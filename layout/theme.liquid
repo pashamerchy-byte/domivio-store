@@ -11,6 +11,440 @@
   {{ content_for_header }}
 </head>
 <body>
-  {{ content_for_layout }}
+  {% capture layout_output %}{{ content_for_layout }}{% endcapture %}
+  {% if layout_output contains 'domivio-root-marker' %}
+    {{ layout_output }}
+  {% else %}
+    <div style="display:none">{{ layout_output }}</div>
+    <style>
+  :root {
+    --bg-cream: {{ settings.bg_color }};
+    --yellow: {{ settings.accent_color }};
+    --black: {{ settings.text_color }};
+  }
+</style>
+
+
+
+  <!-- Top Announcement Bar -->
+  <div class="topbar">
+    <div class="topbar__inner">
+      <div class="topbar__Left">
+        <span class="topbar__pill">FLASH SALE</span>
+        <span data-i18n="announcement_1">🔥 WYPRZEDAŻ DROPSHIPPING · RABATY DO -45% TYLKO DZIŚ</span>
+      </div>
+      <div class="topbar__center">
+        <span data-i18n="announcement_2">🚚 DARMOWA DOSTAWA OD 99 ZŁ (INPOST PACZKOMAT & KURIER DPD 24H)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sticky Header -->
+  <header class="header">
+    <div class="header__inner">
+      <a href="#" class="brand">
+        <span class="brand__box">📦</span>
+        <span>DOMIVIO<span style="color:#D97706;">.</span></span>
+        <span class="brand__tag">HOME · PETS · KIDS</span>
+      </a>
+
+      <nav class="nav">
+        <a href="#catalog" class="nav__link nav__link--highlight" onclick="filterCatalog('mystery')" data-i18n="nav_mystery">🎁 Mystery Box (-45%)</a>
+        <a href="#catalog" class="nav__link" onclick="filterCatalog('all')" data-i18n="nav_all">Wszystkie Hity</a>
+        <a href="#catalog" class="nav__link" onclick="filterCatalog('home')" data-i18n="nav_home">Dom i Kuchnia</a>
+        <a href="#catalog" class="nav__link" onclick="filterCatalog('pets')" data-i18n="nav_pets">Zwierzęta i Dzieci</a>
+        <a href="#why-us" class="nav__link" data-i18n="nav_reviews">Opinie (4.9★)</a>
+        <a href="#faq" class="nav__link" data-i18n="nav_faq">FAQ & Dostawa</a>
+      </nav>
+
+      <div class="header__actions">
+        <!-- Bilingual Switcher PL / EN -->
+        <div class="lang-switch" role="group" aria-label="Language switcher">
+          <button type="button" class="lang-switch__btn is-active" data-lang-btn="pl" onclick="setDomivioLang('pl')">🇵🇱 PL (ZŁ)</button>
+          <button type="button" class="lang-switch__btn" data-lang-btn="en" onclick="setDomivioLang('en')">🌍 EN (€)</button>
+        </div>
+
+        <button type="button" class="cart-trigger" onclick="openCartDrawer()">
+          <span>🛒</span>
+          <span class="cart-trigger__badge" id="headerCartCount">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Flagship Mystery Box Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero__grid">
+        <div>
+          <div class="hero__badge" data-i18n="hero_badge">⚡ HIT TYGODNIA · LIMITOWANA PULA 50 SZTUK</div>
+          <h1 class="hero__title" data-i18n="hero_title">MEGA MYSTERY BOX DOMIVIO™ — 4 PEŁNOWYMIAROWE PRODUKTY ZA UŁAMEK CENY!</h1>
+          <p class="hero__subtitle" data-i18n="hero_subtitle">
+            Odkryj inteligentne gadżety do domu, kuchni oraz pielęgnacji przestrzeni dla dzieci i zwierząt. Gwarantowana wartość rynkowa zestawu to minimum 89,90 zł — dziś odbierzesz go za jedyne 49,90 zł!
+          </p>
+
+          <div class="hero__price-box">
+            <span class="hero__price-now" id="heroPriceNow">49,90 zł</span>
+            <span class="hero__price-old" id="heroPriceOld">89,90 zł</span>
+            <span class="hero__price-save">-45% TANIEJ</span>
+          </div>
+
+          <div class="hero__ctas">
+            <button type="button" class="btn-primary" onclick="addToCart(57828757471558, 1, true)" data-i18n="hero_cta_primary">
+              ODBIERZ MYSTERY BOX ZA 49,90 ZŁ →
+            </button>
+            <a href="#catalog" class="btn-yellow" data-i18n="hero_cta_secondary">
+              ZOBACZ WSZYSTKIE GADŻETY
+            </a>
+          </div>
+
+          <div class="hero__urgency">
+            <span class="hero__urgency-dot"></span>
+            <span data-i18n="hero_stock_left">Pozostało tylko 9 pudełek w cenie promocyjnej!</span>
+          </div>
+
+          <div class="hero__trust-row">
+            <div class="hero__trust-item">⚡ <span data-i18n="hero_trust_1">Wysyłka w 24h z Polski</span></div>
+            <div class="hero__trust-item">📦 <span data-i18n="hero_trust_2">InPost Paczkomat & DPD</span></div>
+            <div class="hero__trust-item">🛡️ <span data-i18n="hero_trust_3">30 dni na darmowy zwrot</span></div>
+          </div>
+        </div>
+
+        <div class="hero__card">
+          <div class="hero__card-ribbon">★★★★★ 4.9/5 (342)</div>
+          <div class="hero__img-wrap" onclick="openProductModal('mystery-box-czystosci')" style="cursor:pointer;">
+            <img src="https://cdn.shopify.com/s/files/1/1069/4715/0161/files/aeterna-mystery-box-packshot-1.jpg?v=1793902435" alt="Domivio Mystery Box" />
+          </div>
+          <ul class="hero__card-bullets" id="heroCardBullets"></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust & Benefits Strip -->
+  <section class="benefits-strip">
+    <div class="container">
+      <div class="benefits-strip__grid">
+        <div class="benefits-strip__item">
+          <div class="benefits-strip__icon">🚚</div>
+          <span data-i18n="trust_fast_ship">Natychmiastowa wysyłka 24h z magazynu w Polsce</span>
+        </div>
+        <div class="benefits-strip__item">
+          <div class="benefits-strip__icon">📍</div>
+          <span data-i18n="trust_locker">Wybór Paczkomatu InPost lub punktu DPD prosto w koszyku</span>
+        </div>
+        <div class="benefits-strip__item">
+          <div class="benefits-strip__icon">💳</div>
+          <span data-i18n="trust_payments">Bezpieczne płatności: BLIK, Przelewy24, Apple Pay, Google Pay, Karta</span>
+        </div>
+        <div class="benefits-strip__item">
+          <div class="benefits-strip__icon">⭐</div>
+          <span data-i18n="trust_guarantee">Gwarancja satysfakcji lub 100% zwrotu pieniędzy w 30 dni</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Product Catalog -->
+  <section class="catalog" id="catalog">
+    <div class="container">
+      <div class="section-head">
+        <h2 class="section-head__title" data-i18n="cat_title">INTELIGENTNE GADŻETY DO DOMU, DLA ZWIERZĄT I DZIECI</h2>
+        <p class="section-head__sub" data-i18n="cat_subtitle">
+          Praktyczne rozwiązania, które oszczędzają Twój czas każdego dnia — od zgrzewarek próżniowych po zbieracze sierści i zestawy niespodzianki.
+        </p>
+      </div>
+
+      <div class="filters">
+        <button type="button" class="filter-btn is-active" data-filter-cat="all" onclick="filterCatalog('all')" data-i18n="filter_all">Wszystkie produkty</button>
+        <button type="button" class="filter-btn" data-filter-cat="mystery" onclick="filterCatalog('mystery')" data-i18n="filter_mystery">🎁 Mystery Box</button>
+        <button type="button" class="filter-btn" data-filter-cat="home" onclick="filterCatalog('home')" data-i18n="filter_home">🏠 Dom i Kuchnia</button>
+        <button type="button" class="filter-btn" data-filter-cat="pets" onclick="filterCatalog('pets')" data-i18n="filter_pets">🐾 Zwierzęta i Dzieci</button>
+        <button type="button" class="filter-btn" data-filter-cat="cleaning" onclick="filterCatalog('cleaning')" data-i18n="filter_cleaning">✨ Sprzątanie & Higiena</button>
+      </div>
+
+      <div class="product-grid" id="productGrid"></div>
+    </div>
+  </section>
+
+  <!-- Why Us / Social Proof Section -->
+  <section class="why-section" id="why-us">
+    <div class="container">
+      <div class="section-head">
+        <div style="font-size:22px;color:#D97706;font-weight:900;margin-bottom:6px;">★★★★★ 4.9 / 5.0</div>
+        <h2 class="section-head__title" data-i18n="why_title">DLACZEGO PONAD 14 000 KLIENTÓW WYBRAŁO NASZE GADŻETY?</h2>
+      </div>
+
+      <div class="why-grid">
+        <div class="why-card">
+          <div class="why-card__icon">🏠🐾👶</div>
+          <h3 class="why-card__title" data-i18n="why_1_t">Dom, Dzieci & Zwierzęta w 1 Miejscu</h3>
+          <p data-i18n="why_1_d">Selekcjonujemy wyłącznie sprawdzone, bezpieczne produkty, które realnie ułatwiają codzienne życie z dziećmi i pupilami.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-card__icon">⚡📦</div>
+          <h3 class="why-card__title" data-i18n="why_2_t">Wysyłka 24h z Magazynu w Polsce</h3>
+          <p data-i18n="why_2_d">Zero czekania tygodniami na paczki z zagranicy. Zamówienia realizujemy błyskawicznie przez InPost Paczkomat oraz kuriera DPD.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-card__icon">🔒💳</div>
+          <h3 class="why-card__title" data-i18n="why_3_t">Bezpieczna Kasa Shopify & BLIK</h3>
+          <p data-i18n="why_3_d">Płacisz wygodnie przez BLIK, Przelewy24, Apple Pay lub kartę, a wybrane w koszyku dane Paczkomatu przenoszą się automatycznie.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="faq-section" id="faq">
+    <div class="container">
+      <div class="section-head">
+        <h2 class="section-head__title" data-i18n="faq_title">NAJCZĘŚCIEJ ZADAWANE PYTANIA (FAQ)</h2>
+      </div>
+
+      <div class="faq-list">
+        <details class="faq-item" open>
+          <summary data-i18n="faq_q1">Co dokładnie znajduje się w Mystery Boxie za 49,90 zł?</summary>
+          <p data-i18n="faq_a1"></p>
+        </details>
+        <details class="faq-item">
+          <summary data-i18n="faq_q2">Jak szybko otrzymam swoją paczkę?</summary>
+          <p data-i18n="faq_a2"></p>
+        </details>
+        <details class="faq-item">
+          <summary data-i18n="faq_q3">Jak wybrać Paczkomat InPost lub punkt DPD?</summary>
+          <p data-i18n="faq_a3"></p>
+        </details>
+        <details class="faq-item">
+          <summary data-i18n="faq_q4">Czy mogę zwrócić zamówienie, jeśli się rozmyślę?</summary>
+          <p data-i18n="faq_a4"></p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div style="font-size:20px;font-weight:900;color:#FFD600;margin-bottom:8px;">DOMIVIO™</div>
+      <p style="margin-bottom:12px;">Smart Gadgets for Home, Pets & Kids · Powered by Shopify Checkout · InPost Paczkomat & DPD</p>
+      <p style="font-size:12px;opacity:0.75;">© 2026 Domivio Storefront · Connected to Shopify Store (1084d2-13.myshopify.com)</p>
+    </div>
+  </footer>
+
+  <!-- Product Detail & Bundle Modal -->
+  <div class="pdp-modal" id="pdpModal" role="dialog" aria-modal="true">
+    <div class="pdp-modal__backdrop" onclick="closeProductModal()"></div>
+    <div class="pdp-modal__dialog">
+      <button type="button" class="pdp-modal__close" onclick="closeProductModal()">✕</button>
+      <div id="pdpModalContent"></div>
+    </div>
+  </div>
+
+  <!-- Slide-Out Cart Drawer -->
+  <div class="cart-drawer" id="cartDrawer" role="dialog" aria-modal="true">
+    <div class="cart-drawer__backdrop" onclick="closeCartDrawer()"></div>
+    <div class="cart-drawer__panel">
+      <div class="cart-drawer__header">
+        <div class="cart-drawer__title" data-i18n="cart_title">TWÓJ KOSZYK</div>
+        <button type="button" class="cart-drawer__close" onclick="closeCartDrawer()">✕</button>
+      </div>
+
+      <!-- Free Shipping Progress Bar -->
+      <div class="ship-bar">
+        <div class="ship-bar__label" id="shipBarLabel"></div>
+        <div class="ship-bar__track">
+          <div class="ship-bar__fill" id="shipBarFill"></div>
+        </div>
+      </div>
+
+      <div class="cart-drawer__body">
+        <div id="cartItemsContainer" style="display:flex;flex-direction:column;gap:10px;"></div>
+        <div id="cartUpsellsContainer" style="display:flex;flex-direction:column;gap:12px;"></div>
+      </div>
+
+      <div class="cart-drawer__footer" id="cartDrawerFooter">
+        <div class="discount-row">
+          <input type="text" id="cartDiscountInput" data-i18n-placeholder="discount_placeholder" placeholder="Kod rabatowy (np. DOMIVIO10)" />
+          <button type="button" onclick="applyManualDiscount()" data-i18n="discount_apply">ZASTOSUJ</button>
+        </div>
+
+        <div class="cart-summary-lines">
+          <div class="cart-summary-line">
+            <span data-i18n="cart_subtotal">Wartość produktów:</span>
+            <span id="summarySubtotal">0,00 zł</span>
+          </div>
+          <div class="cart-summary-line" id="summaryDiscountRow" style="display:none;color:#16A34A;">
+            <span data-i18n="cart_discount_row">Rabat (-10%):</span>
+            <span id="summaryDiscountVal">-0,00 zł</span>
+          </div>
+          <div class="cart-summary-line">
+            <span data-i18n="cart_shipping_row">Dostawa (InPost / DPD):</span>
+            <span id="summaryShipping"></span>
+          </div>
+          <div class="cart-summary-line cart-summary-line--total">
+            <span data-i18n="cart_total">DO ZAPŁATY:</span>
+            <span id="summaryTotal">0,00 zł</span>
+          </div>
+        </div>
+
+        <button type="button" class="checkout-btn" onclick="proceedToShopifyCheckout()" data-i18n="cart_checkout_btn">
+          PRZEJDŹ DO BEZPIECZNEJ PŁATNOŚCI (BLIK / KARTA) →
+        </button>
+        <p style="font-size:11px;color:#64748B;text-align:center;margin-top:8px;" data-i18n="cart_checkout_note"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Welcome -10% Discount Pill -->
+  <div class="welcome-pill" id="welcomePill">
+    <button type="button" class="welcome-pill__btn" id="welcomePillLabel" onclick="openExitModal()">
+      🎁 ODBIERZ -10% NA 1. ZAMÓWIENIE
+    </button>
+    <button type="button" class="welcome-pill__close" onclick="dismissWelcomePill()" aria-label="Close">✕</button>
+  </div>
+
+  <!-- Welcome / Exit-Intent -10% Modal with Strict RODO Consent Validation -->
+  <div class="exit-modal" id="exitModal" role="dialog" aria-modal="true">
+    <div class="exit-modal__backdrop" onclick="closeExitModal()"></div>
+    <div class="exit-modal__dialog">
+      <button type="button" class="pdp-modal__close" onclick="closeExitModal()">✕</button>
+      <div style="display:inline-block;background:#FFD600;border:1.5px solid #111;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:900;margin-bottom:10px;" data-i18n="exit_eyebrow">
+        OFERTA POWITALNA DOMIVIO · TYLKO TERAZ
+      </div>
+
+      <div id="exitStepOffer">
+        <h2 style="font-size:22px;font-weight:900;margin-bottom:8px;" data-i18n="exit_title">ZAPISZ SIĘ I ODBIERZ -10% NA CAŁE ZAMÓWIENIE!</h2>
+        <p style="font-size:13.5px;color:#475569;margin-bottom:16px;" data-i18n="exit_desc"></p>
+
+        <form onsubmit="return submitExitDiscountForm(event)" novalidate>
+          <input
+            type="email"
+            id="exitEmailInput"
+            class="exit-modal__input"
+            data-i18n-placeholder="exit_email_placeholder"
+            placeholder="Wpisz swój adres e-mail (np. anna@domena.pl)..."
+          />
+
+          <label class="rodo-label" id="exitRodoLabel">
+            <input type="checkbox" id="exitRodoCheckbox" style="margin-top:3px;width:16px;height:16px;accent-color:#111111;" />
+            <div>
+              <div class="rodo-badge" data-i18n="exit_rodo_badge">WYMAGANA ZGODA — ZAZNACZ TUTAJ</div>
+              <div data-i18n="exit_rodo_text">Wyrażam zgodę na otrzymywanie newslettera oraz ofert promocyjnych zgodnie z Polityką Prywatności (RODO).</div>
+            </div>
+          </label>
+
+          <button type="submit" class="btn-yellow" style="width:100%;margin-bottom:10px;" data-i18n="exit_cta">
+            ZAPISZ SIĘ I ODBLOKUJ RABAT -10% →
+          </button>
+        </form>
+
+        <button type="button" style="background:none;border:none;font-size:12px;color:#64748B;text-decoration:underline;" onclick="closeExitModal()" data-i18n="exit_skip">
+          Nie, dziękuję — wolę kupić w pełnej cenie
+        </button>
+      </div>
+
+      <div id="exitStepSuccess" style="display:none;">
+        <div style="width:52px;height:52px;border-radius:50%;background:#16A34A;color:#fff;font-size:26px;font-weight:900;display:inline-flex;align-items:center;justify-content:center;margin-bottom:12px;">✓</div>
+        <h2 style="font-size:22px;font-weight:900;margin-bottom:8px;" data-i18n="exit_success_title">TWÓJ RABAT -10% ZOSTAŁ ODBLOKOWANY!</h2>
+        <p style="font-size:13.5px;color:#475569;margin-bottom:14px;" data-i18n="exit_success_desc"></p>
+        <div style="background:#FEF9C3;border:2px dashed #111111;border-radius:10px;padding:12px;margin-bottom:16px;">
+          <div style="font-size:11px;font-weight:800;color:#475569;" data-i18n="exit_code_label">TWÓJ KOD RABATOWY:</div>
+          <div style="font-size:22px;font-weight:900;letter-spacing:0.06em;">DOMIVIO10</div>
+        </div>
+        <button type="button" class="btn-yellow" style="width:100%;" onclick="closeExitModal()" data-i18n="exit_continue_btn">
+          WRÓĆ DO ZAKUPÓW Z RABATEM -10% →
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sticky Bottom Add-to-Cart Bar -->
+  <div class="sticky-bar">
+    <div class="sticky-bar__inner">
+      <div class="sticky-bar__prod">
+        <img src="https://cdn.shopify.com/s/files/1/1069/4715/0161/files/aeterna-mystery-box-packshot-1.jpg?v=1793902435" alt="Mystery Box" />
+        <div>
+          <div style="font-size:13.5px;font-weight:900;" id="stickyBarTitle">Mega Mystery Box Domivio (4 Produkty)</div>
+          <div class="sticky-bar__prod-desc" style="font-size:12px;color:#16A34A;font-weight:800;">● <span data-i18n="stock_in_stock">W magazynie — wysyłka dzisiaj (InPost / DPD)</span></div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <span style="font-size:20px;font-weight:900;" id="stickyBarPrice">49,90 zł</span>
+        <button type="button" class="btn-yellow" style="padding:10px 18px;font-size:13px;" onclick="addToCart(57828757471558, 1, true)">
+          🛒 <span data-i18n="btn_add_to_cart">DODAJ DO KOSZYKA</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="cartToast">
+    <div id="cartToastMsg" style="font-size:13px;"></div>
+  </div>
+
+  
+
+<script src="{{ 'domivio-products.js' | asset_url }}"></script>
+<script>
+  window.DOMIVIO_CONFIG.freeShippingPLN = {{ settings.free_shipping_pln | default: 99 }};
+  window.DOMIVIO_CONFIG.discountCode = {{ settings.discount_code | json }};
+  window.DOMIVIO_I18N.pl.hero_badge = {{ settings.hero_badge | json }};
+  window.DOMIVIO_I18N.pl.hero_title = {{ settings.hero_title | json }};
+  window.DOMIVIO_I18N.pl.hero_subtitle = {{ settings.hero_subtitle | json }};
+  window.DOMIVIO_I18N.pl.cat_title = {{ settings.cat_title | json }};
+
+  // Rewrite local montessori asset paths to Shopify CDN asset_url
+  window.DOMIVIO_PRODUCTS.forEach(function(p) {
+    if (p.handle === 'drewniana-tablica-sensoryczna-montessori-19-led') {
+      p.images = [
+        "{{ 'montessori_img_1.jpg' | asset_url }}",
+        "{{ 'montessori_studio_1.jpg' | asset_url }}",
+        "{{ 'montessori_studio_2.jpg' | asset_url }}",
+        "{{ 'montessori_studio_3.jpg' | asset_url }}",
+        "{{ 'montessori_img_2.jpg' | asset_url }}"
+      ];
+    }
+  });
+
+  {% if settings.domivio_collection != blank %}
+    window.DOMIVIO_SHOPIFY_COLLECTION = [
+      {% for product in collections[settings.domivio_collection].products %}
+        {
+          id: {{ product.id }},
+          variantId: {{ product.selected_or_first_available_variant.id }},
+          shopifyVariantId: {{ product.selected_or_first_available_variant.id }},
+          handle: {{ product.handle | json }},
+          category: ["home", "pets"],
+          isMysteryBox: false,
+          pricePLN: {{ product.selected_or_first_available_variant.price | divided_by: 100.0 }},
+          comparePLN: {{ product.selected_or_first_available_variant.compare_at_price | default: product.selected_or_first_available_variant.price | divided_by: 100.0 }},
+          priceEUR: {{ product.selected_or_first_available_variant.price | divided_by: 425.0 | round: 2 }},
+          compareEUR: {{ product.selected_or_first_available_variant.compare_at_price | default: product.selected_or_first_available_variant.price | divided_by: 425.0 | round: 2 }},
+          rating: "4.9",
+          reviewsCount: 185,
+          badgePL: "BESTSELLER DOMIVIO 🔥",
+          badgeEN: "DOMIVIO BESTSELLER 🔥",
+          images: [
+            {% for img in product.images limit: 5 %}
+              {{ img | image_url: width: 1200 | json }}{% unless forloop.last %},{% endunless %}
+            {% endfor %}
+          ],
+          title: { pl: {{ product.title | json }}, en: {{ product.title | json }} },
+          shortDesc: { pl: {{ product.description | strip_html | truncate: 150 | json }}, en: {{ product.description | strip_html | truncate: 150 | json }} },
+          bullets: {
+            pl: ["🚚 Natychmiastowa wysyłka 24h (InPost Paczkomat & DPD)"],
+            en: ["🚚 Fast 24h dispatch (InPost & DPD)"]
+          }
+        }{% unless forloop.last %},{% endunless %}
+      {% endfor %}
+    ];
+    if (window.DOMIVIO_SHOPIFY_COLLECTION && window.DOMIVIO_SHOPIFY_COLLECTION.length > 0) {
+      window.DOMIVIO_PRODUCTS = window.DOMIVIO_SHOPIFY_COLLECTION;
+    }
+  {% endif %}
+</script>
+<script src="{{ 'domivio-app.js' | asset_url }}"></script>
+  {% endif %}
 </body>
 </html>

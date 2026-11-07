@@ -1,3 +1,4 @@
+<div id="domivio-root-marker"></div>
 <style>
   :root {
     --bg-cream: {{ section.settings.bg_color }};
@@ -430,83 +431,83 @@
 
 {% schema %}
 {
-  "name": "DOMIVIO Витрина (Store)",
+  "name": "DOMIVIO Storefront",
   "settings": [
     {
       "type": "header",
-      "content": "Цвета и стиль темы DOMIVIO"
+      "content": "Kolory i styl"
     },
     {
       "type": "color",
       "id": "bg_color",
-      "label": "Основной фон сайта",
+      "label": "Kolor tla",
       "default": "#FFFDF7"
     },
     {
       "type": "color",
       "id": "accent_color",
-      "label": "Акцентный цвет (кнопки / бейджи)",
+      "label": "Kolor akcentu",
       "default": "#FFD600"
     },
     {
       "type": "color",
       "id": "text_color",
-      "label": "Цвет текста и рамок",
+      "label": "Kolor tekstu",
       "default": "#111111"
     },
     {
       "type": "header",
-      "content": "Отдельный каталог товаров DOMIVIO"
+      "content": "Katalog i dostawa"
     },
     {
       "type": "collection",
       "id": "domivio_collection",
-      "label": "Коллекция товаров DOMIVIO (если выбрана — выводятся только товары из неё)"
+      "label": "Kolekcja DOMIVIO"
     },
     {
       "type": "number",
       "id": "free_shipping_pln",
-      "label": "Бесплатная доставка от (PLN)",
+      "label": "Darmowa dostawa PLN",
       "default": 99
     },
     {
       "type": "text",
       "id": "discount_code",
-      "label": "Промокод на скидку -10%",
+      "label": "Kod rabatowy",
       "default": "DOMIVIO10"
     },
     {
       "type": "header",
-      "content": "Главный экран (Hero Banner)"
+      "content": "Ekran glowny (Hero)"
     },
     {
       "type": "text",
       "id": "hero_badge",
-      "label": "Бейдж над заголовком",
-      "default": "⚡ HIT TYGODNIA · LIMITOWANA PULA 50 SZTUK"
+      "label": "Naglowek Hero Badge",
+      "default": "HIT TYGODNIA - LIMITOWANA PULA 50 SZTUK"
     },
     {
       "type": "textarea",
       "id": "hero_title",
-      "label": "Главный заголовок (Hero Title)",
-      "default": "MEGA MYSTERY BOX DOMIVIO™ — 4 PEŁNOWYMIAROWE PRODUKTY ZA UŁAMEK CENY!"
+      "label": "Tytul glowny Hero",
+      "default": "MEGA MYSTERY BOX DOMIVIO - 4 PRODUKTY ZA ULAMEK CENY!"
     },
     {
       "type": "textarea",
       "id": "hero_subtitle",
-      "label": "Подзаголовок (Hero Subtitle)",
-      "default": "Odkryj inteligentne gadżety do domu, kuchni oraz pielęgnacji przestrzeni dla dzieci i zwierząt."
+      "label": "Podtytul Hero",
+      "default": "Odkryj inteligentne gadzety do domu, kuchni oraz dla dzieci i zwierzat."
     },
     {
       "type": "text",
       "id": "cat_title",
-      "label": "Заголовок каталога товаров",
-      "default": "INTELIGENTNE GADŻETY DO DOMU, DLA ZWIERZĄT I DZIECI"
+      "label": "Tytul katalogu",
+      "default": "INTELIGENTNE GADZETY DO DOMU, DLA ZWIERZAT I DZIECI"
     }
   ],
   "presets": [
     {
-      "name": "DOMIVIO Витрина (Store)"
+      "name": "DOMIVIO Storefront"
     }
   ]
 }

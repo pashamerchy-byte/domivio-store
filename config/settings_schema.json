@@ -1,10 +1,86 @@
 [
   {
     "name": "theme_info",
-    "theme_name": "DOMIVIO Standalone OS 2.0",
+    "theme_name": "DOMIVIO Storefront",
     "theme_version": "2.0.0",
     "theme_author": "DOMIVIO",
     "theme_documentation_url": "https://pashamerchy-byte.github.io/domivio-store/",
     "theme_support_url": "https://pashamerchy-byte.github.io/domivio-store/"
+  },
+  {
+    "name": "DOMIVIO Ustawienia",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Kolory i styl"
+      },
+      {
+        "type": "color",
+        "id": "bg_color",
+        "label": "Kolor tla",
+        "default": "#FFFDF7"
+      },
+      {
+        "type": "color",
+        "id": "accent_color",
+        "label": "Kolor akcentu",
+        "default": "#FFD600"
+      },
+      {
+        "type": "color",
+        "id": "text_color",
+        "label": "Kolor tekstu",
+        "default": "#111111"
+      },
+      {
+        "type": "header",
+        "content": "Katalog i dostawa"
+      },
+      {
+        "type": "collection",
+        "id": "domivio_collection",
+        "label": "Kolekcja DOMIVIO"
+      },
+      {
+        "type": "number",
+        "id": "free_shipping_pln",
+        "label": "Darmowa dostawa PLN",
+        "default": 99
+      },
+      {
+        "type": "text",
+        "id": "discount_code",
+        "label": "Kod rabatowy",
+        "default": "DOMIVIO10"
+      },
+      {
+        "type": "header",
+        "content": "Ekran glowny (Hero)"
+      },
+      {
+        "type": "text",
+        "id": "hero_badge",
+        "label": "Naglowek Hero Badge",
+        "default": "HIT TYGODNIA - LIMITOWANA PULA 50 SZTUK"
+      },
+      {
+        "type": "textarea",
+        "id": "hero_title",
+        "label": "Tytul glowny Hero",
+        "default": "MEGA MYSTERY BOX DOMIVIO - 4 PRODUKTY ZA ULAMEK CENY!"
+      },
+      {
+        "type": "textarea",
+        "id": "hero_subtitle",
+        "label": "Podtytul Hero",
+        "default": "Odkryj inteligentne gadzety do domu, kuchni oraz dla dzieci i zwierzat."
+      },
+      {
+        "type": "text",
+        "id": "cat_title",
+        "label": "Tytul katalogu",
+        "default": "INTELIGENTNE GADZETY DO DOMU, DLA ZWIERZAT I DZIECI"
+      }
+    ]
   }
 ]
