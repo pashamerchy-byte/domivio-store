@@ -235,6 +235,52 @@ window.DOMIVIO_I18N = {
 
 window.DOMIVIO_PRODUCTS = [
   {
+    id: 15836295070022,
+    variantId: 57828996284742,
+    shopifyVariantId: 57828996284742,
+    handle: "krysztalowa-lampka-nocna-projektor-rgb-3d-dekoracyjna-kostka-led-z-pilotem-16-kolorow",
+    category: ["home", "pets"],
+    isMysteryBox: false,
+    pricePLN: 129.00,
+    comparePLN: 189.00,
+    priceEUR: 29.90,
+    compareEUR: 44.00,
+    rating: "4.9",
+    reviewsCount: 518,
+    badgePL: "✨ HIT 16 KOLORÓW · DARMOWA DOSTAWA OD 99 ZŁ",
+    badgeEN: "✨ 16 RGB COLORS · FREE SHIPPING",
+    images: [
+      "https://cdn.shopify.com/s/files/1/1032/7910/0230/files/img_1_80611bbd-a3f6-43ee-aa20-4ac914bef65b.jpg?v=1794089631",
+      "https://cdn.shopify.com/s/files/1/1032/7910/0230/files/img_2.jpg?v=1794089630",
+      "https://cdn.shopify.com/s/files/1/1032/7910/0230/files/img_3.jpg?v=1794089630",
+      "https://cdn.shopify.com/s/files/1/1032/7910/0230/files/img_4.jpg?v=1794089630",
+      "https://cdn.shopify.com/s/files/1/1032/7910/0230/files/img_5.jpg?v=1794089630",
+      "https://cdn.shopify.com/s/files/1/1032/7910/0230/files/img_6.jpg?v=1794089630"
+    ],
+    title: {
+      pl: "Kryształowa Lampka Nocna Projektor RGB 3D — Dekoracyjna Kostka LED z Pilotem (16 Kolorów)",
+      en: "3D Crystal Cube RGB Night Light & Projector with Remote & Touch Control (16 Colors)"
+    },
+    shortDesc: {
+      pl: "Magiczny efekt wodnej zorzy 3D na ścianach i suficie! 16 kolorów RGB, sterowanie dotykiem + pilotem i DARMOWA DOSTAWA (zamówienie powyżej 99 zł).",
+      en: "Magical 3D water-ripple aurora projection on walls & ceiling! 16 RGB colors, remote + touch control & FREE shipping included."
+    },
+    bullets: {
+      pl: [
+        "💎 Designerska kryształowa kostka 3D — tworzy hipnotyzującą projekcję świetlną na ścianach i suficie",
+        "🎨 Aż 16 kolorów RGB + 4 tryby płynnej zmiany barw i regulacja jasności (pilot + panel dotykowy)",
+        "👶🏠 Idealna jako nastrojowa lampka nocna do sypialni, salonu oraz wyciszająca lampka do pokoju dziecka",
+        "🚚 DARMOWA DOSTAWA OD 99 ZŁ — dla tego produktu wysyłka InPost Paczkomat / Kurier DPD jest w 100% GRATIS!"
+      ],
+      en: [
+        "💎 Designer 3D crystal cube — casts mesmerizing aurora water-ripple projections across walls and ceilings",
+        "🎨 16 vivid RGB colors + 4 dynamic lighting modes & dimming via remote control or touch",
+        "👶🏠 Perfect ambient night light for bedrooms, living rooms, and soothing kids' nurseries",
+        "🚚 FREE SHIPPING OVER 99 PLN — qualifies automatically for free InPost / DPD delivery!"
+      ]
+    }
+  },
+  {
     id: 15836262236486,
     variantId: 57828754555206,
     shopifyVariantId: 57828754555206,
