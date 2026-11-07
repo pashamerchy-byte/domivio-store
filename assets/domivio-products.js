@@ -22,12 +22,12 @@ window.DOMIVIO_I18N = {
     nav_mystery: "Oświetlenie 3D",
     nav_all: "Nowości i Bestsellery",
     nav_home: "Dom i Nastrój",
-    nav_pets: "Montessori LED",
-    nav_reviews: "Innowacja",
+    nav_pets: "Gra Rozwijająca dla Dzieci",
+    nav_reviews: "Opinie",
     nav_faq: "FAQ i Dostawa",
     hero_badge: "DO -33% NA WYBRANE PREZENTY · DARMOWA DOSTAWA OD 99 ZŁ",
     hero_title: "Rozświetl Swój Dom i Wieczory",
-    hero_subtitle: "Zacznij tworzyć wyjątkowy klimat w sypialni, salonie i pokoju dziecka dzięki Kryształowej Lampce Projektorowi RGB 3D (129,00 zł) oraz Drewnianej Tablicy Sensorycznej Montessori LED (119,90 zł). Darmowa wysyłka od 99 zł w 24h.",
+    hero_subtitle: "Zacznij tworzyć wyjątkowy klimat w domu dzięki Kryształowej Lampce Projektorowi RGB 3D (129,00 zł) oraz Edukacyjnej Grze Rozwijającej dla Dzieci — Drewnianej Tablicy Montessori LED (119,90 zł). Darmowa wysyłka od 99 zł w 24h.",
     hero_cta_primary: "Kup Lampkę Kryształ RGB — 129 zł",
     hero_cta_secondary: "Zobacz Nowości i Bestsellery",
     hero_trust_1: "Darmowa dostawa od 99 zł",
@@ -38,7 +38,7 @@ window.DOMIVIO_I18N = {
     cat_subtitle: "Każde zamówienie od 99 zł wysyłamy z darmową dostawą 24h przez Paczkomat InPost lub kuriera DPD.",
     filter_all: "Wszystkie (2)",
     filter_home: "Lampka Kryształ RGB 3D",
-    filter_pets: "Tablica Montessori 19 LED",
+    filter_pets: "Gra Rozwijająca dla Dzieci",
     badge_bestseller: "Bestseller",
     badge_save: "Oszczędzasz",
     badge_viral: "Bestseller",
@@ -128,12 +128,12 @@ window.DOMIVIO_I18N = {
     nav_mystery: "3D Ambient Lighting",
     nav_all: "New Products & Bestsellers",
     nav_home: "Home & Ambient",
-    nav_pets: "Montessori LED",
-    nav_reviews: "Innovation",
+    nav_pets: "Educational Kids Game",
+    nav_reviews: "Reviews",
     nav_faq: "FAQ & Shipping",
     hero_badge: "UP TO 33% OFF SELECT GIFTS · FREE SHIPPING OVER 99 PLN",
     hero_title: "Make Your Home & Evenings Lit",
-    hero_subtitle: "Start winning the season with up to 33% OFF our #1 3D RGB Crystal Projector Lamp (129 PLN) and Wooden Montessori 19-LED Busy Board (119.90 PLN). Free 24h shipping on orders over 99 PLN.",
+    hero_subtitle: "Start winning the season with up to 33% OFF our #1 3D RGB Crystal Projector Lamp (129 PLN) and Educational Developmental Kids Game — Wooden Montessori 19-LED Board (119.90 PLN). Free 24h shipping on orders over 99 PLN.",
     hero_cta_primary: "Shop Crystal RGB Lamp — 129 PLN",
     hero_cta_secondary: "Shop Bestsellers",
     hero_trust_1: "Free shipping from 99 PLN",
@@ -144,7 +144,7 @@ window.DOMIVIO_I18N = {
     cat_subtitle: "Every order over 99 PLN qualifies automatically for FREE 24h InPost Locker or DPD delivery.",
     filter_all: "All Products (2)",
     filter_home: "3D Crystal RGB Lamp",
-    filter_pets: "Montessori 19-LED Board",
+    filter_pets: "Educational Kids Game",
     badge_bestseller: "Best Seller",
     badge_save: "Save",
     badge_viral: "Best Seller",
@@ -289,8 +289,8 @@ window.DOMIVIO_PRODUCTS = [
     compareEUR: 42.00,
     rating: "4.9",
     reviewsCount: 412,
-    badgePL: "👶 HIT MONTESSORI 19 LED · DARMOWA DOSTAWA OD 99 ZŁ",
-    badgeEN: "👶 MONTESSORI 19 LEDS · FREE SHIPPING FROM 99 PLN",
+    badgePL: "🧸 GRA ROZWIJAJĄCA DLA DZIECI · DARMOWA DOSTAWA OD 99 ZŁ",
+    badgeEN: "🧸 EDUCATIONAL KIDS GAME · FREE SHIPPING FROM 99 PLN",
     images: [
       "https://cdn.shopify.com/s/files/1/1032/7910/0230/files/img_1.jpg?v=1794087648",
       "https://cdn.shopify.com/s/files/1/1032/7910/0230/files/studio_1.jpg?v=1794087648",
@@ -298,24 +298,24 @@ window.DOMIVIO_PRODUCTS = [
       "https://cdn.shopify.com/s/files/1/1032/7910/0230/files/studio_3.jpg?v=1794087648"
     ],
     title: {
-      pl: "Drewniana Tablica Sensoryczna Montessori Busy Board (10 Przełączników + 19 Diod LED)",
-      en: "Wooden Montessori LED Busy Board (10 Switches & 19 Soft LEDs for Toddlers 1–3Y)"
+      pl: "Edukacyjna Gra Rozwijająca dla Dzieci — Drewniana Tablica Sensoryczna Montessori LED (10 Przełączników + 19 Diod LED)",
+      en: "Educational Developmental Game for Kids — Wooden Montessori 19-LED Busy Board (Ages 1–5)"
     },
     shortDesc: {
-      pl: "Koniec z płaczem w aucie i czasem przed ekranem! 10 przełączników, kluczyk i 19 bezpiecznych diod LED + DARMOWA DOSTAWA (od 99 zł).",
-      en: "Screen-free travel lifesaver! 10 tactile switches, key lock & 19 eye-safe LEDs + FREE shipping (from 99 PLN)."
+      pl: "Interaktywna gra edukacyjna rozwijająca dla dzieci (1–5 lat)! Ćwiczy motorykę małą, logiczne myślenie i koncentrację bez ekranu telefonu. 10 przełączników, kluczyk i 19 bezpiecznych diod LED + DARMOWA DOSTAWA (od 99 zł).",
+      en: "Interactive educational developmental game for kids (ages 1–5)! Trains fine motor skills, logic & focus without screens. 10 tactile switches, key lock & 19 eye-safe LEDs + FREE shipping (from 99 PLN)."
     },
     bullets: {
       pl: [
+        "🧸 Edukacyjna gra rozwijająca dla dzieci (1–5 lat) — uczy przyczyny i skutku, rozwija motorykę małą i koordynację ręka-oko",
         "💡 10 różnych przełączników, kluczyk, wtyczka + aż 19 miękkich, bezpiecznych dla oczu diod LED",
-        "🧠 Rozwija motorykę małą, koordynację ręka-oko i ciekawość u dzieci w wieku 1–3 lat (bez ekranu telefonu!)",
-        "🌳 Naturalne, gładko szlifowane drewno z zaokrąglonymi krawędziami — 100% bezpieczne i ciche (zero hałasu!)",
+        "🌳 Naturalne, gładko szlifowane drewno z zaokrąglonymi krawędziami — 100% bezpieczna zabawa bez ekranu telefonu i bez hałasu",
         "🚚 DARMOWA DOSTAWA OD 99 ZŁ — wysyłka InPost Paczkomat / Kurier DPD w 100% GRATIS!"
       ],
       en: [
+        "🧸 Educational developmental game for kids (ages 1–5) — teaches cause & effect, fine motor skills, and hand-eye coordination",
         "💡 10 interactive switches, turn-key, plug & 19 soft eye-safe glowing LED lights",
-        "🧠 Boosts fine motor skills & hand-eye coordination for ages 1–3 without screens",
-        "🌳 Crafted from smooth eco-friendly solid wood with rounded edges — whisper-quiet play",
+        "🌳 Crafted from smooth eco-friendly solid wood with rounded edges — 100% screen-free, whisper-quiet educational play",
         "🚚 FREE SHIPPING FROM 99 PLN — free InPost / DPD delivery included!"
       ]
     }
