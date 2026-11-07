@@ -32,7 +32,7 @@ window.DOMIVIO_I18N = {
     hero_cta_secondary: "Zobacz Nowości i Bestsellery",
     hero_trust_1: "Darmowa dostawa od 99 zł",
     hero_trust_2: "Wysyłka 24h InPost & DPD",
-    hero_trust_3: "30 dni na darmowy zwrot",
+    hero_trust_3: "14 dni na zwrot",
     hero_stock_left: "W magazynie — wysyłka dzisiaj z darmową dostawą od 99 zł",
     cat_title: "Nowości i Bestsellery",
     cat_subtitle: "Każde zamówienie od 99 zł wysyłamy z darmową dostawą 24h przez Paczkomat InPost lub kuriera DPD.",
@@ -60,7 +60,7 @@ window.DOMIVIO_I18N = {
     trust_fast_ship: "Darmowa wysyłka od 99 zł w 24h z magazynu w Polsce",
     trust_locker: "Wybór Paczkomatu InPost lub punktu DPD prosto w koszyku",
     trust_payments: "Bezpieczne płatności: BLIK, Przelewy24, Apple Pay, Google Pay, Karta",
-    trust_guarantee: "Gwarancja satysfakcji lub 100% zwrotu pieniędzy w 30 dni",
+    trust_guarantee: "Gwarancja satysfakcji lub zwrot pieniędzy w 14 dni",
     cart_title: "Twój koszyk",
     cart_empty: "Twój koszyk jest obecnie pusty.",
     cart_empty_cta: "Zobacz nasze bestsellery →",
@@ -119,7 +119,13 @@ window.DOMIVIO_I18N = {
     faq_q3: "Jak wybrać Paczkomat InPost lub punkt DPD?",
     faq_a3: "Możesz wybrać swój ulubiony Paczkomat InPost lub punkt DPD bezpośrednio w koszyku za pomocą interaktywnej mapy z wyszukiwarką adresów! Twój wybór zostanie automatycznie przekazany do zamówienia.",
     faq_q4: "Czy mogę zwrócić zamówienie, jeśli się rozmyślę?",
-    faq_a4: "Oczywiście! Przysługuje Ci pełne 30 dni na bezproblemowy zwrot bez podawania przyczyny."
+    faq_a4: "Oczywiście! Przysługuje Ci 14 dni od momentu odebrania przesyłki na bezproblemowy zwrot towaru bez podawania przyczyny.",
+    faq_q5: "Jak zasilana i sterowana jest Kryształowa Lampka Projektor RGB 3D?",
+    faq_a5: "Lampka zasilana jest wygodnie przez kabel USB (w zestawie) — możesz podłączyć ją do ładowarki od telefonu, laptopa lub powerbanku. Sterujesz nią dotykowo (dotykając podstawy) lub za pomocą dołączonego pilota bezprzewodowego, wybierając spośród 16 kolorów RGB, 4 trybów płynnej zmiany barw oraz regulacji jasności.",
+    faq_q6: "Dla jakiego wieku przeznaczona jest Drewniana Gra Rozwijająca Montessori i czy jest bezpieczna?",
+    faq_a6: "Nasza drewniana tablica sensoryczna to edukacyjna gra rozwijająca stworzona dla dzieci w wieku od 1 do 5 lat. Wykonana jest z naturalnego, gładko szlifowanego drewna z zaokrąglonymi krawędziami, a 19 diod LED świeci delikatnym, bezpiecznym dla wzroku światłem. Zabawka jest całkowicie bezgłośna (idealna do auta i podróży) i zasilana 2 bateriami AAA.",
+    faq_q7: "Jak działają zestawy z rabatem -10% / -15% i jakie metody płatności są dostępne?",
+    faq_a7: "Wybierając pakiet 2 sztuk na karcie produktu otrzymujesz automatyczny rabat -10%, a przy pakiecie 3 sztuk aż -15% (dodatkowo możesz użyć kodu powitalnego DOMIVIO10). Płatności realizowane są przez szyfrowaną kasę Shopify: zapłacisz błyskawicznie przez BLIK, Przelewy24, Apple Pay, Google Pay lub kartę płatniczą."
   },
   en: {
     announcement_1: "Free shipping on orders of 99 PLN+ (InPost & DPD 24h) — Up to 33% off select gifts - Shop now",
@@ -138,7 +144,7 @@ window.DOMIVIO_I18N = {
     hero_cta_secondary: "Shop Bestsellers",
     hero_trust_1: "Free shipping from 99 PLN",
     hero_trust_2: "InPost Locker & DPD 24h",
-    hero_trust_3: "30-Day Returns",
+    hero_trust_3: "14-Day Returns",
     hero_stock_left: "In stock — ships today with free delivery over 99 PLN",
     cat_title: "New Products & Bestsellers",
     cat_subtitle: "Every order over 99 PLN qualifies automatically for FREE 24h InPost Locker or DPD delivery.",
@@ -166,7 +172,7 @@ window.DOMIVIO_I18N = {
     trust_fast_ship: "Free shipping from 99 PLN — dispatched within 24h",
     trust_locker: "Interactive InPost & DPD Pickup Map right inside your cart",
     trust_payments: "Secure checkout: Apple Pay, Google Pay, Visa, Mastercard, BLIK",
-    trust_guarantee: "30-Day 100% Money-Back Satisfaction Guarantee",
+    trust_guarantee: "14-Day 100% Money-Back Satisfaction Guarantee",
     cart_title: "Your Cart",
     cart_empty: "Your shopping cart is currently empty.",
     cart_empty_cta: "Explore our bestsellers →",
@@ -225,7 +231,13 @@ window.DOMIVIO_I18N = {
     faq_q3: "How does the InPost / DPD Parcel Locker map work?",
     faq_a3: "Inside the slide-out cart drawer, click 'InPost Paczkomat' or 'DPD Pickup' to open our live interactive map with smart street & locker autocomplete.",
     faq_q4: "What is your return policy?",
-    faq_a4: "We offer a hassle-free 30-day money-back guarantee on all orders."
+    faq_a4: "You have 14 days from the date of delivery to return your order hassle-free, no questions asked.",
+    faq_q5: "How is the 3D RGB Crystal Projector Lamp powered and controlled?",
+    faq_a5: "The lamp is powered via USB cable (included) — plug it into any phone charger, laptop, or power bank. Control it via touch on the base or with the included wireless remote to switch between 16 RGB colors, 4 dynamic lighting modes, and adjustable brightness.",
+    faq_q6: "What age is the Wooden Montessori Educational Game suitable for, and is it safe?",
+    faq_a6: "Our wooden sensory board is an educational developmental game designed for children aged 1 to 5 years. Crafted from smooth natural wood with rounded edges, its 19 soft LEDs are completely eye-safe. It is 100% silent (perfect for car rides and travel) and runs on 2 AAA batteries.",
+    faq_q7: "How do the -10% / -15% bundle discounts work and what payment methods do you accept?",
+    faq_a7: "Selecting a 2-pack on any product card automatically applies a 10% discount, while a 3-pack gives you 15% off (and you can also apply welcome code DOMIVIO10). Checkout is processed via encrypted Shopify Checkout supporting BLIK, Przelewy24, Apple Pay, Google Pay, Visa, and Mastercard."
   }
 };
 
