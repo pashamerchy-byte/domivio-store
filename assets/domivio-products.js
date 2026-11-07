@@ -1,17 +1,17 @@
 /* ==========================================================================
    DOMIVIO — Storefront Data, Bilingual Dictionary (PL / EN) & Products
-   Connected to Shopify Store: 1084d2-13.myshopify.com (aeterna-chemicals.com)
+   Connected to Dedicated Shopify Store: 1tvnzn-zf.myshopify.com (Domivio)
    ========================================================================== */
 
 window.DOMIVIO_CONFIG = {
-  shopDomain: "aeterna-chemicals.com",
-  myshopifyDomain: "1084d2-13.myshopify.com",
+  shopDomain: "1tvnzn-zf.myshopify.com",
+  myshopifyDomain: "1tvnzn-zf.myshopify.com",
   apaczkaAppId: "2284954_qAbIYHDOTMdOXwcmY6by33BQ",
-  discountCode: "AETERNA10",
+  discountCode: "DOMIVIO10",
   freeShippingPLN: 99.0,
   freeShippingEUR: 25.0,
-  mysteryBoxVariantId: 55670636609873,
-  mysteryBoxHandle: "mystery-box-czystosci"
+  mysteryBoxVariantId: 57828757471558,
+  mysteryBoxHandle: "mega-mystery-box-domivio-zestaw-4-produktow-do-domu-i-dla-zwierzat"
 };
 
 window.DOMIVIO_I18N = {
@@ -235,9 +235,9 @@ window.DOMIVIO_I18N = {
 
 window.DOMIVIO_PRODUCTS = [
   {
-    id: 11342294548817,
-    variantId: 55718977995089,
-    shopifyVariantId: 55718977995089,
+    id: 15836262236486,
+    variantId: 57828754555206,
+    shopifyVariantId: 57828754555206,
     handle: "drewniana-tablica-sensoryczna-montessori-busy-board-10-przelacznikow-19-diod-led",
     category: ["pets", "home"],
     isMysteryBox: false,
@@ -250,10 +250,10 @@ window.DOMIVIO_PRODUCTS = [
     badgePL: "👶 HIT MONTESSORI · 19 LED",
     badgeEN: "👶 MONTESSORI HIT · 19 LEDS",
     images: [
-      "https://cdn.shopify.com/s/files/1/1069/4715/0161/files/img_1.jpg?v=1794086781",
-      "https://cdn.shopify.com/s/files/1/1069/4715/0161/files/studio_1.jpg?v=1794086782",
-      "https://cdn.shopify.com/s/files/1/1069/4715/0161/files/studio_2.jpg?v=1794086782",
-      "https://cdn.shopify.com/s/files/1/1069/4715/0161/files/studio_3.jpg?v=1794086782"
+      "https://cdn.shopify.com/s/files/1/1032/7910/0230/files/img_1.jpg?v=1794087648",
+      "https://cdn.shopify.com/s/files/1/1032/7910/0230/files/studio_1.jpg?v=1794087648",
+      "https://cdn.shopify.com/s/files/1/1032/7910/0230/files/studio_2.jpg?v=1794087648",
+      "https://cdn.shopify.com/s/files/1/1032/7910/0230/files/studio_3.jpg?v=1794087648"
     ],
     title: {
       pl: "Drewniana Tablica Sensoryczna Montessori Busy Board (10 Przełączników + 19 Diod LED)",
@@ -279,9 +279,9 @@ window.DOMIVIO_PRODUCTS = [
     }
   },
   {
-    id: 11331730014545,
-    variantId: 55670636609873,
-    handle: "mystery-box-czystosci",
+    id: 15836263514438,
+    variantId: 57828757471558,
+    handle: "mega-mystery-box-domivio-zestaw-4-produktow-do-domu-i-dla-zwierzat",
     category: ["mystery", "home", "pets", "cleaning"],
     isMysteryBox: true,
     pricePLN: 49.90,
