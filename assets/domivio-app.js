@@ -1183,11 +1183,16 @@
           (typeof rp.tags === "string" && rp.tags.toLowerCase().includes("domivio")) ||
           String(rp.vendor || "").toLowerCase() === "domivio";
 
-        if (!isDomivioTagged && rp.handle !== "drewniana-tablica-sensoryczna-montessori-19-led") {
+        if (!isDomivioTagged && !String(rp.handle || "").includes("montessori")) {
           return; // Keep DOMIVIO products & prices completely independent from Aeterna!
         }
 
-        const local = PRODUCTS.find((p) => p.handle === rp.handle || p.id === rp.id);
+        const local = PRODUCTS.find(
+          (p) =>
+            p.handle === rp.handle ||
+            p.id === rp.id ||
+            (String(p.handle || "").includes("montessori") && String(rp.handle || "").includes("montessori"))
+        );
         if (local) {
           local.id = rp.id;
           local.variantId = rv.id;
