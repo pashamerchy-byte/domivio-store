@@ -186,7 +186,7 @@
                   🛒 ${t("btn_add_to_cart")}
                 </button>
                 <button type="button" class="p-card__info-btn" onclick="openProductModal('${p.handle}')">
-                  ${p.isMysteryBox ? "👁️" : "📦 -15%"}
+                  📦 -15%
                 </button>
               </div>
             </div>
@@ -234,7 +234,7 @@
           </div>`
         : "";
 
-    const packsHtml = !prod.isMysteryBox
+    const packsHtml = true
       ? `
         <div class="qty-packs">
           <div class="qty-packs__header">${t("qty_header")}</div>
@@ -464,10 +464,10 @@
         const unit = getProductPrice(prod);
         let lineTotal = unit * item.qty;
         let packBadge = "";
-        if (!prod.isMysteryBox && item.qty === 2) {
+        if (item.qty === 2) {
           lineTotal *= 0.9;
           packBadge = `<span style="background:#FFD600;padding:1px 5px;border-radius:4px;font-size:10px;font-weight:900;margin-left:6px;">-10% PAKIET</span>`;
-        } else if (!prod.isMysteryBox && item.qty >= 3) {
+        } else if (item.qty >= 3) {
           lineTotal *= 0.85;
           packBadge = `<span style="background:#FFD600;padding:1px 5px;border-radius:4px;font-size:10px;font-weight:900;margin-left:6px;">-15% PAKIET</span>`;
         }
@@ -491,10 +491,9 @@
       .join("");
 
     // Render 1-Click Mystery Box Order Bump (if not already in cart) + 1-Click Accessories Cross-Sell + InPost/DPD Map Picker
-    const hasMystery = cart.some((i) => i.variantId === CFG.mysteryBoxVariantId);
-    const mbProd = PRODUCTS.find((p) => p.isMysteryBox) || PRODUCTS[0];
+    const otherProd = PRODUCTS.find((p) => !cart.some((i) => i.variantId === p.variantId));
 
-    const mysteryBumpHtml = !hasMystery
+    const mysteryBumpHtml = otherProd
       ? `
         <div class="mystery-bump">
           <div class="mystery-bump__top">
@@ -502,14 +501,14 @@
             <span class="mystery-bump__save">${t("mystery_upsell_save")}</span>
           </div>
           <div class="mystery-bump__row">
-            <img class="mystery-bump__img" src="${mbProd.images[0]}" alt="Mystery Box">
+            <img class="mystery-bump__img" src="${otherProd.images[0]}" alt="">
             <div>
-              <div style="font-size:13px;font-weight:900;line-height:1.25;">${t("mystery_upsell_title")}</div>
+              <div style="font-size:13px;font-weight:900;line-height:1.25;">${otherProd.title[currentLang]}</div>
               <div style="font-size:11.5px;color:#334155;">${t("mystery_upsell_desc")}</div>
             </div>
           </div>
-          <button type="button" class="mystery-bump__btn" onclick="addToCart(${CFG.mysteryBoxVariantId}, 1, false)">
-            ${t("mystery_upsell_btn")} (${formatValue(getProductPrice(mbProd))})
+          <button type="button" class="mystery-bump__btn" onclick="addToCart(${otherProd.variantId}, 1, false)">
+            ${t("mystery_upsell_btn")} (${formatValue(getProductPrice(otherProd))})
           </button>
         </div>
       `
@@ -1218,36 +1217,6 @@
             local.pricePLN = livePrice;
             local.priceEUR = Number((livePrice / 4.25).toFixed(2));
           }
-          updated = true;
-        } else {
-          const livePrice = parseFloat(rv.price) || 99.9;
-          const liveComp = parseFloat(rv.compare_at_price) || Number((livePrice * 1.35).toFixed(2));
-          PRODUCTS.unshift({
-            id: rp.id,
-            variantId: rv.id,
-            shopifyVariantId: rv.id,
-            handle: rp.handle,
-            category: ["home", "pets"],
-            isMysteryBox: false,
-            pricePLN: livePrice,
-            comparePLN: liveComp,
-            priceEUR: Number((livePrice / 4.25).toFixed(2)),
-            compareEUR: Number((liveComp / 4.25).toFixed(2)),
-            rating: "4.9",
-            reviewsCount: 128,
-            badgePL: "NOWOŚĆ DOMIVIO 🔥",
-            badgeEN: "NEW IN DOMIVIO 🔥",
-            images: (rp.images || []).map((im) => im.src),
-            title: { pl: rp.title, en: rp.title },
-            shortDesc: {
-              pl: (rp.body_html || "").replace(/<[^>]+>/g, "").slice(0, 140),
-              en: (rp.body_html || "").replace(/<[^>]+>/g, "").slice(0, 140)
-            },
-            bullets: {
-              pl: ["🚚 Natychmiastowa wysyłka w 24h (InPost Paczkomat / Kurier DPD)"],
-              en: ["🚚 Fast 24h dispatch from our European warehouse"]
-            }
-          });
           updated = true;
         }
       });
