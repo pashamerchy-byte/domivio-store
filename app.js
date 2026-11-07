@@ -174,7 +174,7 @@
         const savePct = totalComp ? Math.round(((totalComp - totalPrice) / totalComp) * 100) : 0;
         const badgeText = p.isMysteryBox
           ? currentLang === "en" ? "Best Seller" : "Bestseller"
-          : currentLang === "en" ? "Best Seller" : "Bestseller";
+          : currentLang === "en" ? "Educational Kids Game" : "Gra Rozwijająca dla Dzieci";
         const activeImg = (p.images && p.images[imgIdx]) || p.images[0];
         const maxDots = Math.min((p.images || []).length, 4);
 
