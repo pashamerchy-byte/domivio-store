@@ -170,6 +170,17 @@
                 <span class="p-card__price">${formatValue(price)}</span>
                 ${comp ? `<span class="p-card__old">${formatValue(comp)}</span>` : ""}
               </div>
+              <div style="margin:6px 0 10px;font-size:11.5px;font-weight:800;color:${p.pricePLN >= 99 ? "#15803D" : "#475569"};background:${p.pricePLN >= 99 ? "#DCFCE7" : "#F1F5F9"};border:1.5px solid ${p.pricePLN >= 99 ? "#16A34A" : "#CBD5E1"};border-radius:6px;padding:4px 8px;display:inline-flex;align-items:center;gap:5px;width:fit-content;">
+                🚚 ${
+                  currentLang === "pl"
+                    ? p.pricePLN >= 99
+                      ? "DARMOWA DOSTAWA (OD 99 ZŁ) ✓"
+                      : "Darmowa dostawa od 99 zł"
+                    : p.pricePLN >= 99
+                    ? "FREE SHIPPING (FROM 99 PLN) ✓"
+                    : "Free shipping from 99 PLN"
+                }
+              </div>
               <div class="p-card__actions">
                 <button type="button" class="p-card__atc" onclick="addToCart(${p.variantId}, 1, true)">
                   🛒 ${t("btn_add_to_cart")}
@@ -1183,7 +1194,11 @@
           (typeof rp.tags === "string" && rp.tags.toLowerCase().includes("domivio")) ||
           String(rp.vendor || "").toLowerCase() === "domivio";
 
-        if (!isDomivioTagged && !String(rp.handle || "").includes("montessori")) {
+        if (
+          !isDomivioTagged &&
+          !String(rp.handle || "").includes("montessori") &&
+          !String(rp.handle || "").includes("krysztal")
+        ) {
           return; // Keep DOMIVIO products & prices completely independent from Aeterna!
         }
 
@@ -1191,7 +1206,8 @@
           (p) =>
             p.handle === rp.handle ||
             p.id === rp.id ||
-            (String(p.handle || "").includes("montessori") && String(rp.handle || "").includes("montessori"))
+            (String(p.handle || "").includes("montessori") && String(rp.handle || "").includes("montessori")) ||
+            (String(p.handle || "").includes("krysztal") && String(rp.handle || "").includes("krysztal"))
         );
         if (local) {
           local.id = rp.id;
