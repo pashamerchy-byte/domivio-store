@@ -642,6 +642,7 @@
     } else {
       params.set("locale", "pl");
     }
+    params.set("attributes[Sklep]", "DOMIVIO");
 
     const checkoutHost = CFG.myshopifyDomain || CFG.shopDomain;
     const checkoutUrl = `https://${checkoutHost}/cart/${pairs}?${params.toString()}`;
@@ -1177,6 +1178,15 @@
       remoteProducts.forEach((rp) => {
         if (!rp.variants || !rp.variants.length) return;
         const rv = rp.variants[0];
+        const isDomivioTagged =
+          (Array.isArray(rp.tags) && rp.tags.some((t) => String(t).toLowerCase().includes("domivio"))) ||
+          (typeof rp.tags === "string" && rp.tags.toLowerCase().includes("domivio")) ||
+          String(rp.vendor || "").toLowerCase() === "domivio";
+
+        if (!isDomivioTagged && rp.handle !== "drewniana-tablica-sensoryczna-montessori-19-led") {
+          return; // Keep DOMIVIO products & prices completely independent from Aeterna!
+        }
+
         const local = PRODUCTS.find((p) => p.handle === rp.handle || p.id === rp.id);
         if (local) {
           local.id = rp.id;
@@ -1188,7 +1198,7 @@
             local.priceEUR = Number((livePrice / 4.25).toFixed(2));
           }
           updated = true;
-        } else if (Array.isArray(rp.tags) && rp.tags.some((t) => String(t).toLowerCase().includes("domivio"))) {
+        } else {
           const livePrice = parseFloat(rv.price) || 99.9;
           const liveComp = parseFloat(rv.compare_at_price) || Number((livePrice * 1.35).toFixed(2));
           PRODUCTS.unshift({
