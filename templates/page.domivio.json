@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "main": {
+      "type": "domivio-storefront",
+      "settings": {}
+    }
+  },
+  "order": [
+    "main"
+  ]
+}
