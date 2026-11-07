@@ -61,25 +61,25 @@
         "type": "text",
         "id": "hero_badge",
         "label": "Naglowek Hero Badge",
-        "default": "HIT TYGODNIA - LIMITOWANA PULA 50 SZTUK"
+        "default": "\u2728 HIT TIKTOK & INSTAGRAM \u00b7 DARMOWA DOSTAWA OD 99 Z\u0141"
       },
       {
         "type": "textarea",
         "id": "hero_title",
         "label": "Tytul glowny Hero",
-        "default": "MEGA MYSTERY BOX DOMIVIO - 4 PRODUKTY ZA ULAMEK CENY!"
+        "default": "KRYSZTA\u0141OWA LAMPKA NOCNA PROJEKTOR RGB 3D \u2014 16 KOLOR\u00d3W Z PILOTEM!"
       },
       {
         "type": "textarea",
         "id": "hero_subtitle",
         "label": "Podtytul Hero",
-        "default": "Odkryj inteligentne gadzety do domu, kuchni oraz dla dzieci i zwierzat."
+        "default": "Zamie\u0144 sypialni\u0119, salon lub pok\u00f3j dziecka w magiczn\u0105 oaz\u0119! Designerska kryszta\u0142owa kostka 3D za jedyne 129,00 z\u0142 + DARMOWA DOSTAWA (od 99 z\u0142)!"
       },
       {
         "type": "text",
         "id": "cat_title",
         "label": "Tytul katalogu",
-        "default": "INTELIGENTNE GADZETY DO DOMU, DLA ZWIERZAT I DZIECI"
+        "default": "NASZE FLAGOWE BESTSELLERY DOMIVIO\u2122"
       }
     ]
   }
