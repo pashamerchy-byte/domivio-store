@@ -1,102 +1,108 @@
 <div id="domivio-root-marker"></div>
 <style>
   :root {
-    --bg-cream: {{ section.settings.bg_color }};
-    --yellow: {{ section.settings.accent_color }};
-    --black: {{ section.settings.text_color }};
+    --bg-page: {{ section.settings.bg_color | default: "#FFFFFF" }};
+    --accent-flame: {{ section.settings.accent_color | default: "#E85D22" }};
+    --text-main: {{ section.settings.text_color | default: "#000000" }};
   }
 </style>
 
 
-
-  <!-- Top Announcement Bar -->
+  <!-- Solo Stove Style Top Announcement Bar -->
   <div class="topbar">
     <div class="topbar__inner">
-      <div class="topbar__Left">
-        <span class="topbar__pill">FLASH SALE</span>
-        <span data-i18n="announcement_1">🔥 WYPRZEDAŻ DROPSHIPPING · RABATY DO -45% TYLKO DZIŚ</span>
-      </div>
-      <div class="topbar__center">
-        <span data-i18n="announcement_2">🚚 DARMOWA DOSTAWA OD 99 ZŁ (INPOST PACZKOMAT & KURIER DPD 24H)</span>
-      </div>
+      <span class="topbar__arrow">‹</span>
+      <a href="#catalog" class="topbar__link" data-i18n="announcement_1">
+        Darmowa dostawa od 99 zł (InPost Paczkomat &amp; DPD 24h) — Wyprzedaż kolekcji do -33% - Kup teraz
+      </a>
+      <span class="topbar__arrow">›</span>
     </div>
   </div>
 
-  <!-- Sticky Header -->
+  <!-- Solo Stove Minimalist Dark Header -->
   <header class="header">
     <div class="header__inner">
+      <div class="header__left">
+        <button type="button" class="header__icon-btn" onclick="document.getElementById('catalog').scrollIntoView({behavior:'smooth'})" aria-label="Menu">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="3" y1="8" x2="21" y2="8"/><line x1="3" y1="16" x2="21" y2="16"/></svg>
+        </button>
+        <button type="button" class="header__icon-btn" onclick="document.getElementById('catalog').scrollIntoView({behavior:'smooth'})" aria-label="Szukaj">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <nav class="nav">
+          <a href="#catalog" class="nav__link" onclick="filterCatalog('all')" data-i18n="nav_all">Nowości i Bestsellery</a>
+          <a href="#catalog" class="nav__link" onclick="filterCatalog('home')" data-i18n="nav_mystery">Oświetlenie 3D</a>
+          <a href="#catalog" class="nav__link" onclick="filterCatalog('pets')" data-i18n="nav_pets">Montessori LED</a>
+          <a href="#why-us" class="nav__link" data-i18n="nav_reviews">Innowacja</a>
+          <a href="#faq" class="nav__link" data-i18n="nav_faq">FAQ i Dostawa</a>
+        </nav>
+      </div>
+
+      <!-- Solo Stove Style Wordmark + Flame Mark -->
       <a href="#" class="brand">
-        <span class="brand__box">📦</span>
-        <span>DOMIVIO<span style="color:#D97706;">.</span></span>
-        <span class="brand__tag">HOME · PETS · KIDS</span>
+        <span>Domivio</span>
+        <span class="brand__flame">
+          <svg width="24" height="26" viewBox="0 0 24 26" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M13.5 1.2C13.5 1.2 18.8 6.4 18.8 12.6C18.8 16.5 16.2 19.8 12.6 20.8C14.1 18.9 14.3 15.8 12.2 13.4C12.2 13.4 12.8 16.9 9.8 18.7C7.6 20.0 6.8 22.4 7.7 24.4C4.2 22.7 2.2 19.1 2.2 14.8C2.2 8.9 7.2 5.4 9.6 1.8C9.6 1.8 9.2 5.4 11.4 7.1C12.1 4.6 13.5 1.2 13.5 1.2Z"/>
+          </svg>
+        </span>
       </a>
 
-      <nav class="nav">
-        <a href="#catalog" class="nav__link nav__link--highlight" onclick="filterCatalog('home')" data-i18n="nav_mystery">🎁 Mystery Box (-45%)</a>
-        <a href="#catalog" class="nav__link" onclick="filterCatalog('all')" data-i18n="nav_all">Wszystkie Hity</a>
-        <a href="#catalog" class="nav__link" onclick="filterCatalog('home')" data-i18n="nav_home">Dom i Kuchnia</a>
-        <a href="#catalog" class="nav__link" onclick="filterCatalog('pets')" data-i18n="nav_pets">Zwierzęta i Dzieci</a>
-        <a href="#why-us" class="nav__link" data-i18n="nav_reviews">Opinie (4.9★)</a>
-        <a href="#faq" class="nav__link" data-i18n="nav_faq">FAQ & Dostawa</a>
-      </nav>
-
       <div class="header__actions">
-        <!-- Bilingual Switcher PL / EN -->
         <div class="lang-switch" role="group" aria-label="Language switcher">
-          <button type="button" class="lang-switch__btn is-active" data-lang-btn="pl" onclick="setDomivioLang('pl')">🇵🇱 PL (ZŁ)</button>
-          <button type="button" class="lang-switch__btn" data-lang-btn="en" onclick="setDomivioLang('en')">🌍 EN (€)</button>
+          <button type="button" class="lang-switch__btn is-active" data-lang-btn="pl" onclick="setDomivioLang('pl')">PL</button>
+          <button type="button" class="lang-switch__btn" data-lang-btn="en" onclick="setDomivioLang('en')">EN</button>
         </div>
 
-        <button type="button" class="cart-trigger" onclick="openCartDrawer()">
-          <span>🛒</span>
+        <button type="button" class="header__icon-btn" onclick="openExitModal()" title="Odbierz -10%" aria-label="Rabat -10%">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z"/></svg>
+        </button>
+
+        <button type="button" class="cart-trigger" onclick="openCartDrawer()" aria-label="Koszyk">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
           <span class="cart-trigger__badge" id="headerCartCount">0</span>
         </button>
       </div>
     </div>
   </header>
 
-  <!-- Hero Flagship Mystery Box Section -->
+  <!-- Full-Bleed Dark Atmospheric Solo Stove Hero -->
   <section class="hero">
     <div class="container">
       <div class="hero__grid">
         <div>
-          <div class="hero__badge" data-i18n="hero_badge">⚡ HIT TYGODNIA · LIMITOWANA PULA 50 SZTUK</div>
-          <h1 class="hero__title" data-i18n="hero_title">MEGA MYSTERY BOX DOMIVIO™ — 4 PEŁNOWYMIAROWE PRODUKTY ZA UŁAMEK CENY!</h1>
+          <div class="hero__eyebrow" data-i18n="hero_badge">DO -33% NA WYBRANE PREZENTY · DARMOWA DOSTAWA OD 99 ZŁ</div>
+          <h1 class="hero__title" data-i18n="hero_title">Rozświetl Swój Dom i Wieczory</h1>
           <p class="hero__subtitle" data-i18n="hero_subtitle">
-            Odkryj inteligentne gadżety do domu, kuchni oraz pielęgnacji przestrzeni dla dzieci i zwierząt. Gwarantowana wartość rynkowa zestawu to minimum 189,00 zł — dziś odbierzesz go za jedyne 129,00 zł!
+            Zacznij tworzyć wyjątkowy klimat w sypialni, salonie i pokoju dziecka dzięki Kryształowej Lampce Projektorowi RGB 3D (129,00 zł) oraz Drewnianej Tablicy Sensorycznej Montessori LED (119,90 zł). Darmowa wysyłka od 99 zł w 24h.
           </p>
 
           <div class="hero__price-box">
             <span class="hero__price-now" id="heroPriceNow">129,00 zł</span>
             <span class="hero__price-old" id="heroPriceOld">189,00 zł</span>
-            <span class="hero__price-save">-32% + DOSTAWA 0 ZŁ</span>
+            <span class="hero__price-save">-32% · Dostawa 0 zł (od 99 zł)</span>
           </div>
 
           <div class="hero__ctas">
             <button type="button" class="btn-primary" onclick="addToCart(57828996284742, 1, true)" data-i18n="hero_cta_primary">
-              ODBIERZ MYSTERY BOX ZA 49,90 ZŁ →
+              Kup Lampkę Kryształ RGB — 129 zł
             </button>
             <a href="#catalog" class="btn-yellow" data-i18n="hero_cta_secondary">
-              ZOBACZ WSZYSTKIE GADŻETY
+              Zobacz Nowości i Bestsellery
             </a>
           </div>
 
-          <div class="hero__urgency">
-            <span class="hero__urgency-dot"></span>
-            <span data-i18n="hero_stock_left">Pozostało tylko 9 pudełek w cenie promocyjnej!</span>
-          </div>
-
           <div class="hero__trust-row">
-            <div class="hero__trust-item">⚡ <span data-i18n="hero_trust_1">Wysyłka w 24h z Polski</span></div>
-            <div class="hero__trust-item">📦 <span data-i18n="hero_trust_2">InPost Paczkomat & DPD</span></div>
-            <div class="hero__trust-item">🛡️ <span data-i18n="hero_trust_3">30 dni na darmowy zwrot</span></div>
+            <div class="hero__trust-item">✓ <span data-i18n="hero_trust_1">Darmowa dostawa od 99 zł</span></div>
+            <div class="hero__trust-item">✓ <span data-i18n="hero_trust_2">Wysyłka 24h InPost &amp; DPD</span></div>
+            <div class="hero__trust-item">✓ <span data-i18n="hero_trust_3">30 dni na darmowy zwrot</span></div>
           </div>
         </div>
 
         <div class="hero__card">
-          <div class="hero__card-ribbon">★★★★★ 4.9/5 (342)</div>
+          <div class="hero__card-ribbon">Bestseller · ★ 4.9 (342)</div>
           <div class="hero__img-wrap" onclick="openProductModal('krysztalowa-lampka-nocna-projektor-rgb-3d-dekoracyjna-kostka-led-z-pilotem-16-kolorow')" style="cursor:pointer;">
-            <img src="https://cdn.shopify.com/s/files/1/1032/7910/0230/files/img_1_80611bbd-a3f6-43ee-aa20-4ac914bef65b.jpg?v=1794089631" alt="Domivio Mystery Box" />
+            <img src="https://cdn.shopify.com/s/files/1/1032/7910/0230/files/img_1_80611bbd-a3f6-43ee-aa20-4ac914bef65b.jpg?v=1794089631" alt="Kryształowa Lampka Nocna Projektor RGB 3D" />
           </div>
           <ul class="hero__card-bullets" id="heroCardBullets"></ul>
         </div>
@@ -104,88 +110,98 @@
     </div>
   </section>
 
-  <!-- Trust & Benefits Strip -->
-  <section class="benefits-strip">
-    <div class="container">
-      <div class="benefits-strip__grid">
-        <div class="benefits-strip__item">
-          <div class="benefits-strip__icon">🚚</div>
-          <span data-i18n="trust_fast_ship">Natychmiastowa wysyłka 24h z magazynu w Polsce</span>
-        </div>
-        <div class="benefits-strip__item">
-          <div class="benefits-strip__icon">📍</div>
-          <span data-i18n="trust_locker">Wybór Paczkomatu InPost lub punktu DPD prosto w koszyku</span>
-        </div>
-        <div class="benefits-strip__item">
-          <div class="benefits-strip__icon">💳</div>
-          <span data-i18n="trust_payments">Bezpieczne płatności: BLIK, Przelewy24, Apple Pay, Google Pay, Karta</span>
-        </div>
-        <div class="benefits-strip__item">
-          <div class="benefits-strip__icon">⭐</div>
-          <span data-i18n="trust_guarantee">Gwarancja satysfakcji lub 100% zwrotu pieniędzy w 30 dni</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Main Product Catalog -->
+  <!-- Main Product Catalog ("Nowości i Bestsellery" — Solo Stove Layout) -->
   <section class="catalog" id="catalog">
     <div class="container">
       <div class="section-head">
-        <h2 class="section-head__title" data-i18n="cat_title">INTELIGENTNE GADŻETY DO DOMU, DLA ZWIERZĄT I DZIECI</h2>
-        <p class="section-head__sub" data-i18n="cat_subtitle">
-          Praktyczne rozwiązania, które oszczędzają Twój czas każdego dnia — od zgrzewarek próżniowych po zbieracze sierści i zestawy niespodzianki.
-        </p>
-      </div>
+        <div>
+          <h2 class="section-head__title" data-i18n="cat_title">Nowości i Bestsellery</h2>
+          <p class="section-head__sub" data-i18n="cat_subtitle">
+            Każde zamówienie od 99 zł wysyłamy z darmową dostawą 24h przez Paczkomat InPost lub kuriera DPD.
+          </p>
+        </div>
 
-      <div class="filters">
-        <button type="button" class="filter-btn is-active" data-filter-cat="all" onclick="filterCatalog('all')" data-i18n="filter_all">Wszystkie produkty (2)</button>
-        <button type="button" class="filter-btn" data-filter-cat="home" onclick="filterCatalog('home')" data-i18n="filter_home">✨ Lampka Kryształ RGB 3D</button>
-        <button type="button" class="filter-btn" data-filter-cat="pets" onclick="filterCatalog('pets')" data-i18n="filter_pets">👶 Tablica Montessori 19 LED</button>
+        <div class="filters">
+          <button type="button" class="filter-btn is-active" data-filter-cat="all" onclick="filterCatalog('all')" data-i18n="filter_all">Wszystkie (2)</button>
+          <button type="button" class="filter-btn" data-filter-cat="home" onclick="filterCatalog('home')" data-i18n="filter_home">Lampka Kryształ RGB 3D</button>
+          <button type="button" class="filter-btn" data-filter-cat="pets" onclick="filterCatalog('pets')" data-i18n="filter_pets">Tablica Montessori 19 LED</button>
+        </div>
       </div>
 
       <div class="product-grid" id="productGrid"></div>
     </div>
   </section>
 
-  <!-- Why Us / Social Proof Section -->
-  <section class="why-section" id="why-us">
+  <!-- Solo Stove "Shop By Category" ("Kupuj według kategorii") -->
+  <section class="category-tiles">
     <div class="container">
       <div class="section-head">
-        <div style="font-size:22px;color:#D97706;font-weight:900;margin-bottom:6px;">★★★★★ 4.9 / 5.0</div>
-        <h2 class="section-head__title" data-i18n="why_title">DLACZEGO PONAD 14 000 KLIENTÓW WYBRAŁO NASZE GADŻETY?</h2>
+        <h2 class="section-head__title">Kupuj według kategorii</h2>
       </div>
-
-      <div class="why-grid">
-        <div class="why-card">
-          <div class="why-card__icon">🏠🐾👶</div>
-          <h3 class="why-card__title" data-i18n="why_1_t">Dom, Dzieci & Zwierzęta w 1 Miejscu</h3>
-          <p data-i18n="why_1_d">Selekcjonujemy wyłącznie sprawdzone, bezpieczne produkty, które realnie ułatwiają codzienne życie z dziećmi i pupilami.</p>
+      <div class="category-tiles__grid">
+        <div class="cat-tile" onclick="openProductModal('krysztalowa-lampka-nocna-projektor-rgb-3d-dekoracyjna-kostka-led-z-pilotem-16-kolorow', 1)">
+          <img class="cat-tile__img" src="https://cdn.shopify.com/s/files/1/1032/7910/0230/files/img_1_80611bbd-a3f6-43ee-aa20-4ac914bef65b.jpg?v=1794089631" alt="Oświetlenie Kryształowe RGB 3D" />
+          <div class="cat-tile__title">Oświetlenie Kryształowe RGB 3D</div>
         </div>
-        <div class="why-card">
-          <div class="why-card__icon">⚡📦</div>
-          <h3 class="why-card__title" data-i18n="why_2_t">Wysyłka 24h z Magazynu w Polsce</h3>
-          <p data-i18n="why_2_d">Zero czekania tygodniami na paczki z zagranicy. Zamówienia realizujemy błyskawicznie przez InPost Paczkomat oraz kuriera DPD.</p>
+        <div class="cat-tile" onclick="openProductModal('drewniana-tablica-sensoryczna-montessori-busy-board-10-przelacznikow-19-diod-led', 1)">
+          <img class="cat-tile__img" src="https://cdn.shopify.com/s/files/1/1032/7910/0230/files/img_1.jpg?v=1794087648" alt="Tablice Sensoryczne Montessori" />
+          <div class="cat-tile__title">Tablice Sensoryczne Montessori</div>
         </div>
-        <div class="why-card">
-          <div class="why-card__icon">🔒💳</div>
-          <h3 class="why-card__title" data-i18n="why_3_t">Bezpieczna Kasa Shopify & BLIK</h3>
-          <p data-i18n="why_3_d">Płacisz wygodnie przez BLIK, Przelewy24, Apple Pay lub kartę, a wybrane w koszyku dane Paczkomatu przenoszą się automatycznie.</p>
+        <div class="cat-tile" onclick="openProductModal('krysztalowa-lampka-nocna-projektor-rgb-3d-dekoracyjna-kostka-led-z-pilotem-16-kolorow', 2)">
+          <img class="cat-tile__img" src="https://cdn.shopify.com/s/files/1/1032/7910/0230/files/img_2.jpg?v=1794089635" alt="Zestawy Prezentowe (-10% / -15%)" />
+          <div class="cat-tile__title">Zestawy Prezentowe (-15%)</div>
+        </div>
+        <div class="cat-tile" onclick="document.getElementById('catalog').scrollIntoView({behavior:'smooth'})">
+          <img class="cat-tile__img" src="https://cdn.shopify.com/s/files/1/1032/7910/0230/files/studio_1.jpg?v=1794087654" alt="Bestsellery z Dostawą 0 zł" />
+          <div class="cat-tile__title">Bestsellery z Dostawą od 99 zł</div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- FAQ Section -->
+  <!-- Solo Stove Full-Bleed Gift Guide Banner -->
+  <section class="editorial-banner">
+    <div class="container">
+      <h2 class="editorial-banner__title">Prezent, Który Tworzy Niezapomniany Klimat</h2>
+      <p class="editorial-banner__sub">
+        Od hipnotyzującej wodnej zorzy 3D RGB w sypialni po kreatywną zabawę bez ekranu z drewnianą tablicą Montessori 19 LED. Zamów dzisiaj z darmową dostawą od 99 zł.
+      </p>
+      <a href="#catalog" class="btn-primary">Zobacz Bestsellery</a>
+    </div>
+  </section>
+
+  <!-- Solo Stove "The Innovation Behind" Split Section -->
+  <section class="innovation-split" id="why-us">
+    <div class="container">
+      <div class="innovation-split__grid">
+        <div>
+          <div class="innovation-split__eyebrow">Niezrównany Design &amp; Technologia Domivio</div>
+          <h2 class="innovation-split__title" data-i18n="why_title">Innowacja, Która Tworzy Klimat</h2>
+          <p class="innovation-split__desc">
+            Szlifowany akrylowy kryształ 3D rozszczepia światło LED RGB w 16 odcieniach, tworząc na ścianach i suficie kojący efekt zorzy wodnej sterowany pilotem i dotykiem. Z kolei ręcznie szlifowana tablica Montessori z 10 przełącznikami i 19 diodami LED rozwija motorykę małą i koncentrację dziecka od 1. roku życia.
+          </p>
+          <button type="button" class="btn-yellow" onclick="openProductModal('krysztalowa-lampka-nocna-projektor-rgb-3d-dekoracyjna-kostka-led-z-pilotem-16-kolorow', 1)">
+            Poznaj Szczegóły i Pakiety
+          </button>
+        </div>
+        <div class="innovation-split__visual">
+          <img src="https://cdn.shopify.com/s/files/1/1032/7910/0230/files/img_3.jpg?v=1794089639" alt="Projekcja RGB 3D" />
+          <img src="https://cdn.shopify.com/s/files/1/1032/7910/0230/files/studio_2.jpg?v=1794087660" alt="Tablica Sensoryczna Montessori LED" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Minimalist Solo Stove FAQ Section -->
   <section class="faq-section" id="faq">
     <div class="container">
       <div class="section-head">
-        <h2 class="section-head__title" data-i18n="faq_title">NAJCZĘŚCIEJ ZADAWANE PYTANIA (FAQ)</h2>
+        <h2 class="section-head__title" data-i18n="faq_title">Najczęściej Zadawane Pytania</h2>
       </div>
 
       <div class="faq-list">
         <details class="faq-item" open>
-          <summary data-i18n="faq_q1">Co dokładnie znajduje się w Mystery Boxie za 129,00 zł?</summary>
+          <summary data-i18n="faq_q1">Czy dostawa naprawdę jest darmowa od 99 zł?</summary>
           <p data-i18n="faq_a1"></p>
         </details>
         <details class="faq-item">
@@ -204,14 +220,104 @@
     </div>
   </section>
 
-  <!-- Footer -->
-  <footer class="footer">
+  <!-- Solo Stove Pre-Footer Split ("Stay In The Know" + 2x2 Minimalist Trust Grid) -->
+  <section class="prefooter">
     <div class="container">
-      <div style="font-size:20px;font-weight:900;color:#FFD600;margin-bottom:8px;">DOMIVIO™</div>
-      <p style="margin-bottom:12px;">Smart Gadgets for Home, Pets & Kids · Powered by Shopify Checkout · InPost Paczkomat & DPD</p>
-      <p style="font-size:12px;opacity:0.75;">© 2026 Domivio Storefront · Connected to Shopify Store (1tvnzn-zf.myshopify.com)</p>
+      <div class="prefooter__grid">
+        <div class="prefooter__left">
+          <h2 class="prefooter__title">Bądź Na<br/>Bieżąco</h2>
+          <p class="prefooter__sub">
+            Dołącz do społeczności Domivio i odbierz ekskluzywny rabat -10% na pierwsze zamówienie oraz dostęp do premier.
+          </p>
+          <div class="prefooter__form" onclick="openExitModal()" style="cursor:pointer;">
+            <input type="email" class="prefooter__input" placeholder="Wpisz adres e-mail" readonly style="cursor:pointer;" />
+            <button type="button" class="prefooter__submit">
+              <span>Zapisz się</span>
+              <span>→</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="prefooter__trust-grid">
+          <div>
+            <div class="trust-cell__icon">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            </div>
+            <div class="trust-cell__title">Darmowa Dostawa od 99 zł</div>
+            <div class="trust-cell__desc">Bezpłatna wysyłka w 24h do Paczkomatów InPost i kurierem DPD dla zamówień od 99 zł.</div>
+          </div>
+
+          <div>
+            <div class="trust-cell__icon">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+            </div>
+            <div class="trust-cell__title">Wiodąca Gwarancja Jakości</div>
+            <div class="trust-cell__desc">Stworzone, by służyć latami. Certyfikowane bezpieczeństwo CE / EN71 i pełne wsparcie.</div>
+          </div>
+
+          <div>
+            <div class="trust-cell__icon">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+            </div>
+            <div class="trust-cell__title">30 Dni na Zwrot</div>
+            <div class="trust-cell__desc">Jeśli nie będziesz w 100% zadowolony, masz pełne 30 dni na bezproblemowy zwrot.</div>
+          </div>
+
+          <div>
+            <div class="trust-cell__icon">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            </div>
+            <div class="trust-cell__title">Elastyczne Płatności</div>
+            <div class="trust-cell__desc">Kup teraz i zapłać wygodnie przez BLIK, Przelewy24, Apple Pay, Google Pay lub kartę.</div>
+          </div>
+        </div>
+      </div>
     </div>
-  </footer>
+  </section>
+
+  <!-- Solo Stove Rounded-Card Dark Photo Footer -->
+  <div class="footer-wrap">
+    <footer class="footer">
+      <div class="footer__grid">
+        <div>
+          <div class="footer__col-title">Kontakt</div>
+          <ul class="footer__links">
+            <li><a href="#faq">Skontaktuj się z nami</a></li>
+            <li><a href="#faq">Gwarancja i Reklamacje</a></li>
+            <li><a href="#catalog">Status zamówienia</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer__col-title">Pomoc</div>
+          <ul class="footer__links">
+            <li><a href="#faq">Najczęstsze pytania (FAQ)</a></li>
+            <li><a href="#faq">Dostawa InPost &amp; DPD (od 99 zł)</a></li>
+            <li><a href="#faq">Zwroty w 30 dni</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer__col-title">O Domivio</div>
+          <ul class="footer__links">
+            <li><a href="#why-us">Nasza technologia</a></li>
+            <li><a href="#catalog">Bestsellery Domivio</a></li>
+            <li><a href="#catalog">Zestawy prezentowe</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer__col-title">Społeczność</div>
+          <ul class="footer__links">
+            <li><a href="https://www.tiktok.com/@domivio.official" target="_blank" rel="noopener">TikTok @domivio.official</a></li>
+            <li><a href="#catalog" onclick="openExitModal()">Newsletter (-10%)</a></li>
+          </ul>
+        </div>
+        <div class="footer__right">
+          <div>Darmowa dostawa od 99 zł · Wysyłka 24h z Polski</div>
+          <div>Regulamin i Polityka Prywatności (RODO)</div>
+          <div>© Domivio, 2026 · domivio-official.com</div>
+        </div>
+      </div>
+    </footer>
+  </div>
 
   <!-- Product Detail & Bundle Modal -->
   <div class="pdp-modal" id="pdpModal" role="dialog" aria-modal="true">
@@ -227,7 +333,7 @@
     <div class="cart-drawer__backdrop" onclick="closeCartDrawer()"></div>
     <div class="cart-drawer__panel">
       <div class="cart-drawer__header">
-        <div class="cart-drawer__title" data-i18n="cart_title">TWÓJ KOSZYK</div>
+        <div class="cart-drawer__title" data-i18n="cart_title">Twój koszyk</div>
         <button type="button" class="cart-drawer__close" onclick="closeCartDrawer()">✕</button>
       </div>
 
@@ -247,7 +353,7 @@
       <div class="cart-drawer__footer" id="cartDrawerFooter">
         <div class="discount-row">
           <input type="text" id="cartDiscountInput" data-i18n-placeholder="discount_placeholder" placeholder="Kod rabatowy (np. DOMIVIO10)" />
-          <button type="button" onclick="applyManualDiscount()" data-i18n="discount_apply">ZASTOSUJ</button>
+          <button type="button" onclick="applyManualDiscount()" data-i18n="discount_apply">Zastosuj</button>
         </div>
 
         <div class="cart-summary-lines">
@@ -255,7 +361,7 @@
             <span data-i18n="cart_subtotal">Wartość produktów:</span>
             <span id="summarySubtotal">0,00 zł</span>
           </div>
-          <div class="cart-summary-line" id="summaryDiscountRow" style="display:none;color:#16A34A;">
+          <div class="cart-summary-line" id="summaryDiscountRow" style="display:none;color:#15803D;">
             <span data-i18n="cart_discount_row">Rabat (-10%):</span>
             <span id="summaryDiscountVal">-0,00 zł</span>
           </div>
@@ -264,15 +370,15 @@
             <span id="summaryShipping"></span>
           </div>
           <div class="cart-summary-line cart-summary-line--total">
-            <span data-i18n="cart_total">DO ZAPŁATY:</span>
+            <span data-i18n="cart_total">Do zapłaty:</span>
             <span id="summaryTotal">0,00 zł</span>
           </div>
         </div>
 
         <button type="button" class="checkout-btn" onclick="proceedToShopifyCheckout()" data-i18n="cart_checkout_btn">
-          PRZEJDŹ DO BEZPIECZNEJ PŁATNOŚCI (BLIK / KARTA) →
+          Przejdź do bezpiecznej płatności →
         </button>
-        <p style="font-size:11px;color:#64748B;text-align:center;margin-top:8px;" data-i18n="cart_checkout_note"></p>
+        <p style="font-size:11px;color:#666666;text-align:center;margin-top:8px;" data-i18n="cart_checkout_note"></p>
       </div>
     </div>
   </div>
@@ -280,7 +386,7 @@
   <!-- Floating Welcome -10% Discount Pill -->
   <div class="welcome-pill" id="welcomePill">
     <button type="button" class="welcome-pill__btn" id="welcomePillLabel" onclick="openExitModal()">
-      🎁 ODBIERZ -10% NA 1. ZAMÓWIENIE
+      Odbierz -10% na 1. zamówienie
     </button>
     <button type="button" class="welcome-pill__close" onclick="dismissWelcomePill()" aria-label="Close">✕</button>
   </div>
@@ -290,13 +396,13 @@
     <div class="exit-modal__backdrop" onclick="closeExitModal()"></div>
     <div class="exit-modal__dialog">
       <button type="button" class="pdp-modal__close" onclick="closeExitModal()">✕</button>
-      <div style="display:inline-block;background:#FFD600;border:1.5px solid #111;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:900;margin-bottom:10px;" data-i18n="exit_eyebrow">
-        OFERTA POWITALNA DOMIVIO · TYLKO TERAZ
+      <div style="display:inline-block;background:#E85D22;color:#FFFFFF;padding:4px 12px;border-radius:4px;font-size:11px;font-weight:600;margin-bottom:12px;" data-i18n="exit_eyebrow">
+        Oferta powitalna Domivio
       </div>
 
       <div id="exitStepOffer">
-        <h2 style="font-size:22px;font-weight:900;margin-bottom:8px;" data-i18n="exit_title">ZAPISZ SIĘ I ODBIERZ -10% NA CAŁE ZAMÓWIENIE!</h2>
-        <p style="font-size:13.5px;color:#475569;margin-bottom:16px;" data-i18n="exit_desc"></p>
+        <h2 style="font-size:24px;font-weight:600;letter-spacing:-0.02em;margin-bottom:8px;" data-i18n="exit_title">Odbierz -10% na pierwsze zamówienie</h2>
+        <p style="font-size:13.5px;color:#555555;margin-bottom:16px;" data-i18n="exit_desc"></p>
 
         <form onsubmit="return submitExitDiscountForm(event)" novalidate>
           <input
@@ -304,37 +410,37 @@
             id="exitEmailInput"
             class="exit-modal__input"
             data-i18n-placeholder="exit_email_placeholder"
-            placeholder="Wpisz swój adres e-mail (np. anna@domena.pl)..."
+            placeholder="Adres e-mail"
           />
 
           <label class="rodo-label" id="exitRodoLabel">
-            <input type="checkbox" id="exitRodoCheckbox" style="margin-top:3px;width:16px;height:16px;accent-color:#111111;" />
+            <input type="checkbox" id="exitRodoCheckbox" style="margin-top:3px;width:16px;height:16px;accent-color:#141414;" />
             <div>
-              <div class="rodo-badge" data-i18n="exit_rodo_badge">WYMAGANA ZGODA — ZAZNACZ TUTAJ</div>
+              <div class="rodo-badge" data-i18n="exit_rodo_badge">Wymagana zgoda — zaznacz tutaj</div>
               <div data-i18n="exit_rodo_text">Wyrażam zgodę na otrzymywanie newslettera oraz ofert promocyjnych zgodnie z Polityką Prywatności (RODO).</div>
             </div>
           </label>
 
           <button type="submit" class="btn-yellow" style="width:100%;margin-bottom:10px;" data-i18n="exit_cta">
-            ZAPISZ SIĘ I ODBLOKUJ RABAT -10% →
+            Kontynuuj i odbierz -10%
           </button>
         </form>
 
-        <button type="button" style="background:none;border:none;font-size:12px;color:#64748B;text-decoration:underline;" onclick="closeExitModal()" data-i18n="exit_skip">
-          Nie, dziękuję — wolę kupić w pełnej cenie
+        <button type="button" style="background:none;border:none;font-size:12px;color:#666666;text-decoration:underline;" onclick="closeExitModal()" data-i18n="exit_skip">
+          Nie, dziękuję — kontynuuj w pełnej cenie
         </button>
       </div>
 
       <div id="exitStepSuccess" style="display:none;">
-        <div style="width:52px;height:52px;border-radius:50%;background:#16A34A;color:#fff;font-size:26px;font-weight:900;display:inline-flex;align-items:center;justify-content:center;margin-bottom:12px;">✓</div>
-        <h2 style="font-size:22px;font-weight:900;margin-bottom:8px;" data-i18n="exit_success_title">TWÓJ RABAT -10% ZOSTAŁ ODBLOKOWANY!</h2>
-        <p style="font-size:13.5px;color:#475569;margin-bottom:14px;" data-i18n="exit_success_desc"></p>
-        <div style="background:#FEF9C3;border:2px dashed #111111;border-radius:10px;padding:12px;margin-bottom:16px;">
-          <div style="font-size:11px;font-weight:800;color:#475569;" data-i18n="exit_code_label">TWÓJ KOD RABATOWY:</div>
-          <div style="font-size:22px;font-weight:900;letter-spacing:0.06em;">DOMIVIO10</div>
+        <div style="width:52px;height:52px;border-radius:50%;background:#15803D;color:#fff;font-size:24px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;margin-bottom:12px;">✓</div>
+        <h2 style="font-size:22px;font-weight:600;margin-bottom:8px;" data-i18n="exit_success_title">Twój rabat -10% jest aktywny</h2>
+        <p style="font-size:13.5px;color:#555555;margin-bottom:14px;" data-i18n="exit_success_desc"></p>
+        <div style="background:#F6F6F6;border:1.5px dashed #141414;border-radius:10px;padding:12px;margin-bottom:16px;">
+          <div style="font-size:11px;font-weight:600;color:#666666;" data-i18n="exit_code_label">Twój kod rabatowy:</div>
+          <div style="font-size:22px;font-weight:700;letter-spacing:0.06em;">DOMIVIO10</div>
         </div>
         <button type="button" class="btn-yellow" style="width:100%;" onclick="closeExitModal()" data-i18n="exit_continue_btn">
-          WRÓĆ DO ZAKUPÓW Z RABATEM -10% →
+          Wróć do zakupów z rabatem -10%
         </button>
       </div>
     </div>
@@ -344,16 +450,16 @@
   <div class="sticky-bar">
     <div class="sticky-bar__inner">
       <div class="sticky-bar__prod">
-        <img src="https://cdn.shopify.com/s/files/1/1032/7910/0230/files/img_1_80611bbd-a3f6-43ee-aa20-4ac914bef65b.jpg?v=1794089631" alt="Mystery Box" />
+        <img src="https://cdn.shopify.com/s/files/1/1032/7910/0230/files/img_1_80611bbd-a3f6-43ee-aa20-4ac914bef65b.jpg?v=1794089631" alt="Kryształowa Lampka RGB 3D" />
         <div>
-          <div style="font-size:13.5px;font-weight:900;" id="stickyBarTitle">Kryształowa Lampka Nocna Projektor RGB 3D (16 Kolorów)</div>
-          <div class="sticky-bar__prod-desc" style="font-size:12px;color:#16A34A;font-weight:800;">● <span data-i18n="stock_in_stock">W magazynie — wysyłka dzisiaj (InPost / DPD)</span></div>
+          <div style="font-size:14px;font-weight:600;" id="stickyBarTitle">Kryształowa Lampka Nocna Projektor RGB 3D (16 Kolorów)</div>
+          <div class="sticky-bar__prod-desc" style="font-size:12px;color:#15803D;font-weight:500;">● <span data-i18n="stock_in_stock">W magazynie — darmowa wysyłka dzisiaj (od 99 zł)</span></div>
         </div>
       </div>
-      <div style="display:flex;align-items:center;gap:12px;">
-        <span style="font-size:20px;font-weight:900;" id="stickyBarPrice">129,00 zł</span>
-        <button type="button" class="btn-yellow" style="padding:10px 18px;font-size:13px;" onclick="addToCart(57828996284742, 1, true)">
-          🛒 <span data-i18n="btn_add_to_cart">DODAJ DO KOSZYKA</span>
+      <div style="display:flex;align-items:center;gap:14px;">
+        <span style="font-size:18px;font-weight:600;" id="stickyBarPrice">129,00 zł</span>
+        <button type="button" class="btn-yellow" style="padding:10px 22px;font-size:13px;" onclick="addToCart(57828996284742, 1, true)">
+          <span data-i18n="btn_add_to_cart">Dodaj do koszyka</span>
         </button>
       </div>
     </div>
@@ -365,28 +471,22 @@
   </div>
 
   
-
 <script src="{{ 'domivio-products.js' | asset_url }}"></script>
 <script>
   window.DOMIVIO_CONFIG.freeShippingPLN = {{ section.settings.free_shipping_pln | default: 99 }};
-  window.DOMIVIO_CONFIG.discountCode = {{ section.settings.discount_code | json }};
-  window.DOMIVIO_I18N.pl.hero_badge = {{ section.settings.hero_badge | json }};
-  window.DOMIVIO_I18N.pl.hero_title = {{ section.settings.hero_title | json }};
-  window.DOMIVIO_I18N.pl.hero_subtitle = {{ section.settings.hero_subtitle | json }};
-  window.DOMIVIO_I18N.pl.cat_title = {{ section.settings.cat_title | json }};
-
-  // Rewrite local montessori asset paths to Shopify CDN asset_url
-  window.DOMIVIO_PRODUCTS.forEach(function(p) {
-    if (p.handle === 'drewniana-tablica-sensoryczna-montessori-19-led') {
-      p.images = [
-        "{{ 'montessori_img_1.jpg' | asset_url }}",
-        "{{ 'montessori_studio_1.jpg' | asset_url }}",
-        "{{ 'montessori_studio_2.jpg' | asset_url }}",
-        "{{ 'montessori_studio_3.jpg' | asset_url }}",
-        "{{ 'montessori_img_2.jpg' | asset_url }}"
-      ];
-    }
-  });
+  window.DOMIVIO_CONFIG.discountCode = {{ section.settings.discount_code | default: "DOMIVIO10" | json }};
+  {% if section.settings.hero_badge != blank %}
+    window.DOMIVIO_I18N.pl.hero_badge = {{ section.settings.hero_badge | json }};
+  {% endif %}
+  {% if section.settings.hero_title != blank %}
+    window.DOMIVIO_I18N.pl.hero_title = {{ section.settings.hero_title | json }};
+  {% endif %}
+  {% if section.settings.hero_subtitle != blank %}
+    window.DOMIVIO_I18N.pl.hero_subtitle = {{ section.settings.hero_subtitle | json }};
+  {% endif %}
+  {% if section.settings.cat_title != blank %}
+    window.DOMIVIO_I18N.pl.cat_title = {{ section.settings.cat_title | json }};
+  {% endif %}
 
   {% if section.settings.domivio_collection != blank %}
     window.DOMIVIO_SHOPIFY_COLLECTION = [
@@ -403,19 +503,19 @@
           priceEUR: {{ product.selected_or_first_available_variant.price | divided_by: 425.0 | round: 2 }},
           compareEUR: {{ product.selected_or_first_available_variant.compare_at_price | default: product.selected_or_first_available_variant.price | divided_by: 425.0 | round: 2 }},
           rating: "4.9",
-          reviewsCount: 185,
-          badgePL: "BESTSELLER DOMIVIO 🔥",
-          badgeEN: "DOMIVIO BESTSELLER 🔥",
+          reviewsCount: 253,
+          badgePL: "Bestseller",
+          badgeEN: "Best Seller",
           images: [
-            {% for img in product.images limit: 5 %}
+            {% for img in product.images limit: 6 %}
               {{ img | image_url: width: 1200 | json }}{% unless forloop.last %},{% endunless %}
             {% endfor %}
           ],
           title: { pl: {{ product.title | json }}, en: {{ product.title | json }} },
           shortDesc: { pl: {{ product.description | strip_html | truncate: 150 | json }}, en: {{ product.description | strip_html | truncate: 150 | json }} },
           bullets: {
-            pl: ["🚚 Natychmiastowa wysyłka 24h (InPost Paczkomat & DPD)"],
-            en: ["🚚 Fast 24h dispatch (InPost & DPD)"]
+            pl: ["🚚 Darmowa dostawa od 99 zł (InPost Paczkomat & DPD 24h)"],
+            en: ["🚚 Free 24h shipping over 99 PLN (InPost & DPD)"]
           }
         }{% unless forloop.last %},{% endunless %}
       {% endfor %}
@@ -439,19 +539,19 @@
       "type": "color",
       "id": "bg_color",
       "label": "Kolor tla",
-      "default": "#FFFDF7"
+      "default": "#FFFFFF"
     },
     {
       "type": "color",
       "id": "accent_color",
       "label": "Kolor akcentu",
-      "default": "#FFD600"
+      "default": "#E85D22"
     },
     {
       "type": "color",
       "id": "text_color",
       "label": "Kolor tekstu",
-      "default": "#111111"
+      "default": "#000000"
     },
     {
       "type": "header",
@@ -482,25 +582,25 @@
       "type": "text",
       "id": "hero_badge",
       "label": "Naglowek Hero Badge",
-      "default": "\u2728 HIT TIKTOK & INSTAGRAM \u00b7 DARMOWA DOSTAWA OD 99 Z\u0141"
+      "default": "DO -33% NA WYBRANE PREZENTY · DARMOWA DOSTAWA OD 99 ZŁ"
     },
     {
       "type": "textarea",
       "id": "hero_title",
       "label": "Tytul glowny Hero",
-      "default": "KRYSZTA\u0141OWA LAMPKA NOCNA PROJEKTOR RGB 3D \u2014 16 KOLOR\u00d3W Z PILOTEM!"
+      "default": "Rozświetl Swój Dom i Wieczory"
     },
     {
       "type": "textarea",
       "id": "hero_subtitle",
       "label": "Podtytul Hero",
-      "default": "Zamie\u0144 sypialni\u0119, salon lub pok\u00f3j dziecka w magiczn\u0105 oaz\u0119! Designerska kryszta\u0142owa kostka 3D za jedyne 129,00 z\u0142 + DARMOWA DOSTAWA (od 99 z\u0142)!"
+      "default": "Zacznij tworzyć wyjątkowy klimat w sypialni, salonie i pokoju dziecka dzięki Kryształowej Lampce Projektorowi RGB 3D (129,00 zł) oraz Drewnianej Tablicy Sensorycznej Montessori LED (119,90 zł). Darmowa wysyłka od 99 zł w 24h."
     },
     {
       "type": "text",
       "id": "cat_title",
       "label": "Tytul katalogu",
-      "default": "NASZE FLAGOWE BESTSELLERY DOMIVIO\u2122"
+      "default": "Nowości i Bestsellery"
     }
   ],
   "presets": [
