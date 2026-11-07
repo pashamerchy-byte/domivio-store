@@ -137,6 +137,22 @@
     renderCatalog();
   };
 
+  // Track selected pack quantity and image index per product card (Solo Stove style)
+  const cardPackState = {};
+  const cardImgState = {};
+
+  window.selectCardPack = function (handle, qty, ev) {
+    if (ev) ev.stopPropagation();
+    cardPackState[handle] = qty;
+    renderCatalog();
+  };
+
+  window.selectCardImage = function (handle, idx, ev) {
+    if (ev) ev.stopPropagation();
+    cardImgState[handle] = idx;
+    renderCatalog();
+  };
+
   function renderCatalog() {
     const grid = document.getElementById("productGrid");
     if (!grid) return;
@@ -148,45 +164,74 @@
 
     grid.innerHTML = list
       .map((p) => {
-        const price = getProductPrice(p);
-        const comp = getProductCompare(p);
-        const savePct = comp ? Math.round(((comp - price) / comp) * 100) : 0;
-        const badgeText = currentLang === "en" ? p.badgeEN : p.badgePL;
+        const packQty = cardPackState[p.handle] || 1;
+        const imgIdx = cardImgState[p.handle] || 0;
+        const unitPrice = getProductPrice(p);
+        const unitComp = getProductCompare(p);
+        const discMult = packQty === 3 ? 0.85 : packQty === 2 ? 0.9 : 1;
+        const totalPrice = unitPrice * packQty * discMult;
+        const totalComp = unitComp ? unitComp * packQty : 0;
+        const savePct = totalComp ? Math.round(((totalComp - totalPrice) / totalComp) * 100) : 0;
+        const badgeText = p.isMysteryBox
+          ? currentLang === "en" ? "Best Seller" : "Bestseller"
+          : currentLang === "en" ? "Best Seller" : "Bestseller";
+        const activeImg = (p.images && p.images[imgIdx]) || p.images[0];
+        const maxDots = Math.min((p.images || []).length, 4);
+
+        const dotsHtml =
+          maxDots > 1
+            ? `<div class="p-card__dots-pill" onclick="event.stopPropagation()">
+                ${Array.from({ length: maxDots })
+                  .map(
+                    (_, idx) =>
+                      `<button type="button" class="p-card__dot ${idx === imgIdx ? "is-active" : ""}" onclick="selectCardImage('${p.handle}', ${idx}, event)" aria-label="Zdjęcie ${idx + 1}"></button>`
+                  )
+                  .join("")}
+              </div>`
+            : "";
 
         return `
-          <article class="p-card ${p.isMysteryBox ? "p-card--featured" : ""}">
-            <div class="p-card__badges">
-              <span class="p-card__badge">${badgeText}</span>
-              ${savePct > 0 ? `<span class="p-card__save">-${savePct}%</span>` : ""}
-            </div>
-            <div class="p-card__img-wrap" onclick="openProductModal('${p.handle}')">
-              <img src="${p.images[0]}" alt="${p.title[currentLang]}" loading="lazy">
+          <article class="p-card">
+            <div class="p-card__img-wrap" onclick="openProductModal('${p.handle}', ${packQty})">
+              <div class="p-card__badges">
+                <span class="p-card__badge">${badgeText}</span>
+                ${savePct > 0 ? `<span class="p-card__save">-${savePct}%</span>` : ""}
+              </div>
+              <img src="${activeImg}" alt="${p.title[currentLang]}" loading="lazy">
+              ${dotsHtml}
             </div>
             <div class="p-card__body">
-              <div class="p-card__rating">★★★★★ ${p.rating} <span>(${p.reviewsCount})</span></div>
-              <h3 class="p-card__title" onclick="openProductModal('${p.handle}')">${p.title[currentLang]}</h3>
+              <h3 class="p-card__title" onclick="openProductModal('${p.handle}', ${packQty})">${p.title[currentLang]}</h3>
               <p class="p-card__desc">${p.shortDesc[currentLang]}</p>
-              <div class="p-card__price-row">
-                <span class="p-card__price">${formatValue(price)}</span>
-                ${comp ? `<span class="p-card__old">${formatValue(comp)}</span>` : ""}
+              <div class="p-card__rating">
+                <span class="p-card__stars">★★★★★</span>
+                <span class="p-card__rev-count">${p.reviewsCount} ${currentLang === "en" ? "Reviews" : "Opinii"}</span>
               </div>
-              <div style="margin:6px 0 10px;font-size:11.5px;font-weight:800;color:${p.pricePLN >= 99 ? "#15803D" : "#475569"};background:${p.pricePLN >= 99 ? "#DCFCE7" : "#F1F5F9"};border:1.5px solid ${p.pricePLN >= 99 ? "#16A34A" : "#CBD5E1"};border-radius:6px;padding:4px 8px;display:inline-flex;align-items:center;gap:5px;width:fit-content;">
-                🚚 ${
-                  currentLang === "pl"
-                    ? p.pricePLN >= 99
-                      ? "DARMOWA DOSTAWA (OD 99 ZŁ) ✓"
-                      : "Darmowa dostawa od 99 zł"
-                    : p.pricePLN >= 99
-                    ? "FREE SHIPPING (FROM 99 PLN) ✓"
-                    : "Free shipping from 99 PLN"
-                }
-              </div>
-              <div class="p-card__actions">
-                <button type="button" class="p-card__atc" onclick="addToCart(${p.variantId}, 1, true)">
-                  🛒 ${t("btn_add_to_cart")}
+
+              <div class="p-card__variants">
+                <button type="button" class="p-card__pill ${packQty === 1 ? "is-active" : ""}" onclick="selectCardPack('${p.handle}', 1, event)">
+                  ${currentLang === "en" ? "1 pc · Standard" : "1 szt. · Standard"}
                 </button>
-                <button type="button" class="p-card__info-btn" onclick="openProductModal('${p.handle}')">
-                  📦 -15%
+                <button type="button" class="p-card__pill ${packQty === 2 ? "is-active" : ""}" onclick="selectCardPack('${p.handle}', 2, event)">
+                  ${currentLang === "en" ? "2 pcs (-10%)" : "2 szt. (-10%)"}
+                </button>
+                <button type="button" class="p-card__pill ${packQty === 3 ? "is-active" : ""}" onclick="selectCardPack('${p.handle}', 3, event)">
+                  ${currentLang === "en" ? "3 pcs (-15%)" : "3 szt. (-15%)"}
+                </button>
+                <span class="p-card__ship-pill">
+                  🚚 ${currentLang === "en" ? "Free shipping from 99 PLN ✓" : "Darmowa dostawa od 99 zł ✓"}
+                </span>
+              </div>
+
+              <div class="p-card__price-row">
+                <span class="p-card__price">${formatValue(totalPrice)}</span>
+                ${totalComp ? `<span class="p-card__old">${formatValue(totalComp)}</span>` : ""}
+              </div>
+
+              <div class="p-card__actions">
+                <button type="button" class="p-card__atc" onclick="addToCart(${p.variantId}, ${packQty}, true)">
+                  <span>${currentLang === "en" ? "Add to Cart" : "Dodaj do koszyka"}</span>
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
                 </button>
               </div>
             </div>
@@ -272,26 +317,26 @@
           ${thumbsHtml}
         </div>
         <div>
-          <div style="display:inline-block;background:#FFD600;border:1.5px solid #111;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:900;margin-bottom:8px;">
-            ${currentLang === "en" ? prod.badgeEN : prod.badgePL}
+          <div style="display:inline-block;background:#E85D22;color:#FFFFFF;padding:4px 10px;border-radius:4px;font-size:11.5px;font-weight:600;margin-bottom:10px;">
+            ${currentLang === "en" ? "Best Seller" : "Bestseller"}
           </div>
-          <h2 style="font-size:22px;font-weight:900;line-height:1.25;margin-bottom:8px;">${prod.title[currentLang]}</h2>
-          <div style="font-size:13px;font-weight:800;color:#D97706;margin-bottom:12px;">★★★★★ ${prod.rating} (${prod.reviewsCount})</div>
+          <h2 style="font-size:24px;font-weight:600;letter-spacing:-0.02em;line-height:1.25;margin-bottom:8px;color:#000000;">${prod.title[currentLang]}</h2>
+          <div style="font-size:13px;font-weight:600;color:#E85D22;margin-bottom:12px;">★★★★★ <span style="color:#666666;font-weight:400;">${prod.rating} (${prod.reviewsCount} ${currentLang === "en" ? "Reviews" : "Opinii"})</span></div>
           <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:14px;">
-            <span style="font-size:28px;font-weight:900;">${formatValue(activeTotal)}</span>
-            ${unitComp ? `<span style="font-size:16px;color:#94A3B8;text-decoration:line-through;font-weight:700;">${formatValue(unitComp * activePdpPackQty)}</span>` : ""}
+            <span style="font-size:26px;font-weight:600;color:#000000;">${formatValue(activeTotal)}</span>
+            ${unitComp ? `<span style="font-size:15px;color:#888888;text-decoration:line-through;font-weight:400;">${formatValue(unitComp * activePdpPackQty)}</span>` : ""}
           </div>
-          <p style="font-size:14px;color:#334155;margin-bottom:14px;">${prod.shortDesc[currentLang]}</p>
-          <ul style="list-style:none;display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600;margin-bottom:16px;">
+          <p style="font-size:14px;color:#333333;line-height:1.55;margin-bottom:14px;">${prod.shortDesc[currentLang]}</p>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:500;color:#222222;margin-bottom:16px;">
             ${prod.bullets[currentLang].map((b) => `<li>${b}</li>`).join("")}
           </ul>
           ${packsHtml}
           <button type="button" class="btn-yellow" style="width:100%;margin-bottom:12px;" onclick="addToCart(${prod.variantId}, ${activePdpPackQty}, true); closeProductModal();">
-            🛒 ${t("btn_add_to_cart")} — ${formatValue(activeTotal)}
+            ${t("btn_add_to_cart")} — ${formatValue(activeTotal)}
           </button>
-          <div style="background:#F8FAFC;border:1.5px solid #CBD5E1;border-radius:8px;padding:10px 12px;font-size:12px;display:flex;flex-direction:column;gap:4px;font-weight:700;">
-            <div style="color:#16A34A;">● ${t("stock_in_stock")}</div>
-            <div>🚚 ${t("trust_fast_ship")}</div>
+          <div style="background:#F7F7F7;border:1px solid #E5E5E5;border-radius:10px;padding:12px 14px;font-size:12.5px;display:flex;flex-direction:column;gap:5px;font-weight:500;color:#222222;">
+            <div style="color:#15803D;font-weight:600;">● ${t("stock_in_stock")}</div>
+            <div>🚚 ${t("trust_fast_ship")} (Darmowa dostawa od 99 zł)</div>
             <div>📦 ${t("trust_locker")}</div>
             <div>🔒 ${t("trust_payments")}</div>
           </div>
@@ -368,11 +413,9 @@
       if (!prod) return;
       const unit = getProductPrice(prod);
       let lineTotal = unit * item.qty;
-      // Bundle discount on non-mystery-box items if qty === 2 (-10%) or qty >= 3 (-15%)
-      if (!prod.isMysteryBox) {
-        if (item.qty === 2) lineTotal = lineTotal * 0.9;
-        else if (item.qty >= 3) lineTotal = lineTotal * 0.85;
-      }
+      // Bundle discount if qty === 2 (-10%) or qty >= 3 (-15%)
+      if (item.qty === 2) lineTotal = lineTotal * 0.9;
+      else if (item.qty >= 3) lineTotal = lineTotal * 0.85;
       subtotal += lineTotal;
       totalCount += item.qty;
     });
@@ -466,10 +509,10 @@
         let packBadge = "";
         if (item.qty === 2) {
           lineTotal *= 0.9;
-          packBadge = `<span style="background:#FFD600;padding:1px 5px;border-radius:4px;font-size:10px;font-weight:900;margin-left:6px;">-10% PAKIET</span>`;
+          packBadge = `<span style="background:#E85D22;color:#FFFFFF;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:600;margin-left:6px;">-10% PAKIET</span>`;
         } else if (item.qty >= 3) {
           lineTotal *= 0.85;
-          packBadge = `<span style="background:#FFD600;padding:1px 5px;border-radius:4px;font-size:10px;font-weight:900;margin-left:6px;">-15% PAKIET</span>`;
+          packBadge = `<span style="background:#E85D22;color:#FFFFFF;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:600;margin-left:6px;">-15% PAKIET</span>`;
         }
 
         return `
