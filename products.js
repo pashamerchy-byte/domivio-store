@@ -235,10 +235,10 @@ window.DOMIVIO_I18N = {
 
 window.DOMIVIO_PRODUCTS = [
   {
-    id: 11339990001001,
-    variantId: 9900001001,
-    shopifyVariantId: 55659739775313,
-    handle: "drewniana-tablica-sensoryczna-montessori-19-led",
+    id: 11342294548817,
+    variantId: 55718977995089,
+    shopifyVariantId: 55718977995089,
+    handle: "drewniana-tablica-sensoryczna-montessori-busy-board-10-przelacznikow-19-diod-led",
     category: ["pets", "home"],
     isMysteryBox: false,
     pricePLN: 119.90,
@@ -250,11 +250,10 @@ window.DOMIVIO_PRODUCTS = [
     badgePL: "👶 HIT MONTESSORI · 19 LED",
     badgeEN: "👶 MONTESSORI HIT · 19 LEDS",
     images: [
-      "assets/montessori/img_1.jpg",
-      "assets/montessori/studio_1.jpg",
-      "assets/montessori/studio_2.jpg",
-      "assets/montessori/studio_3.jpg",
-      "assets/montessori/img_2.jpg"
+      "https://cdn.shopify.com/s/files/1/1069/4715/0161/files/img_1.jpg?v=1794086781",
+      "https://cdn.shopify.com/s/files/1/1069/4715/0161/files/studio_1.jpg?v=1794086782",
+      "https://cdn.shopify.com/s/files/1/1069/4715/0161/files/studio_2.jpg?v=1794086782",
+      "https://cdn.shopify.com/s/files/1/1069/4715/0161/files/studio_3.jpg?v=1794086782"
     ],
     title: {
       pl: "Drewniana Tablica Sensoryczna Montessori Busy Board (10 Przełączników + 19 Diod LED)",
