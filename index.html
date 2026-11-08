@@ -5,10 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Oficjalny sklep domivio — produkty do snu nowej generacji CELL®</title>
   <meta name="description" content="Innowacyjne poduszki ortopedyczne i materace z hipoalergiczną siatką elastomerową TPE CELL®. Darmowa dostawa Paczkomatem InPost i DPD od 99 zł." />
+  <meta name="theme-color" content="#7B42F6" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="domivio — Poduszki i materace nowej generacji CELL®" />
+  <meta property="og:description" content="Hipoalergiczna siatka elastomerowa TPE CELL® — zero ucisku, mikroklimat 360° i darmowa dostawa Paczkomatem od 99 zł." />
+  <meta property="og:image" content="darwin_hero_1.jpg" />
+  <link rel="preload" as="image" href="darwin_hero_1.jpg" fetchpriority="high" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Domivio Sleep Polska",
+    "url": "https://domivio-official.com",
+    "email": "domivio.official@gmail.com",
+    "description": "Innowacyjne poduszki anatomiczne i materace hybrydowe z siatką elastomerową TPE CELL®."
+  }
+  </script>
 </head>
 <body>
 
@@ -69,6 +85,15 @@
         </button>
       </div>
     </div>
+    <nav class="dw-mobile-nav" aria-label="Kategorie mobilne">
+      <a href="#catalog" onclick="filterCatalog('all')">WSZYSTKIE</a>
+      <a href="#catalog" onclick="filterCatalog('poduszki')" data-i18n="nav_pillows">PODUSZKI</a>
+      <a href="#catalog" onclick="filterCatalog('materace')" data-i18n="nav_mattresses">MATERACE</a>
+      <a href="#catalog" onclick="filterCatalog('dla-dzieci')" data-i18n="nav_kids">DLA DZIECI</a>
+      <a href="#catalog" onclick="filterCatalog('akcesoria')" data-i18n="nav_accessories">AKCESORIA</a>
+      <a href="#why-us" data-i18n="reviews_title">OPINIE</a>
+      <a href="#faq" data-i18n="contacts_label">KONTAKTY</a>
+    </nav>
   </header>
 
   <!-- 3. Full-Width Hero Banner Slider (1:1 Darwin) -->
