@@ -782,24 +782,11 @@
     const isFreeLocker = isDigitalOnly || (totalAfterDiscount >= threshold && totalCount > 0);
 
     let shippingCost = 0;
-    let shippingMethodLabel = "";
-    if (totalCount > 0) {
-      if (isDigitalOnly) {
-        shippingCost = 0;
-        shippingMethodLabel = currentLang === "en" ? "Instant PDF Email Delivery" : "Wysyłka PDF na e-mail (0 zł)";
-      } else if (selectedShippingMethod === "kurier_dpd") {
-        shippingCost = isFreeLocker ? 0 : (currentLang === "en" ? 4.70 : 19.90);
-        shippingMethodLabel = currentLang === "en" ? "Kurier DPD" : "Kurier DPD";
-      } else if (selectedShippingMethod === "dpd_paczkomat") {
-        shippingCost = isFreeLocker ? 0 : (currentLang === "en" ? 3.50 : 14.90);
-        shippingMethodLabel = "DPD Paczkomaty";
-      } else {
-        shippingCost = isFreeLocker ? 0 : (currentLang === "en" ? 3.50 : 14.90);
-        shippingMethodLabel = "InPost Paczkomaty";
-      }
-    }
+    let shippingMethodLabel = selectedLocker && selectedLocker.code
+      ? `${selectedLocker.supplier || "PACZKOMAT"} ${selectedLocker.code}`
+      : "Paczkomat";
 
-    const grandTotal = totalAfterDiscount + shippingCost;
+    const grandTotal = totalAfterDiscount;
 
     return {
       subtotal,
@@ -940,83 +927,73 @@
       `
       : "";
 
-    const lockerPriceBase = currentLang === "en" ? "€3.50" : "14,90 zł";
-    const courierPriceBase = currentLang === "en" ? "€4.70" : "19,90 zł";
-    const lockerPriceDisplay = totals.isFreeLocker
-      ? `<span style="color:#16A34A;font-weight:700;">0,00 zł (GRATIS)</span> <span style="text-decoration:line-through;color:#94A3B8;font-size:11px;">${lockerPriceBase}</span>`
-      : `<span style="font-weight:700;">${lockerPriceBase}</span>`;
-    const courierPriceStr = totals.isFreeLocker
-      ? `<span style="color:#16A34A;font-weight:700;">0,00 zł (GRATIS)</span> <span style="text-decoration:line-through;color:#94A3B8;font-size:11px;">${courierPriceBase}</span>`
-      : courierPriceBase;
-
     const selectedPointHtml =
-      selectedLocker && selectedLocker.code && selectedShippingMethod !== "kurier_dpd"
+      selectedLocker && selectedLocker.code
         ? `
-          <div class="locker-selected" style="margin-top:8px;">
+          <div class="locker-selected" style="margin-bottom:10px;border:1.5px solid #7B42F6;background:#F6F3FF;padding:12px;">
             <div>
-              <span class="locker-selected__badge">${selectedLocker.supplier === "INPOST" ? "INPOST PACZKOMATY" : "DPD PACZKOMATY"}</span>
-              <div style="font-size:13px;font-weight:700;color:#242C34;">${selectedLocker.code}</div>
+              <span class="locker-selected__badge" style="background:#7B42F6;color:#FFF;padding:2px 7px;font-size:10px;font-weight:700;display:inline-block;margin-bottom:4px;">✅ ${selectedLocker.supplier === "DPD" ? "DPD PICKUP / PACZKOMAT" : "INPOST PACZKOMAT"}</span>
+              <div style="font-size:13.5px;font-weight:700;color:#242C34;">${selectedLocker.code}</div>
               <div style="font-size:11.5px;color:#475569;">${selectedLocker.street}, ${selectedLocker.postal_code} ${selectedLocker.city}</div>
             </div>
             <div style="display:flex;flex-direction:column;gap:4px;">
               <button type="button" class="acc-card__btn" onclick="openApaczkaLockerMap('${selectedLocker.supplier || "ALL"}')">${t("locker_change_btn")}</button>
-              <button type="button" style="background:none;border:none;font-size:10.5px;font-weight:700;color:#DC2626;" onclick="clearSelectedLocker()">${t("locker_remove_btn")}</button>
+              <button type="button" style="background:none;border:none;font-size:10.5px;font-weight:700;color:#DC2626;cursor:pointer;" onclick="clearSelectedLocker()">${t("locker_remove_btn")}</button>
             </div>
           </div>
         `
         : "";
 
+    const searchPlaceholder =
+      currentLang === "en"
+        ? "🔍 Enter city, street or locker code (e.g. Warszawa)..."
+        : "🔍 Wpisz miasto, ulicę lub kod Paczkomatu (np. Warszawa)...";
+    const openMapBtnText =
+      currentLang === "en"
+        ? "🗺️ SELECT PARCEL LOCKER ON MAP"
+        : "🗺️ WYBIERZ PACZKOMAT NA MAPIE";
+
     const lockerHtml = `
       <div class="locker-box">
         <div class="locker-box__title">${t("locker_title")}</div>
-        <div style="display:flex;flex-direction:column;gap:8px;">
-          <div
-            onclick="selectShippingMethod('inpost_paczkomat')"
-            style="border:1.5px solid ${selectedShippingMethod === "inpost_paczkomat" ? "#7B42F6" : "#E2E8F0"};background:${selectedShippingMethod === "inpost_paczkomat" ? "#F6F3FF" : "#FFFFFF"};padding:10px 12px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;"
-          >
-            <div style="display:flex;align-items:center;gap:8px;">
-              <input type="radio" name="dom_ship_method" ${selectedShippingMethod === "inpost_paczkomat" ? "checked" : ""} style="accent-color:#7B42F6;width:16px;height:16px;" />
-              <div>
-                <div style="font-size:13px;font-weight:700;color:#242C34;">📦 InPost Paczkomaty</div>
-                <button type="button" onclick="event.stopPropagation(); selectShippingMethod('inpost_paczkomat'); openApaczkaLockerMap('INPOST');" style="background:none;border:none;padding:0;font-size:11px;font-weight:600;color:#7B42F6;text-decoration:underline;">
-                  ${t("locker_inpost_sub")}
-                </button>
-              </div>
-            </div>
-            <div style="text-align:right;font-size:12.5px;white-space:nowrap;">${lockerPriceDisplay}</div>
-          </div>
-
-          <div
-            onclick="selectShippingMethod('dpd_paczkomat')"
-            style="border:1.5px solid ${selectedShippingMethod === "dpd_paczkomat" ? "#7B42F6" : "#E2E8F0"};background:${selectedShippingMethod === "dpd_paczkomat" ? "#F6F3FF" : "#FFFFFF"};padding:10px 12px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;"
-          >
-            <div style="display:flex;align-items:center;gap:8px;">
-              <input type="radio" name="dom_ship_method" ${selectedShippingMethod === "dpd_paczkomat" ? "checked" : ""} style="accent-color:#7B42F6;width:16px;height:16px;" />
-              <div>
-                <div style="font-size:13px;font-weight:700;color:#242C34;">📦 DPD Paczkomaty</div>
-                <button type="button" onclick="event.stopPropagation(); selectShippingMethod('dpd_paczkomat'); openApaczkaLockerMap('DPD');" style="background:none;border:none;padding:0;font-size:11px;font-weight:600;color:#7B42F6;text-decoration:underline;">
-                  ${t("locker_dpd_sub")}
-                </button>
-              </div>
-            </div>
-            <div style="text-align:right;font-size:12.5px;white-space:nowrap;">${lockerPriceDisplay}</div>
-          </div>
-
-          <div
-            onclick="selectShippingMethod('kurier_dpd')"
-            style="border:1.5px solid ${selectedShippingMethod === "kurier_dpd" ? "#7B42F6" : "#E2E8F0"};background:${selectedShippingMethod === "kurier_dpd" ? "#F6F3FF" : "#FFFFFF"};padding:10px 12px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;"
-          >
-            <div style="display:flex;align-items:center;gap:8px;">
-              <input type="radio" name="dom_ship_method" ${selectedShippingMethod === "kurier_dpd" ? "checked" : ""} style="accent-color:#7B42F6;width:16px;height:16px;" />
-              <div>
-                <div style="font-size:13px;font-weight:700;color:#242C34;">🚚 Kurier DPD</div>
-                <div style="font-size:11px;color:#64748B;">${t("locker_courier_sub")}</div>
-              </div>
-            </div>
-            <div style="text-align:right;font-size:13px;font-weight:700;white-space:nowrap;">${courierPriceStr}</div>
-          </div>
-        </div>
         ${selectedPointHtml}
+        <div style="position:relative;margin-bottom:8px;">
+          <input
+            type="text"
+            id="cartInlineLockerInput"
+            placeholder="${searchPlaceholder}"
+            oninput="handleCartInlineLockerSearch(this.value)"
+            autocomplete="off"
+            style="width:100%;padding:10px 12px;border:1.5px solid #CBD5E1;font-size:12.5px;color:#1D1D1F;background:#FFFFFF;outline:none;box-sizing:border-box;"
+          />
+          <div
+            id="cartInlineLockerResults"
+            style="display:none;max-height:190px;overflow-y:auto;border:1.5px solid #7B42F6;border-top:none;background:#FFFFFF;box-shadow:0 8px 20px rgba(0,0,0,0.08);"
+          ></div>
+        </div>
+        <button
+          type="button"
+          onclick="openApaczkaLockerMap('ALL')"
+          style="width:100%;padding:11px 14px;background:#7B42F6;color:#FFFFFF;border:none;font-size:12px;font-weight:700;letter-spacing:0.04em;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:6px;"
+        >
+          ${openMapBtnText}
+        </button>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+          <button
+            type="button"
+            onclick="selectShippingMethod('inpost_paczkomat'); openApaczkaLockerMap('INPOST');"
+            style="padding:8px 10px;background:#F8FAFC;border:1px solid #E2E8F0;font-size:11.5px;font-weight:700;color:#242C34;cursor:pointer;"
+          >
+            📦 Mapa InPost
+          </button>
+          <button
+            type="button"
+            onclick="selectShippingMethod('dpd_paczkomat'); openApaczkaLockerMap('DPD');"
+            style="padding:8px 10px;background:#F8FAFC;border:1px solid #E2E8F0;font-size:11.5px;font-weight:700;color:#242C34;cursor:pointer;"
+          >
+            📦 Mapa DPD
+          </button>
+        </div>
       </div>
     `;
 
@@ -1029,18 +1006,72 @@
     const discRow = document.getElementById("summaryDiscountRow");
     if (discRow) discRow.style.display = "none";
 
-    const shipEl = document.getElementById("cartShippingVal") || document.getElementById("summaryShipping");
-    if (shipEl) {
-      if (totals.shippingCost === 0 && totals.isFreeLocker) {
-        shipEl.innerHTML = `<span style="color:#16A34A;font-weight:700;">${totals.shippingMethodLabel}: 0,00 zł (GRATIS)</span>`;
-      } else {
-        shipEl.textContent = `${totals.shippingMethodLabel}: ${formatValue(totals.shippingCost)}`;
-      }
-    }
+    const shipRow = document.getElementById("cartShippingRow");
+    if (shipRow) shipRow.style.display = "none";
 
     const totEl = document.getElementById("cartTotalVal") || document.getElementById("summaryTotal");
     if (totEl) totEl.textContent = formatValue(totals.grandTotal);
   }
+
+  let _cartLockerTimer = null;
+  let _cartLockerAbort = null;
+  let _cartLockerCache = [];
+
+  window.handleCartInlineLockerSearch = function (rawQuery) {
+    const q = (rawQuery || "").trim();
+    const resBox = document.getElementById("cartInlineLockerResults");
+    if (!resBox) return;
+    if (_cartLockerTimer) clearTimeout(_cartLockerTimer);
+    if (q.length < 2) {
+      resBox.style.display = "none";
+      resBox.innerHTML = "";
+      return;
+    }
+    _cartLockerTimer = setTimeout(async () => {
+      try {
+        if (_cartLockerAbort) _cartLockerAbort.abort();
+        _cartLockerAbort = new AbortController();
+        resBox.style.display = "block";
+        resBox.innerHTML = `<div style="padding:10px 12px;font-size:12px;color:#64748B;">Szukam Paczkomatów...</div>`;
+        const list = await fetchMatchingLockers(q, _cartLockerAbort.signal);
+        _cartLockerCache = list || [];
+        if (!_cartLockerCache.length) {
+          resBox.innerHTML = `<div style="padding:10px 12px;font-size:12px;color:#64748B;">Brak wyników — kliknij "Wybierz Paczkomat na mapie" poniżej.</div>`;
+          return;
+        }
+        resBox.innerHTML = _cartLockerCache
+          .map(
+            (lk, idx) => `
+            <div
+              onclick="pickInlineCartLocker(${idx})"
+              style="padding:9px 12px;border-bottom:1px solid #F1F5F9;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;"
+            >
+              <div>
+                <div style="font-size:12px;font-weight:700;color:#242C34;">[${lk.supplier}] ${lk.code} — ${lk.street}</div>
+                <div style="font-size:11px;color:#64748B;">${lk.postal_code} ${lk.city}</div>
+              </div>
+              <span style="background:#7B42F6;color:#FFF;padding:4px 8px;font-size:10.5px;font-weight:700;white-space:nowrap;">WYBIERZ ✓</span>
+            </div>
+          `
+          )
+          .join("");
+      } catch (e) {}
+    }, 180);
+  };
+
+  window.pickInlineCartLocker = function (idx) {
+    const lk = _cartLockerCache[idx];
+    if (!lk) return;
+    selectedShippingMethod = lk.supplier === "DPD" ? "dpd_paczkomat" : "inpost_paczkomat";
+    localStorage.setItem(STORAGE_SHIP_KEY, selectedShippingMethod);
+    saveLocker({
+      code: lk.code,
+      supplier: lk.supplier,
+      street: lk.street,
+      postal_code: lk.postal_code,
+      city: lk.city
+    });
+  };
 
   window.clearSelectedLocker = function () {
     saveLocker(null);
@@ -1078,7 +1109,7 @@
       `${totals.shippingMethodLabel} (${totals.shippingCost === 0 ? "0,00 zł GRATIS od 890 zł" : formatValue(totals.shippingCost)})`
     );
 
-    if (selectedLocker && selectedLocker.code && selectedShippingMethod !== "kurier_dpd") {
+    if (selectedLocker && selectedLocker.code) {
       const companyVal = `${selectedLocker.supplier} ${selectedLocker.code} (${selectedLocker.street}, ${selectedLocker.city})`;
       const addr2Val = `Paczkomat / Punkt: ${selectedLocker.code}`;
       params.set("checkout[shipping_address][company]", companyVal);
@@ -1549,11 +1580,38 @@
   // ── Live Sync with Shopify Backend (1tvnzn-zf.myshopify.com) ──────────
   async function syncWithShopifyBackend() {
     try {
-      const resp = await fetch(`/products.json?limit=250`);
-      if (!resp.ok) return;
-      const data = await resp.json();
-      const remoteProducts = data.products || [];
+      const colHandles = ["poduszki", "dla-dzieci", "akcesoria", "na-prezent"];
+      const [prodResp, ...colResps] = await Promise.allSettled([
+        fetch(`/products.json?limit=250`).then((r) => (r.ok ? r.json() : null)),
+        ...colHandles.map((h) =>
+          fetch(`/collections/${h}/products.json?limit=250`).then((r) => (r.ok ? r.json() : null))
+        )
+      ]);
+
+      if (prodResp.status !== "fulfilled" || !prodResp.value) return;
+      const remoteProducts = prodResp.value.products || [];
       if (!remoteProducts.length) return;
+
+      // Map product ID -> array of collection handles from Shopify Admin "Kolekcje"
+      const prodColMap = {};
+      const addColMapping = (pid, handle) => {
+        const key = String(pid);
+        if (!prodColMap[key]) prodColMap[key] = [];
+        if (!prodColMap[key].includes(handle)) prodColMap[key].push(handle);
+      };
+
+      if (window.DOMIVIO_COLLECTION_MAP) {
+        Object.keys(window.DOMIVIO_COLLECTION_MAP).forEach((h) => {
+          (window.DOMIVIO_COLLECTION_MAP[h] || []).forEach((pid) => addColMapping(pid, h));
+        });
+      }
+
+      colHandles.forEach((h, idx) => {
+        const cRes = colResps[idx];
+        if (cRes && cRes.status === "fulfilled" && cRes.value && Array.isArray(cRes.value.products)) {
+          cRes.value.products.forEach((cp) => addColMapping(cp.id, h));
+        }
+      });
 
       const stripHtml = (html) => {
         const tmp = document.createElement("div");
@@ -1580,6 +1638,19 @@
         return result;
       };
 
+      const catLabelPLMap = {
+        "poduszki": "PODUSZKI",
+        "dla-dzieci": "DLA DZIECI",
+        "akcesoria": "AKCESORIA",
+        "na-prezent": "NA PREZENT"
+      };
+      const catLabelENMap = {
+        "poduszki": "PILLOWS",
+        "dla-dzieci": "FOR KIDS",
+        "akcesoria": "ACCESSORIES",
+        "na-prezent": "GIFTS"
+      };
+
       const syncedList = [];
 
       remoteProducts.forEach((rp) => {
@@ -1594,22 +1665,48 @@
           (p) => p.id === rp.id || p.handle === rp.handle
         );
 
-        const catTag = String(rp.product_type || rp.tags || "poduszki").toLowerCase();
         const cats = [];
-        if (catTag.includes("materac")) cats.push("materace");
-        else if (catTag.includes("dziec") || catTag.includes("kid")) cats.push("dla-dzieci");
-        else if (catTag.includes("akcesor") || catTag.includes("poszewk")) cats.push("akcesoria");
-        else if (catTag.includes("prezent") || catTag.includes("gift")) cats.push("na-prezent");
-        else cats.push("poduszki");
+        const addCat = (c) => {
+          if (c && !cats.includes(c)) cats.push(c);
+        };
+
+        // 1. Categories from Shopify Admin "Kolekcje"
+        (prodColMap[String(rp.id)] || []).forEach((h) => {
+          if (colHandles.includes(h)) addCat(h);
+        });
+
+        // 2. Categories from Shopify Admin "Typ" (product_type) and "Tagi" (tags)
+        const tagStr = [
+          rp.product_type || "",
+          Array.isArray(rp.tags) ? rp.tags.join(" ") : String(rp.tags || "")
+        ]
+          .join(" ")
+          .toLowerCase();
+
+        if (tagStr.includes("poduszk") || tagStr.includes("pillow")) addCat("poduszki");
+        if (tagStr.includes("dziec") || tagStr.includes("kid")) addCat("dla-dzieci");
+        if (tagStr.includes("akcesor") || tagStr.includes("poszewk") || tagStr.includes("access")) addCat("akcesoria");
+        if (tagStr.includes("prezent") || tagStr.includes("gift")) addCat("na-prezent");
+
+        // 3. Fallback if no category was assigned yet in Shopify Admin
+        if (cats.length === 0) {
+          if (existing && Array.isArray(existing.category) && existing.category.length > 0) {
+            existing.category.forEach(addCat);
+          } else {
+            addCat("poduszki");
+          }
+        }
+
+        const primaryCat = cats[0] || "poduszki";
 
         syncedList.push({
           id: rp.id,
           variantId: rv.id,
           shopifyVariantId: rv.id,
           handle: rp.handle,
-          category: existing && existing.category ? existing.category : cats,
-          catLabelPL: (rp.product_type || (existing && existing.catLabelPL) || "PODUSZKI").toUpperCase(),
-          catLabelEN: (rp.product_type || (existing && existing.catLabelEN) || "PILLOWS").toUpperCase(),
+          category: cats,
+          catLabelPL: catLabelPLMap[primaryCat] || (rp.product_type || "PODUSZKI").toUpperCase(),
+          catLabelEN: catLabelENMap[primaryCat] || (rp.product_type || "PILLOWS").toUpperCase(),
           isMysteryBox: existing ? existing.isMysteryBox : syncedList.length === 0,
           badges: [],
           specTopPL: "",
