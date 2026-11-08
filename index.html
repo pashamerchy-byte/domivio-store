@@ -51,12 +51,8 @@
       <a href="#" class="dw-logo" onclick="if(window.closeProductModal) closeProductModal();">domivio</a>
 
       <nav class="dw-nav">
-        <a href="#catalog" class="dw-nav__link" onclick="if(window.closeProductModal) closeProductModal(); filterCatalog('materace')" data-i18n="nav_mattresses">MATERACE</a>
         <a href="#catalog" class="dw-nav__link" onclick="if(window.closeProductModal) closeProductModal(); filterCatalog('poduszki')" data-i18n="nav_pillows">PODUSZKI</a>
         <a href="#catalog" class="dw-nav__link" onclick="if(window.closeProductModal) closeProductModal(); filterCatalog('dla-dzieci')" data-i18n="nav_kids">DLA DZIECI</a>
-        <a href="#catalog" class="dw-nav__link" onclick="if(window.closeProductModal) closeProductModal(); filterCatalog('lozka')" data-i18n="nav_beds">ŁÓŻKA</a>
-        <a href="#catalog" class="dw-nav__link" onclick="if(window.closeProductModal) closeProductModal(); filterCatalog('sofy')" data-i18n="nav_sofas">SOFY</a>
-        <a href="#catalog" class="dw-nav__link" onclick="if(window.closeProductModal) closeProductModal(); filterCatalog('all')" data-i18n="nav_furniture">MEBLE</a>
         <a href="#catalog" class="dw-nav__link" onclick="if(window.closeProductModal) closeProductModal(); filterCatalog('akcesoria')" data-i18n="nav_accessories">AKCESORIA</a>
         <a href="#catalog" class="dw-nav__link" onclick="if(window.closeProductModal) closeProductModal(); filterCatalog('na-prezent')" data-i18n="nav_gifts">NA PREZENT</a>
         <a href="#faq" class="dw-nav__link" onclick="if(window.closeProductModal) closeProductModal();" data-i18n="nav_customers">DLA KLIENTÓW</a>
@@ -88,10 +84,8 @@
     <nav class="dw-mobile-nav" aria-label="Kategorie mobilne">
       <a href="#catalog" onclick="if(window.closeProductModal) closeProductModal(); filterCatalog('all')">WSZYSTKIE</a>
       <a href="#catalog" onclick="if(window.closeProductModal) closeProductModal(); filterCatalog('poduszki')" data-i18n="nav_pillows">PODUSZKI</a>
-      <a href="#catalog" onclick="if(window.closeProductModal) closeProductModal(); filterCatalog('materace')" data-i18n="nav_mattresses">MATERACE</a>
       <a href="#catalog" onclick="if(window.closeProductModal) closeProductModal(); filterCatalog('dla-dzieci')" data-i18n="nav_kids">DLA DZIECI</a>
       <a href="#catalog" onclick="if(window.closeProductModal) closeProductModal(); filterCatalog('akcesoria')" data-i18n="nav_accessories">AKCESORIA</a>
-      <a href="#why-us" onclick="if(window.closeProductModal) closeProductModal();" data-i18n="reviews_title">OPINIE</a>
       <a href="#faq" onclick="if(window.closeProductModal) closeProductModal();" data-i18n="contacts_label">KONTAKTY</a>
     </nav>
   </header>
@@ -163,18 +157,10 @@
     </div>
   </section>
 
-  <!-- 5. HITY SPRZEDAŻY — 4-Column Product Grid with Prepared Product Slots (1:1 Darwin) -->
+  <!-- 5. HITY SPRZEDAŻY — Product Grid -->
   <section class="dw-hits" id="catalog">
     <div class="dw-container">
       <h2 class="dw-section-title" data-i18n="hits_title">HITY SPRZEDAŻY</h2>
-
-      <div class="dw-filter-pills">
-        <button type="button" class="dw-filter-pill is-active" data-filter-cat="all" onclick="filterCatalog('all')">WSZYSTKIE</button>
-        <button type="button" class="dw-filter-pill" data-filter-cat="poduszki" onclick="filterCatalog('poduszki')">PODUSZKI</button>
-        <button type="button" class="dw-filter-pill" data-filter-cat="materace" onclick="filterCatalog('materace')">MATERACE</button>
-        <button type="button" class="dw-filter-pill" data-filter-cat="dla-dzieci" onclick="filterCatalog('dla-dzieci')">DLA DZIECI</button>
-        <button type="button" class="dw-filter-pill" data-filter-cat="akcesoria" onclick="filterCatalog('akcesoria')">AKCESORIA</button>
-      </div>
 
       <div class="dw-product-grid" id="productGrid"></div>
 
@@ -184,82 +170,7 @@
     </div>
   </section>
 
-  <!-- 6. Full-Width Interactive KATALOG Section (1:1 Darwin) -->
-  <section class="dw-catalog-banner" style="background-image: url('darwin_cat_mattress.jpg');">
-    <div class="dw-catalog-banner__overlay">
-      <h2 class="dw-catalog-banner__title" data-i18n="cat_banner_title">KATALOG</h2>
-      <div class="dw-catalog-tiles">
-        <a href="#catalog" class="dw-catalog-tile is-active" onclick="filterCatalog('materace')">
-          <span data-i18n="nav_mattresses">MATERACE</span>
-        </a>
-        <a href="#catalog" class="dw-catalog-tile" onclick="filterCatalog('poduszki')">
-          <span data-i18n="nav_pillows">PODUSZKI</span>
-        </a>
-        <a href="#catalog" class="dw-catalog-tile" onclick="filterCatalog('dla-dzieci')">
-          <span data-i18n="nav_kids">DLA DZIECI</span>
-        </a>
-        <a href="#catalog" class="dw-catalog-tile" onclick="filterCatalog('lozka')">
-          <span data-i18n="nav_beds">ŁÓŻKA</span>
-        </a>
-        <a href="#catalog" class="dw-catalog-tile" onclick="filterCatalog('sofy')">
-          <span data-i18n="nav_sofas">SOFY</span>
-        </a>
-        <a href="#catalog" class="dw-catalog-tile" onclick="filterCatalog('all')">
-          <span data-i18n="nav_furniture">MEBLE</span>
-        </a>
-        <a href="#catalog" class="dw-catalog-tile" onclick="filterCatalog('akcesoria')">
-          <span data-i18n="nav_accessories">AKCESORIA</span>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- 7. Split 50/50 OPINIE Section (1:1 Darwin) -->
-  <section class="dw-reviews" id="why-us">
-    <div class="dw-reviews__head">
-      <h2 class="dw-section-title" data-i18n="reviews_title">OPINIE</h2>
-      <p class="dw-reviews__sub" data-i18n="reviews_sub">Nasz. rating 4.9 / 5.0</p>
-    </div>
-
-    <div class="dw-reviews__split">
-      <!-- Left 50%: Electric Violet Customer Review -->
-      <div class="dw-reviews__left">
-        <div class="dw-reviews__stars">★★★★★</div>
-        <div class="dw-reviews__author" data-i18n="review_left_author">artur i.</div>
-        <p class="dw-reviews__quote" data-i18n="review_left_text">
-          Sen nie ma ceny)) To prawdziwe dzieło sztuki inżynieryjnej... jedyny minus to walka w domu o to, kto śpi na niej pierwszy. Takiej wygody nie dawała żadna inna poduszka z pianki memory, a przetestowałem niemal wszystkie topowe marki. Zero zapachu po rozpakowaniu, od razu gotowa do snu, ciężka i stabilna na łóżku.
-        </p>
-        <div class="dw-reviews__prod-tag" onclick="openProductModal('poduszka-ortopedyczna-adult-cell')">
-          <img src="darwin_rev_pill.png" alt="Poduszka Cell" />
-          <div>
-            <span data-i18n="review_left_on">OPINIA O MODELU</span>
-            <strong>ADULT® / COMPOSITE L®</strong>
-          </div>
-        </div>
-      </div>
-
-      <!-- Right 50%: White Story Avatars & Expert Quote -->
-      <div class="dw-reviews__right">
-        <div class="dw-reviews__avatars">
-          <div class="dw-avatar"><img src="darwin_story_1.jpg" alt="" /></div>
-          <div class="dw-avatar is-active"><img src="darwin_story_2.jpg" alt="" /></div>
-          <div class="dw-avatar"><img src="darwin_story_3.jpg" alt="" /></div>
-          <div class="dw-avatar"><img src="darwin_grid_hand.jpg" alt="" /></div>
-          <div class="dw-avatar"><img src="darwin_showroom.jpg" alt="" /></div>
-        </div>
-        <p class="dw-reviews__story-text" data-i18n="review_right_text">
-          Najważniejszy w sypialni jest materac i poduszka, bo przesypiamy jedną trzecią życia. Siatka elastomerowa Domivio Cell pozwala mięśniom karku całkowicie się rozluźnić już w pierwsze 10 minut i utrzymuje przyjemny chłód przez całą noc.
-        </p>
-        <div class="dw-reviews__story-author" data-i18n="review_right_author">Kamil Karapetyan</div>
-        <div class="dw-reviews__story-role" data-i18n="review_right_role">Projektant wnętrz & specjalista ergonomii snu</div>
-        <div class="dw-reviews__nums">
-          <span class="is-active">1</span><span>2</span><span>3</span><span>4</span><span>5</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 8. Full-Width Welcome to Quality Sleep Banner (1:1 Darwin) -->
+  <!-- 8. Full-Width Welcome to Quality Sleep Banner -->
   <section class="dw-welcome-banner" style="background-image: url('darwin_welcome_sleep.jpg');">
     <div class="dw-welcome-banner__overlay">
       <h2 class="dw-welcome-banner__title" data-i18n="welcome_banner_title">WITAJ W ŚWIECIE<br>JAKOŚCIOWEGO SNU</h2>
@@ -267,7 +178,7 @@
     </div>
   </section>
 
-  <!-- 9. Split 50/50 KONTAKTY & MAGAZYN / DOSTAWA Section (1:1 Darwin) -->
+  <!-- 9. Split 50/50 KONTAKTY & MAGAZYN / DOSTAWA Section -->
   <section class="dw-contacts-split" id="faq">
     <div class="dw-contacts-split__col">
       <div class="dw-contacts-split__label" data-i18n="contacts_label">KONTAKTY</div>
@@ -281,10 +192,6 @@
         <a href="#catalog" class="dw-social-circle" aria-label="Instagram">◎</a>
         <a href="#catalog" class="dw-social-circle" aria-label="YouTube">▶</a>
       </div>
-
-      <div class="dw-contacts-split__img">
-        <img src="darwin_grid_hand.jpg" alt="Technologia siatki TPE Cell Domivio" />
-      </div>
     </div>
 
     <div class="dw-contacts-split__col">
@@ -292,25 +199,20 @@
       <div class="dw-contacts-split__big" data-i18n="showroom_title">WYSYŁKA 24H Z POLSKI<br>INPOST PACZKOMATY · DPD PACZKOMATY · KURIER DPD</div>
       <p class="dw-contacts-split__hours" data-i18n="showroom_hours">
         OBSŁUGA KLIENTA: 09:00 DO 20:00, PON–SOB<br>
-        DARMOWA DOSTAWA OD 890 ZŁ (PACZKOMAT 14,90 ZŁ)<br>
-        KURIER DPD POD DRZWI: 19,90 ZŁ · 14 DNI NA ZWROT
+        DARMOWA DOSTAWA OD 890 ZŁ
       </p>
 
       <button type="button" class="dw-outline-btn" onclick="openCartDrawer()" data-i18n="showroom_btn">
         WYBIERZ PACZKOMAT W KOSZYKU
       </button>
-
-      <div class="dw-contacts-split__img">
-        <img src="darwin_showroom.jpg" alt="Domivio Sleep Showroom" />
-      </div>
     </div>
   </section>
   </main>
 
-  <!-- 1:1 Darwin Full-Page Product View (#pdpPageView — darwinsleep.ru/shop/poduska/adult) -->
+  <!-- Full-Page Product View (#pdpPageView) -->
   <main id="pdpPageView" class="dw-pdp" style="display: none;"></main>
 
-  <!-- 10. Giant Watermark Logo + Violet CTA + 4-Column Footer (1:1 Darwin) -->
+  <!-- 10. Giant Watermark Logo + Violet CTA -->
   <section class="dw-watermark-sec">
     <div class="dw-watermark-logo" aria-hidden="true">domivio</div>
     <div class="dw-questions-box">
@@ -321,51 +223,6 @@
       </a>
     </div>
   </section>
-
-  <footer class="dw-footer">
-    <div class="dw-container dw-footer__grid">
-      <div class="dw-footer__sub">
-        <div class="dw-footer__heading" data-i18n="sub_title">ZAPISZ SIĘ NA NOWOŚCI I AKCJE</div>
-        <form class="dw-sub-form" onsubmit="event.preventDefault(); alert('Dziękujemy za zapisanie się!');">
-          <input type="email" placeholder="Twój adres e-mail" data-i18n-placeholder="sub_placeholder" required />
-          <button type="submit" data-i18n="sub_btn">ZAPISZ SIĘ</button>
-        </form>
-        <label class="dw-sub-consent">
-          <input type="checkbox" checked />
-          <span data-i18n="sub_consent">Klikając „Zapisz się”, wyrażam zgodę na otrzymywanie informacji o nowościach i promocjach Domivio.</span>
-        </label>
-        <div class="dw-footer__contact-mail">
-          <a href="mailto:domivio.official@gmail.com">DOMIVIO.OFFICIAL@GMAIL.COM</a>
-        </div>
-      </div>
-
-      <div class="dw-footer__col">
-        <div class="dw-footer__heading" data-i18n="foot_col1">DLA KLIENTÓW</div>
-        <a href="#faq">Dostawa i płatność (InPost / DPD)</a>
-        <a href="#faq">14 dni na test i zwrot</a>
-        <a href="#catalog">O technologii CELL®</a>
-        <a href="#why-us">Opinie klientów</a>
-        <a href="mailto:domivio.official@gmail.com">Kontakt: domivio.official@gmail.com</a>
-      </div>
-
-      <div class="dw-footer__col">
-        <div class="dw-footer__heading" data-i18n="foot_col2">WSPÓŁPRACA</div>
-        <a href="mailto:domivio.official@gmail.com">O marce Domivio</a>
-        <a href="mailto:domivio.official@gmail.com">Dla architektów i hoteli</a>
-        <a href="mailto:domivio.official@gmail.com">Zamówienia hurtowe</a>
-        <a href="mailto:domivio.official@gmail.com">Napisz do nas</a>
-      </div>
-
-      <div class="dw-footer__col">
-        <div class="dw-footer__heading" data-i18n="foot_col3">KATALOG</div>
-        <a href="#catalog" onclick="filterCatalog('materace')" data-i18n="nav_mattresses">Materace</a>
-        <a href="#catalog" onclick="filterCatalog('poduszki')" data-i18n="nav_pillows">Poduszki</a>
-        <a href="#catalog" onclick="filterCatalog('dla-dzieci')" data-i18n="nav_kids">Dla dzieci</a>
-        <a href="#catalog" onclick="filterCatalog('lozka')" data-i18n="nav_beds">Łóżka</a>
-        <a href="#catalog" onclick="filterCatalog('akcesoria')" data-i18n="nav_accessories">Akcesoria</a>
-      </div>
-    </div>
-  </footer>
 
   <!-- Product Detail & Bundle Modal -->
   <div class="pdp-modal" id="pdpModal" role="dialog" aria-modal="true">
