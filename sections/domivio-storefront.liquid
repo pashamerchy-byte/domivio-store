@@ -10,7 +10,7 @@
       </div>
       <div class="dw-topbar__promo">
         <span class="dw-topbar__arrow">‹</span>
-        <img src="{{ 'darwin_gift_icon.png' | asset_url }}" alt="" class="dw-topbar__gift" />
+        <img src="{{ '{{ 'darwin_gift_icon.png' | asset_url }}' | asset_url }}" alt="" class="dw-topbar__gift" />
         <span data-i18n="top_promo">Podaruj zdrowy sen bliskim! Darmowa dostawa Paczkomatem od 99 zł</span>
         <span class="dw-topbar__arrow">›</span>
       </div>
@@ -58,6 +58,15 @@
         </button>
       </div>
     </div>
+    <nav class="dw-mobile-nav" aria-label="Kategorie mobilne">
+      <a href="#catalog" onclick="filterCatalog('all')">WSZYSTKIE</a>
+      <a href="#catalog" onclick="filterCatalog('poduszki')" data-i18n="nav_pillows">PODUSZKI</a>
+      <a href="#catalog" onclick="filterCatalog('materace')" data-i18n="nav_mattresses">MATERACE</a>
+      <a href="#catalog" onclick="filterCatalog('dla-dzieci')" data-i18n="nav_kids">DLA DZIECI</a>
+      <a href="#catalog" onclick="filterCatalog('akcesoria')" data-i18n="nav_accessories">AKCESORIA</a>
+      <a href="#why-us" data-i18n="reviews_title">OPINIE</a>
+      <a href="#faq" data-i18n="contacts_label">KONTAKTY</a>
+    </nav>
   </header>
 
   <!-- 3. Full-Width Hero Banner Slider (1:1 Darwin) -->
@@ -195,7 +204,7 @@
           Sen nie ma ceny)) To prawdziwe dzieło sztuki inżynieryjnej... jedyny minus to walka w domu o to, kto śpi na niej pierwszy. Takiej wygody nie dawała żadna inna poduszka z pianki memory, a przetestowałem niemal wszystkie topowe marki. Zero zapachu po rozpakowaniu, od razu gotowa do snu, ciężka i stabilna na łóżku.
         </p>
         <div class="dw-reviews__prod-tag" onclick="openProductModal('poduszka-ortopedyczna-adult-cell')">
-          <img src="{{ 'darwin_rev_pill.png' | asset_url }}" alt="Poduszka Cell" />
+          <img src="{{ '{{ 'darwin_rev_pill.png' | asset_url }}' | asset_url }}" alt="Poduszka Cell" />
           <div>
             <span data-i18n="review_left_on">OPINIA O MODELU</span>
             <strong>ADULT® / COMPOSITE L®</strong>
@@ -206,11 +215,11 @@
       <!-- Right 50%: White Story Avatars & Expert Quote -->
       <div class="dw-reviews__right">
         <div class="dw-reviews__avatars">
-          <div class="dw-avatar"><img src="{{ 'darwin_story_1.jpg' | asset_url }}" alt="" /></div>
-          <div class="dw-avatar is-active"><img src="{{ 'darwin_story_2.jpg' | asset_url }}" alt="" /></div>
-          <div class="dw-avatar"><img src="{{ 'darwin_story_3.jpg' | asset_url }}" alt="" /></div>
-          <div class="dw-avatar"><img src="{{ 'darwin_grid_hand.jpg' | asset_url }}" alt="" /></div>
-          <div class="dw-avatar"><img src="{{ 'darwin_showroom.jpg' | asset_url }}" alt="" /></div>
+          <div class="dw-avatar"><img src="{{ '{{ 'darwin_story_1.jpg' | asset_url }}' | asset_url }}" alt="" /></div>
+          <div class="dw-avatar is-active"><img src="{{ '{{ 'darwin_story_2.jpg' | asset_url }}' | asset_url }}" alt="" /></div>
+          <div class="dw-avatar"><img src="{{ '{{ 'darwin_story_3.jpg' | asset_url }}' | asset_url }}" alt="" /></div>
+          <div class="dw-avatar"><img src="{{ '{{ 'darwin_grid_hand.jpg' | asset_url }}' | asset_url }}" alt="" /></div>
+          <div class="dw-avatar"><img src="{{ '{{ 'darwin_showroom.jpg' | asset_url }}' | asset_url }}" alt="" /></div>
         </div>
         <p class="dw-reviews__story-text" data-i18n="review_right_text">
           Najważniejszy w sypialni jest materac i poduszka, bo przesypiamy jedną trzecią życia. Siatka elastomerowa Domivio Cell pozwala mięśniom karku całkowicie się rozluźnić już w pierwsze 10 minut i utrzymuje przyjemny chłód przez całą noc.
@@ -248,7 +257,7 @@
       </div>
 
       <div class="dw-contacts-split__img">
-        <img src="{{ 'darwin_grid_hand.jpg' | asset_url }}" alt="Technologia siatki TPE Cell Domivio" />
+        <img src="{{ '{{ 'darwin_grid_hand.jpg' | asset_url }}' | asset_url }}" alt="Technologia siatki TPE Cell Domivio" />
       </div>
     </div>
 
@@ -266,7 +275,7 @@
       </button>
 
       <div class="dw-contacts-split__img">
-        <img src="{{ 'darwin_showroom.jpg' | asset_url }}" alt="Domivio Sleep Showroom" />
+        <img src="{{ '{{ 'darwin_showroom.jpg' | asset_url }}' | asset_url }}" alt="Domivio Sleep Showroom" />
       </div>
     </div>
   </section>
@@ -389,6 +398,7 @@
     <span id="cartToastMsg">Dodano do koszyka!</span>
   </div>
 
+  <!-- Scripts -->
   
 <script src="{{ 'domivio-products.js' | asset_url }}"></script>
 <script>
@@ -414,12 +424,7 @@
 
 {% schema %}
 {
-  "name": "Domivio Darwin Storefront",
-  "settings": [],
-  "presets": [
-    {
-      "name": "Domivio Darwin Storefront"
-    }
-  ]
+  "name": "Domivio Storefront",
+  "settings": []
 }
 {% endschema %}

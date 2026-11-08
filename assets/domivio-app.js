@@ -160,18 +160,104 @@
     if (stickyTitleEl) stickyTitleEl.textContent = mb.title[currentLang];
   }
 
-  // ── Hero Slider & Catalog Rendering (1:1 Darwin Sleep) ────────────────
+  // ── Hero Slider, Story Switcher & Catalog Rendering (1:1 Darwin Sleep) ──
+  let selectedSizes = {};
+  let currentHeroSlide = 1;
+
+  window.setProductSize = function (handle, sizeVal) {
+    if (handle && sizeVal) {
+      selectedSizes[handle] = sizeVal;
+    }
+  };
+
   window.switchDarwinSlide = function (num) {
+    currentHeroSlide = num === 2 ? 2 : 1;
     const s1 = document.getElementById("dwHeroSlide1");
     const s2 = document.getElementById("dwHeroSlide2");
     if (!s1 || !s2) return;
-    if (num === 2) {
+    if (currentHeroSlide === 2) {
       s1.style.display = "none";
       s2.style.display = "flex";
     } else {
       s1.style.display = "flex";
       s2.style.display = "none";
     }
+  };
+
+  const STORIES_DATA = [
+    {
+      pl: {
+        text: "Najważniejszy w sypialni jest materac i poduszka, bo przesypiamy jedną trzecią życia. Siatka elastomerowa Domivio Cell pozwala mięśniom karku całkowicie się rozluźnić już w pierwsze 10 minut i utrzymuje przyjemny chłód przez całą noc.",
+        author: "Kamil Karapetyan",
+        role: "Projektant wnętrz & specjalista ergonomii snu"
+      },
+      en: {
+        text: "The most important thing in any bedroom is your pillow and mattress because we spend a third of our lives sleeping. The Domivio Cell grid lets your neck muscles completely relax within minutes.",
+        author: "Kamil Karapetyan",
+        role: "Interior Designer & Sleep Ergonomics Specialist"
+      }
+    },
+    {
+      pl: {
+        text: "Jako fizjoterapeutka polecam poduszkę Wave M® pacjentom z napięciem odcinka szyjnego. Dwa profile wysokości (8,5 i 10 cm) oraz sprężysta kratownica TPE stabilizują kręgosłup zarówno na boku, jak i na plecach.",
+        author: "dr Marta Lewandowska",
+        role: "Fizjoterapeutka & ekspertka rehabilitacji kręgosłupa"
+      },
+      en: {
+        text: "As a physiotherapist, I recommend the Wave M® pillow for cervical tension. Dual contour heights (8.5 and 10 cm) and the elastic TPE grid align the spine on both side and back.",
+        author: "Dr. Marta Lewandowska",
+        role: "Physiotherapist & Spine Rehabilitation Specialist"
+      }
+    },
+    {
+      pl: {
+        text: "Dla naszego synka wybraliśmy model Flat® / Teenager® o niskim profilu 6,5 cm. Zero przegrzewania główki, poszewka Tencel™ jest cudownie chłodna w dotyku, a poduszka można umyć pod bieżącą wodą.",
+        author: "Karolina i Piotr W.",
+        role: "Rodzice 7-letniego Leona · Warszawa"
+      },
+      en: {
+        text: "For our son we chose the Flat® / Teenager® low-profile 6.5 cm pillow. Zero overheating, the Tencel™ cover feels cool to the touch, and the grid is washable.",
+        author: "Karolina & Piotr W.",
+        role: "Parents · Warsaw"
+      }
+    },
+    {
+      pl: {
+        text: "Po wymianie zwykłego materaca piankowego na hybrydowy Cell Premium 160×200 przestaliśmy budzić się z bólem lędźwi. Nie przenosi drgań, gdy druga osoba wstaje w nocy — wart każdej złotówki.",
+        author: "Tomasz Krawczyk",
+        role: "Architekt · Kraków"
+      },
+      en: {
+        text: "After switching from regular memory foam to the Cell Premium 160×200 hybrid mattress, our lower-back pain disappeared. Zero motion transfer when my partner moves at night.",
+        author: "Tomasz Krawczyk",
+        role: "Architect · Krakow"
+      }
+    },
+    {
+      pl: {
+        text: "Kupiliśmy zestaw dla par (2× Adult® z rabatem -10% i darmowym Paczkomatem InPost). Brak zagnieceń na twarzy rano to prawda — skóra odpoczywa bez ucisku przez całą noc!",
+        author: "Aleksandra Nowak",
+        role: "Kosmetolog · Gdańsk"
+      },
+      en: {
+        text: "We ordered the couples bundle (2× Adult® with 10% off and free InPost Locker delivery). Waking up without sleep creases on my face is real — zero skin compression all night!",
+        author: "Aleksandra Nowak",
+        role: "Cosmetologist · Gdansk"
+      }
+    }
+  ];
+
+  window.switchDarwinStory = function (idx) {
+    const i = Math.max(0, Math.min(STORIES_DATA.length - 1, Number(idx) || 0));
+    const st = STORIES_DATA[i][currentLang] || STORIES_DATA[i].pl;
+    const txtEl = document.querySelector(".dw-reviews__story-text");
+    const authEl = document.querySelector(".dw-reviews__story-author");
+    const roleEl = document.querySelector(".dw-reviews__story-role");
+    if (txtEl) txtEl.textContent = st.text;
+    if (authEl) authEl.textContent = st.author;
+    if (roleEl) roleEl.textContent = st.role;
+    document.querySelectorAll(".dw-avatar").forEach((el, k) => el.classList.toggle("is-active", k === i));
+    document.querySelectorAll(".dw-reviews__nums span").forEach((el, k) => el.classList.toggle("is-active", k === i));
   };
 
   window.filterCatalog = function (cat) {
@@ -203,13 +289,16 @@
         const badgesHtml = (p.badges || [])
           .map((b) => `<span class="dw-badge dw-badge--${b.type}">${b.text}</span>`)
           .join("");
+        const currentSz = selectedSizes[p.handle] || (p.sizes && p.sizes[0]) || "";
+        if (currentSz && !selectedSizes[p.handle]) selectedSizes[p.handle] = currentSz;
+
         const sizesHtml =
           p.sizes && p.sizes.length > 0
             ? `
               <div class="dw-card__size-row">
                 <span>${t("size_label")}</span>
-                <select class="dw-card__size-select" aria-label="Rozmiar">
-                  ${p.sizes.map((sz) => `<option value="${sz}">${sz}</option>`).join("")}
+                <select class="dw-card__size-select" aria-label="Rozmiar" onchange="setProductSize('${p.handle}', this.value)">
+                  ${p.sizes.map((sz) => `<option value="${sz}" ${sz === currentSz ? "selected" : ""}>${sz}</option>`).join("")}
                 </select>
               </div>
             `
@@ -222,7 +311,7 @@
                 ${badgesHtml}
                 ${specTop ? `<div class="dw-card__spec">${specTop}</div>` : ""}
               </div>
-              <img class="dw-card__img" src="${p.images[0]}" alt="${p.title[currentLang]}" loading="lazy" />
+              <img class="dw-card__img" src="${p.images[0]}" alt="${p.title[currentLang]}" width="320" height="320" loading="lazy" decoding="async" />
               <button type="button" class="dw-card__atc-overlay" onclick="event.stopPropagation(); addToCart(${p.variantId}, 1, true)">
                 ${t("btn_add_to_cart")}
               </button>
@@ -240,6 +329,9 @@
                 <span>${t("split_label")}</span>
               </div>
               ${sizesHtml}
+              <button type="button" class="dw-card__mobile-atc" onclick="addToCart(${p.variantId}, 1, true)">
+                ${t("btn_add_to_cart")}
+              </button>
             </div>
           </article>
         `;
@@ -270,6 +362,19 @@
     const activeTotal =
       activePdpPackQty === 3 ? p3Disc : activePdpPackQty === 2 ? p2Disc : p1;
 
+    const currentSz = selectedSizes[prod.handle] || (prod.sizes && prod.sizes[0]) || "";
+    const pdpSizeHtml =
+      prod.sizes && prod.sizes.length > 0
+        ? `
+          <div style="margin-bottom:16px;">
+            <label style="display:block;font-size:11.5px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:#64748B;margin-bottom:6px;">${t("size_label")}</label>
+            <select style="width:100%;padding:11px 14px;border:1px solid #CBD5E1;background:#F8FAFC;font-size:13.5px;font-weight:600;color:#242C34;" onchange="setProductSize('${prod.handle}', this.value); renderCatalog();">
+              ${prod.sizes.map((sz) => `<option value="${sz}" ${sz === currentSz ? "selected" : ""}>${sz}</option>`).join("")}
+            </select>
+          </div>
+        `
+        : "";
+
     const thumbsHtml =
       prod.images.length > 1
         ? `<div class="pdp-modal__thumbs">
@@ -277,7 +382,7 @@
               .map(
                 (src, i) => `
               <div class="pdp-modal__thumb ${i === 0 ? "is-active" : ""}" onclick="switchPdpImage('${src}', this)">
-                <img src="${src}" alt="">
+                <img src="${src}" alt="" loading="lazy" decoding="async">
               </div>
             `
               )
@@ -323,25 +428,26 @@
           ${thumbsHtml}
         </div>
         <div>
-          <div style="display:inline-block;background:#FFD600;border:1.5px solid #111;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:900;margin-bottom:8px;">
+          <div style="display:inline-block;background:#7B42F6;color:#FFFFFF;padding:4px 10px;font-size:10.5px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:10px;">
             ${currentLang === "en" ? prod.badgeEN : prod.badgePL}
           </div>
-          <h2 style="font-size:22px;font-weight:900;line-height:1.25;margin-bottom:8px;">${prod.title[currentLang]}</h2>
-          <div style="font-size:13px;font-weight:800;color:#D97706;margin-bottom:12px;">★★★★★ ${prod.rating} (${prod.reviewsCount})</div>
+          <h2 style="font-size:21px;font-weight:600;line-height:1.25;margin-bottom:8px;color:#242C34;text-transform:uppercase;">${prod.title[currentLang]}</h2>
+          <div style="font-size:13px;font-weight:600;color:#7B42F6;margin-bottom:12px;">★★★★★ ${prod.rating} (${prod.reviewsCount})</div>
           <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:14px;">
-            <span style="font-size:28px;font-weight:900;">${formatValue(activeTotal)}</span>
-            ${unitComp ? `<span style="font-size:16px;color:#94A3B8;text-decoration:line-through;font-weight:700;">${formatValue(unitComp * activePdpPackQty)}</span>` : ""}
+            <span style="font-size:26px;font-weight:700;color:#242C34;">${formatValue(activeTotal)}</span>
+            ${unitComp ? `<span style="font-size:15px;color:#94A3B8;text-decoration:line-through;">${formatValue(unitComp * activePdpPackQty)}</span>` : ""}
           </div>
-          <p style="font-size:14px;color:#334155;margin-bottom:14px;">${prod.shortDesc[currentLang]}</p>
-          <ul style="list-style:none;display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600;margin-bottom:16px;">
+          <p style="font-size:13.5px;color:#475569;line-height:1.55;margin-bottom:14px;">${prod.shortDesc[currentLang]}</p>
+          ${pdpSizeHtml}
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:6px;font-size:12.5px;font-weight:500;color:#242C34;margin-bottom:16px;">
             ${prod.bullets[currentLang].map((b) => `<li>${b}</li>`).join("")}
           </ul>
           ${packsHtml}
           <button type="button" class="btn-yellow" style="width:100%;margin-bottom:12px;" onclick="addToCart(${prod.variantId}, ${activePdpPackQty}, true); closeProductModal();">
-            🛒 ${t("btn_add_to_cart")} — ${formatValue(activeTotal)}
+            ${t("btn_add_to_cart")} — ${formatValue(activeTotal)}
           </button>
-          <div style="background:#F8FAFC;border:1.5px solid #CBD5E1;border-radius:8px;padding:10px 12px;font-size:12px;display:flex;flex-direction:column;gap:4px;font-weight:700;">
-            <div style="color:#16A34A;">● ${t("stock_in_stock")}</div>
+          <div style="background:#F5F5F7;padding:12px 14px;font-size:12px;display:flex;flex-direction:column;gap:5px;color:#242C34;">
+            <div style="color:#16A34A;font-weight:600;">● ${t("stock_in_stock")}</div>
             <div>🚚 ${t("trust_fast_ship")}</div>
             <div>📦 ${t("trust_locker")}</div>
             <div>🔒 ${t("trust_payments")}</div>
@@ -371,15 +477,18 @@
     const prod = PRODUCTS.find((p) => p.variantId === Number(variantId));
     if (!prod) return;
     const addQty = Math.max(1, parseInt(qty, 10) || 1);
+    const chosenSize = selectedSizes[prod.handle] || (prod.sizes && prod.sizes[0]) || "";
 
     const existing = cart.find((item) => item.variantId === prod.variantId);
     if (existing) {
       existing.qty += addQty;
+      if (chosenSize) existing.size = chosenSize;
     } else {
       cart.push({
         variantId: prod.variantId,
         handle: prod.handle,
-        qty: addQty
+        qty: addQty,
+        size: chosenSize
       });
     }
 
@@ -520,10 +629,10 @@
 
     if (cart.length === 0) {
       itemsWrap.innerHTML = `
-        <div style="text-align:center;padding:40px 16px;">
-          <div style="font-size:42px;margin-bottom:10px;">🛒</div>
-          <p style="font-weight:800;margin-bottom:16px;">${t("cart_empty")}</p>
-          <button type="button" class="btn-yellow" onclick="addToCart(${CFG.mysteryBoxVariantId}, 1, false)">
+        <div style="text-align:center;padding:48px 16px;">
+          <div style="font-size:38px;margin-bottom:12px;">🛏️</div>
+          <p style="font-weight:600;color:#242C34;margin-bottom:20px;">${t("cart_empty")}</p>
+          <button type="button" class="btn-yellow" onclick="closeCartDrawer(); document.getElementById('catalog').scrollIntoView({behavior:'smooth'});">
             ${t("cart_empty_cta")}
           </button>
         </div>
@@ -545,17 +654,19 @@
         let packBadge = "";
         if (item.qty === 2) {
           lineTotal *= 0.9;
-          packBadge = `<span style="background:#FFD600;padding:1px 5px;border-radius:4px;font-size:10px;font-weight:900;margin-left:6px;">-10% PAKIET</span>`;
+          packBadge = `<span style="background:#7B42F6;color:#FFF;padding:2px 6px;font-size:10px;font-weight:600;margin-left:6px;">-10% PAKIET</span>`;
         } else if (item.qty >= 3) {
           lineTotal *= 0.85;
-          packBadge = `<span style="background:#FFD600;padding:1px 5px;border-radius:4px;font-size:10px;font-weight:900;margin-left:6px;">-15% PAKIET</span>`;
+          packBadge = `<span style="background:#7B42F6;color:#FFF;padding:2px 6px;font-size:10px;font-weight:600;margin-left:6px;">-15% PAKIET</span>`;
         }
+        const itemSz = item.size || selectedSizes[prod.handle] || (prod.sizes && prod.sizes[0]) || "";
 
         return `
           <div class="cart-item">
-            <img class="cart-item__img" src="${prod.images[0]}" alt="${prod.title[currentLang]}">
+            <img class="cart-item__img" src="${prod.images[0]}" alt="${prod.title[currentLang]}" loading="lazy" decoding="async">
             <div>
               <div class="cart-item__title">${prod.title[currentLang]}</div>
+              ${itemSz ? `<div style="font-size:11.5px;color:#64748B;margin-bottom:3px;">${t("size_label")} <strong>${itemSz}</strong></div>` : ""}
               <div class="cart-item__price">${formatValue(lineTotal)} ${packBadge}</div>
               <div class="cart-item__qty-ctrl">
                 <button type="button" class="cart-item__qty-btn" onclick="updateCartQty(${prod.variantId}, -1)">−</button>
@@ -563,7 +674,7 @@
                 <button type="button" class="cart-item__qty-btn" onclick="updateCartQty(${prod.variantId}, 1)">+</button>
               </div>
             </div>
-            <button type="button" style="background:transparent;border:none;font-size:16px;font-weight:900;color:#94A3B8;" onclick="updateCartQty(${prod.variantId}, -999)">✕</button>
+            <button type="button" style="background:transparent;border:none;font-size:16px;font-weight:700;color:#94A3B8;" onclick="updateCartQty(${prod.variantId}, -999)">✕</button>
           </div>
         `;
       })
@@ -571,21 +682,21 @@
 
     // Render 1-Click Second Product Order Bump + 3-Option Shipping Selector + Interactive Locker Map
     const otherProd =
-      PRODUCTS.find((p) => p.isDigital && !cart.some((i) => i.variantId === p.variantId)) ||
+      PRODUCTS.find((p) => p.handle === "poszewka-chlodzaca-tencel-cell" && !cart.some((i) => i.variantId === p.variantId)) ||
       PRODUCTS.find((p) => !cart.some((i) => i.variantId === p.variantId));
 
     const mysteryBumpHtml = otherProd
       ? `
         <div class="mystery-bump">
           <div class="mystery-bump__top">
-            <span class="mystery-bump__tag">${otherProd.isDigital ? (currentLang === "en" ? "👶 BABY PARENTS E-BOOK (PDF)" : "👶 PORADNIK DLA RODZICÓW NIEMOWLĄT (PDF)") : t("mystery_upsell_tag")}</span>
-            <span class="mystery-bump__save">${otherProd.isDigital ? (currentLang === "en" ? "-49% · PDF" : "-49% · WYSYŁKA PDF") : t("mystery_upsell_save")}</span>
+            <span class="mystery-bump__tag">${t("mystery_upsell_tag")}</span>
+            <span class="mystery-bump__save">${t("mystery_upsell_save")}</span>
           </div>
           <div class="mystery-bump__row">
-            <img class="mystery-bump__img" src="${otherProd.images[0]}" alt="">
+            <img class="mystery-bump__img" src="${otherProd.images[0]}" alt="" loading="lazy" decoding="async">
             <div>
-              <div style="font-size:13px;font-weight:900;line-height:1.25;">${otherProd.title[currentLang]}</div>
-              <div style="font-size:11.5px;color:#334155;">${otherProd.isDigital ? (currentLang === "en" ? "Gentle baby sleep routines & first-year development guide — instant PDF!" : "Sprawdzone rytuały usypiania niemowląt i skoki rozwojowe — natychmiast na e-mail!") : t("mystery_upsell_desc")}</div>
+              <div style="font-size:13px;font-weight:700;color:#242C34;line-height:1.25;">${otherProd.title[currentLang]}</div>
+              <div style="font-size:11.5px;color:#64748B;margin-top:2px;">${t("mystery_upsell_desc")}</div>
             </div>
           </div>
           <button type="button" class="mystery-bump__btn" onclick="addToCart(${otherProd.variantId}, 1, false)">
@@ -598,8 +709,8 @@
     const lockerPriceBase = currentLang === "en" ? "€3.50" : "14,90 zł";
     const courierPriceStr = currentLang === "en" ? "€4.70" : "19,90 zł";
     const lockerPriceDisplay = totals.isFreeLocker
-      ? `<span style="color:#16A34A;font-weight:900;">0,00 zł (GRATIS)</span> <span style="text-decoration:line-through;color:#94A3B8;font-size:11px;">${lockerPriceBase}</span>`
-      : `<span style="font-weight:900;">${lockerPriceBase}</span>`;
+      ? `<span style="color:#16A34A;font-weight:700;">0,00 zł (GRATIS)</span> <span style="text-decoration:line-through;color:#94A3B8;font-size:11px;">${lockerPriceBase}</span>`
+      : `<span style="font-weight:700;">${lockerPriceBase}</span>`;
 
     const selectedPointHtml =
       selectedLocker && selectedLocker.code && selectedShippingMethod !== "kurier_dpd"
@@ -607,12 +718,12 @@
           <div class="locker-selected" style="margin-top:8px;">
             <div>
               <span class="locker-selected__badge">${selectedLocker.supplier === "INPOST" ? "INPOST PACZKOMATY" : "DPD PACZKOMATY"}</span>
-              <div style="font-size:13px;font-weight:900;">${selectedLocker.code}</div>
+              <div style="font-size:13px;font-weight:700;color:#242C34;">${selectedLocker.code}</div>
               <div style="font-size:11.5px;color:#475569;">${selectedLocker.street}, ${selectedLocker.postal_code} ${selectedLocker.city}</div>
             </div>
             <div style="display:flex;flex-direction:column;gap:4px;">
               <button type="button" class="acc-card__btn" onclick="openApaczkaLockerMap('${selectedLocker.supplier || "ALL"}')">${t("locker_change_btn")}</button>
-              <button type="button" style="background:none;border:none;font-size:10.5px;font-weight:800;color:#DC2626;" onclick="clearSelectedLocker()">${t("locker_remove_btn")}</button>
+              <button type="button" style="background:none;border:none;font-size:10.5px;font-weight:700;color:#DC2626;" onclick="clearSelectedLocker()">${t("locker_remove_btn")}</button>
             </div>
           </div>
         `
@@ -624,13 +735,13 @@
         <div style="display:flex;flex-direction:column;gap:8px;">
           <div
             onclick="selectShippingMethod('inpost_paczkomat')"
-            style="border:2px solid ${selectedShippingMethod === "inpost_paczkomat" ? "#111111" : "#CBD5E1"};background:${selectedShippingMethod === "inpost_paczkomat" ? "#FEF9C3" : "#FFFFFF"};border-radius:8px;padding:10px 12px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;"
+            style="border:1.5px solid ${selectedShippingMethod === "inpost_paczkomat" ? "#7B42F6" : "#E2E8F0"};background:${selectedShippingMethod === "inpost_paczkomat" ? "#F6F3FF" : "#FFFFFF"};padding:10px 12px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;"
           >
             <div style="display:flex;align-items:center;gap:8px;">
-              <input type="radio" name="dom_ship_method" ${selectedShippingMethod === "inpost_paczkomat" ? "checked" : ""} style="accent-color:#111111;width:16px;height:16px;" />
+              <input type="radio" name="dom_ship_method" ${selectedShippingMethod === "inpost_paczkomat" ? "checked" : ""} style="accent-color:#7B42F6;width:16px;height:16px;" />
               <div>
-                <div style="font-size:13px;font-weight:900;color:#111111;">📦 InPost Paczkomaty</div>
-                <button type="button" onclick="event.stopPropagation(); selectShippingMethod('inpost_paczkomat'); openApaczkaLockerMap('INPOST');" style="background:none;border:none;padding:0;font-size:11px;font-weight:800;color:#D97706;text-decoration:underline;">
+                <div style="font-size:13px;font-weight:700;color:#242C34;">📦 InPost Paczkomaty</div>
+                <button type="button" onclick="event.stopPropagation(); selectShippingMethod('inpost_paczkomat'); openApaczkaLockerMap('INPOST');" style="background:none;border:none;padding:0;font-size:11px;font-weight:600;color:#7B42F6;text-decoration:underline;">
                   ${t("locker_inpost_sub")}
                 </button>
               </div>
@@ -640,13 +751,13 @@
 
           <div
             onclick="selectShippingMethod('dpd_paczkomat')"
-            style="border:2px solid ${selectedShippingMethod === "dpd_paczkomat" ? "#111111" : "#CBD5E1"};background:${selectedShippingMethod === "dpd_paczkomat" ? "#FEF9C3" : "#FFFFFF"};border-radius:8px;padding:10px 12px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;"
+            style="border:1.5px solid ${selectedShippingMethod === "dpd_paczkomat" ? "#7B42F6" : "#E2E8F0"};background:${selectedShippingMethod === "dpd_paczkomat" ? "#F6F3FF" : "#FFFFFF"};padding:10px 12px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;"
           >
             <div style="display:flex;align-items:center;gap:8px;">
-              <input type="radio" name="dom_ship_method" ${selectedShippingMethod === "dpd_paczkomat" ? "checked" : ""} style="accent-color:#111111;width:16px;height:16px;" />
+              <input type="radio" name="dom_ship_method" ${selectedShippingMethod === "dpd_paczkomat" ? "checked" : ""} style="accent-color:#7B42F6;width:16px;height:16px;" />
               <div>
-                <div style="font-size:13px;font-weight:900;color:#111111;">📦 DPD Paczkomaty</div>
-                <button type="button" onclick="event.stopPropagation(); selectShippingMethod('dpd_paczkomat'); openApaczkaLockerMap('DPD');" style="background:none;border:none;padding:0;font-size:11px;font-weight:800;color:#D97706;text-decoration:underline;">
+                <div style="font-size:13px;font-weight:700;color:#242C34;">📦 DPD Paczkomaty</div>
+                <button type="button" onclick="event.stopPropagation(); selectShippingMethod('dpd_paczkomat'); openApaczkaLockerMap('DPD');" style="background:none;border:none;padding:0;font-size:11px;font-weight:600;color:#7B42F6;text-decoration:underline;">
                   ${t("locker_dpd_sub")}
                 </button>
               </div>
@@ -656,16 +767,16 @@
 
           <div
             onclick="selectShippingMethod('kurier_dpd')"
-            style="border:2px solid ${selectedShippingMethod === "kurier_dpd" ? "#111111" : "#CBD5E1"};background:${selectedShippingMethod === "kurier_dpd" ? "#FEF9C3" : "#FFFFFF"};border-radius:8px;padding:10px 12px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;"
+            style="border:1.5px solid ${selectedShippingMethod === "kurier_dpd" ? "#7B42F6" : "#E2E8F0"};background:${selectedShippingMethod === "kurier_dpd" ? "#F6F3FF" : "#FFFFFF"};padding:10px 12px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;"
           >
             <div style="display:flex;align-items:center;gap:8px;">
-              <input type="radio" name="dom_ship_method" ${selectedShippingMethod === "kurier_dpd" ? "checked" : ""} style="accent-color:#111111;width:16px;height:16px;" />
+              <input type="radio" name="dom_ship_method" ${selectedShippingMethod === "kurier_dpd" ? "checked" : ""} style="accent-color:#7B42F6;width:16px;height:16px;" />
               <div>
-                <div style="font-size:13px;font-weight:900;color:#111111;">🚚 Kurier DPD</div>
-                <div style="font-size:11px;color:#475569;font-weight:600;">${t("locker_courier_sub")}</div>
+                <div style="font-size:13px;font-weight:700;color:#242C34;">🚚 Kurier DPD</div>
+                <div style="font-size:11px;color:#64748B;">${t("locker_courier_sub")}</div>
               </div>
             </div>
-            <div style="text-align:right;font-size:13px;font-weight:900;white-space:nowrap;">${courierPriceStr}</div>
+            <div style="text-align:right;font-size:13px;font-weight:700;white-space:nowrap;">${courierPriceStr}</div>
           </div>
         </div>
         ${selectedPointHtml}
@@ -674,20 +785,24 @@
 
     upsellWrap.innerHTML = mysteryBumpHtml + lockerHtml;
 
-    // Summary totals
-    document.getElementById("summarySubtotal").textContent = formatValue(totals.subtotal);
+    // Summary totals (safe support for both ID naming conventions)
+    const subEl = document.getElementById("cartSubtotalVal") || document.getElementById("summarySubtotal");
+    if (subEl) subEl.textContent = formatValue(totals.subtotal);
+
     const discRow = document.getElementById("summaryDiscountRow");
     if (discRow) discRow.style.display = "none";
 
-    const shipEl = document.getElementById("summaryShipping");
+    const shipEl = document.getElementById("cartShippingVal") || document.getElementById("summaryShipping");
     if (shipEl) {
       if (totals.shippingCost === 0 && totals.isFreeLocker) {
-        shipEl.innerHTML = `<span style="color:#16A34A;font-weight:900;">${totals.shippingMethodLabel}: 0,00 zł (GRATIS od 99 zł)</span>`;
+        shipEl.innerHTML = `<span style="color:#16A34A;font-weight:700;">${totals.shippingMethodLabel}: 0,00 zł (GRATIS)</span>`;
       } else {
         shipEl.textContent = `${totals.shippingMethodLabel}: ${formatValue(totals.shippingCost)}`;
       }
     }
-    document.getElementById("summaryTotal").textContent = formatValue(totals.grandTotal);
+
+    const totEl = document.getElementById("cartTotalVal") || document.getElementById("summaryTotal");
+    if (totEl) totEl.textContent = formatValue(totals.grandTotal);
   }
 
   window.clearSelectedLocker = function () {
@@ -708,6 +823,18 @@
       .join(",");
     const params = new URLSearchParams();
     const totals = getCartTotals();
+
+    const sizeSummary = cart
+      .map((i) => {
+        const prod = PRODUCTS.find((p) => p.variantId === i.variantId);
+        const sz = i.size || (prod && selectedSizes[prod.handle]) || (prod && prod.sizes && prod.sizes[0]) || "";
+        return prod ? `${prod.title.pl} [${sz || "Standard"}] ×${i.qty}` : "";
+      })
+      .filter(Boolean)
+      .join(" | ");
+    if (sizeSummary) {
+      params.set("attributes[Wybrane modele i rozmiary]", sizeSummary);
+    }
 
     params.set(
       "attributes[Sposób dostawy]",
@@ -1240,5 +1367,28 @@
   document.addEventListener("DOMContentLoaded", () => {
     window.setDomivioLang(currentLang);
     syncWithShopifyBackend();
+
+    // Interactive OPINIE story avatars & numbers
+    document.querySelectorAll(".dw-avatar").forEach((el, idx) => {
+      el.style.cursor = "pointer";
+      el.addEventListener("click", () => window.switchDarwinStory(idx));
+    });
+    document.querySelectorAll(".dw-reviews__nums span").forEach((el, idx) => {
+      el.style.cursor = "pointer";
+      el.addEventListener("click", () => window.switchDarwinStory(idx));
+    });
+
+    // Auto-rotate Hero Slider every 7s unless hovered
+    const heroSec = document.querySelector(".dw-hero");
+    let heroHovered = false;
+    if (heroSec) {
+      heroSec.addEventListener("mouseenter", () => { heroHovered = true; });
+      heroSec.addEventListener("mouseleave", () => { heroHovered = false; });
+      setInterval(() => {
+        if (!heroHovered) {
+          window.switchDarwinSlide(currentHeroSlide === 1 ? 2 : 1);
+        }
+      }, 7000);
+    }
   });
 })();
