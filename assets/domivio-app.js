@@ -186,12 +186,16 @@
                 <span class="p-card__price">${formatValue(price)}</span>
                 ${comp ? `<span class="p-card__old">${formatValue(comp)}</span>` : ""}
               </div>
-              <div style="margin:6px 0 10px;font-size:11.5px;font-weight:800;color:${p.pricePLN >= 99 ? "#15803D" : "#475569"};background:${p.pricePLN >= 99 ? "#DCFCE7" : "#F1F5F9"};border:1.5px solid ${p.pricePLN >= 99 ? "#16A34A" : "#CBD5E1"};border-radius:6px;padding:4px 8px;display:inline-flex;align-items:center;gap:5px;width:fit-content;">
-                🚚 ${
+              <div style="margin:6px 0 10px;font-size:11.5px;font-weight:800;color:${p.isDigital || p.pricePLN >= 99 ? "#15803D" : "#475569"};background:${p.isDigital || p.pricePLN >= 99 ? "#DCFCE7" : "#F1F5F9"};border:1.5px solid ${p.isDigital || p.pricePLN >= 99 ? "#16A34A" : "#CBD5E1"};border-radius:6px;padding:4px 8px;display:inline-flex;align-items:center;gap:5px;width:fit-content;">
+                ${p.isDigital ? "⚡" : "🚚"} ${
                   currentLang === "pl"
-                    ? p.pricePLN >= 99
+                    ? p.isDigital
+                      ? "WYSYŁKA PDF NA E-MAIL (0 ZŁ) ✓"
+                      : p.pricePLN >= 99
                       ? "DARMOWY PACZKOMAT (OD 99 ZŁ) ✓"
                       : "Darmowy Paczkomat od 99 zł"
+                    : p.isDigital
+                    ? "INSTANT PDF E-MAIL DELIVERY (0 PLN) ✓"
                     : p.pricePLN >= 99
                     ? "FREE LOCKER SHIPPING (FROM 99 PLN) ✓"
                     : "Free Locker shipping from 99 PLN"
@@ -202,7 +206,7 @@
                   🛒 ${t("btn_add_to_cart")}
                 </button>
                 <button type="button" class="p-card__info-btn" onclick="openProductModal('${p.handle}')">
-                  📦 -15%
+                  ${p.isDigital ? "📖 PDF" : "📦 -15%"}
                 </button>
               </div>
             </div>
@@ -250,7 +254,7 @@
           </div>`
         : "";
 
-    const packsHtml = true
+    const packsHtml = !prod.isDigital
       ? `
         <div class="qty-packs">
           <div class="qty-packs__header">${t("qty_header")}</div>
@@ -395,12 +399,21 @@
     const threshold = currentLang === "en" ? (CFG.freeShippingEUR || 25.0) : (CFG.freeShippingPLN || 99.0);
     const remainingForFreeShip = Math.max(0, threshold - totalAfterDiscount);
     const progressPct = Math.min(100, (totalAfterDiscount / threshold) * 100);
-    const isFreeLocker = totalAfterDiscount >= threshold && totalCount > 0;
+    const isDigitalOnly =
+      cart.length > 0 &&
+      cart.every((item) => {
+        const p = PRODUCTS.find((x) => x.variantId === item.variantId);
+        return p && p.isDigital;
+      });
+    const isFreeLocker = isDigitalOnly || (totalAfterDiscount >= threshold && totalCount > 0);
 
     let shippingCost = 0;
     let shippingMethodLabel = "";
     if (totalCount > 0) {
-      if (selectedShippingMethod === "kurier_dpd") {
+      if (isDigitalOnly) {
+        shippingCost = 0;
+        shippingMethodLabel = currentLang === "en" ? "Instant PDF Email Delivery" : "Wysyłka PDF na e-mail (0 zł)";
+      } else if (selectedShippingMethod === "kurier_dpd") {
         shippingCost = currentLang === "en" ? 4.70 : 19.90;
         shippingMethodLabel = currentLang === "en" ? "Kurier DPD" : "Kurier DPD";
       } else if (selectedShippingMethod === "dpd_paczkomat") {
@@ -526,20 +539,22 @@
       .join("");
 
     // Render 1-Click Second Product Order Bump + 3-Option Shipping Selector + Interactive Locker Map
-    const otherProd = PRODUCTS.find((p) => !cart.some((i) => i.variantId === p.variantId));
+    const otherProd =
+      PRODUCTS.find((p) => p.isDigital && !cart.some((i) => i.variantId === p.variantId)) ||
+      PRODUCTS.find((p) => !cart.some((i) => i.variantId === p.variantId));
 
     const mysteryBumpHtml = otherProd
       ? `
         <div class="mystery-bump">
           <div class="mystery-bump__top">
-            <span class="mystery-bump__tag">${t("mystery_upsell_tag")}</span>
-            <span class="mystery-bump__save">${t("mystery_upsell_save")}</span>
+            <span class="mystery-bump__tag">${otherProd.isDigital ? (currentLang === "en" ? "👶 BABY PARENTS E-BOOK (PDF)" : "👶 PORADNIK DLA RODZICÓW NIEMOWLĄT (PDF)") : t("mystery_upsell_tag")}</span>
+            <span class="mystery-bump__save">${otherProd.isDigital ? (currentLang === "en" ? "-49% · PDF" : "-49% · WYSYŁKA PDF") : t("mystery_upsell_save")}</span>
           </div>
           <div class="mystery-bump__row">
             <img class="mystery-bump__img" src="${otherProd.images[0]}" alt="">
             <div>
               <div style="font-size:13px;font-weight:900;line-height:1.25;">${otherProd.title[currentLang]}</div>
-              <div style="font-size:11.5px;color:#334155;">${t("mystery_upsell_desc")}</div>
+              <div style="font-size:11.5px;color:#334155;">${otherProd.isDigital ? (currentLang === "en" ? "Gentle baby sleep routines & first-year development guide — instant PDF!" : "Sprawdzone rytuały usypiania niemowląt i skoki rozwojowe — natychmiast na e-mail!") : t("mystery_upsell_desc")}</div>
             </div>
           </div>
           <button type="button" class="mystery-bump__btn" onclick="addToCart(${otherProd.variantId}, 1, false)">
