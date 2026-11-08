@@ -918,15 +918,6 @@
         `
         : "";
 
-    const searchPlaceholder =
-      currentLang === "en"
-        ? "Enter city, street or locker code (e.g. Warszawa)..."
-        : "Wpisz miasto, ulicę lub kod Paczkomatu (np. Warszawa)...";
-    const openMapBtnText =
-      currentLang === "en"
-        ? "SELECT PARCEL LOCKER ON MAP"
-        : "WYBIERZ PACZKOMAT NA MAPIE";
-
     const lockerHtml = `
       <div class="locker-box" style="background:#F6F3FF;border:1.5px solid #EDE5FF;padding:14px;">
         <div class="locker-box__title" style="color:#7B42F6;font-size:11.5px;font-weight:800;letter-spacing:0.05em;margin-bottom:10px;display:flex;align-items:center;gap:6px;">
@@ -934,44 +925,22 @@
           <span>${t("locker_title")}</span>
         </div>
         ${selectedPointHtml}
-        <div style="position:relative;margin-bottom:10px;">
-          <input
-            type="text"
-            id="cartInlineLockerInput"
-            placeholder="${searchPlaceholder}"
-            oninput="handleCartInlineLockerSearch(this.value)"
-            autocomplete="off"
-            style="width:100%;padding:10px 12px;border:1.5px solid #D8B4FE;font-size:12.5px;color:#242C34;background:#FFFFFF;outline:none;box-sizing:border-box;"
-          />
-          <div
-            id="cartInlineLockerResults"
-            style="display:none;max-height:190px;overflow-y:auto;border:1.5px solid #7B42F6;border-top:none;background:#FFFFFF;box-shadow:0 8px 20px rgba(123,66,246,0.12);"
-          ></div>
-        </div>
-        <button
-          type="button"
-          onclick="openApaczkaLockerMap('ALL')"
-          style="width:100%;padding:11px 14px;background:#7B42F6;color:#FFFFFF;border:none;font-size:12px;font-weight:700;letter-spacing:0.05em;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px;"
-        >
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          <span>${openMapBtnText}</span>
-        </button>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
           <button
             type="button"
             onclick="selectShippingMethod('inpost_paczkomat'); openApaczkaLockerMap('INPOST');"
-            style="padding:10px 10px;background:#FFFFFF;border:1.5px solid #D8B4FE;font-size:11.5px;font-weight:700;color:#242C34;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all 0.15s;"
+            style="padding:12px 10px;background:#7B42F6;border:1.5px solid #7B42F6;font-size:12px;font-weight:700;color:#FFFFFF;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all 0.15s;"
           >
-            <span style="width:8px;height:8px;border-radius:50%;background:#7B42F6;display:inline-block;"></span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
             <span>InPost Paczkomat</span>
           </button>
           <button
             type="button"
             onclick="selectShippingMethod('dpd_paczkomat'); openApaczkaLockerMap('DPD');"
-            style="padding:10px 10px;background:#FFFFFF;border:1.5px solid #D8B4FE;font-size:11.5px;font-weight:700;color:#242C34;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all 0.15s;"
+            style="padding:12px 10px;background:#7B42F6;border:1.5px solid #7B42F6;font-size:12px;font-weight:700;color:#FFFFFF;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all 0.15s;"
           >
-            <span style="width:8px;height:8px;border-radius:50%;background:#7B42F6;display:inline-block;"></span>
-            <span>DPD Pickup</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span>DPD Paczkomat</span>
           </button>
         </div>
       </div>
@@ -1231,7 +1200,7 @@
       const c = btn.getAttribute("data-dom-carrier-tab");
       btn.classList.toggle("is-active", c === currentCarrierFilter);
       const labelBase =
-        c === "INPOST" ? "InPost Paczkomat" : c === "DPD" ? "DPD Pickup" : "Wszystkie";
+        c === "INPOST" ? "InPost Paczkomat" : c === "DPD" ? "DPD Paczkomat" : "Wszystkie";
       btn.textContent = c === currentCarrierFilter ? `✓ ${labelBase}` : labelBase;
     });
   }
@@ -1379,7 +1348,7 @@
       controls.className = "dom-map-header-controls";
       controls.innerHTML = `
         <button type="button" class="dom-map-carrier-tab" data-dom-carrier-tab="INPOST">InPost Paczkomat</button>
-        <button type="button" class="dom-map-carrier-tab" data-dom-carrier-tab="DPD">DPD Pickup</button>
+        <button type="button" class="dom-map-carrier-tab" data-dom-carrier-tab="DPD">DPD Paczkomat</button>
         <button type="button" class="dom-map-carrier-tab" data-dom-carrier-tab="ALL">Wszystkie</button>
         <button type="button" class="dom-map-close-desktop" data-dom-map-close>✕ Zamknij</button>
       `;
