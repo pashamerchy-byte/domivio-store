@@ -133,7 +133,7 @@
       </div>
       <div class="dw-violet-bar__item">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 20V10M10 20V4M14 20v-8M18 20v-4"/></svg>
-        <span data-i18n="feat_6">PŁATNOŚCI BLIK / RATY 0% / KARTA</span>
+        <span data-i18n="feat_6">PŁATNOŚCI BLIK / KARTA / APPLE PAY</span>
       </div>
     </div>
   </section>
@@ -436,17 +436,320 @@
     "domivio_wave_1.jpg": "{{ 'domivio_wave_1.jpg' | asset_url }}",
     "domivio_wave_2.jpg": "{{ 'domivio_wave_2.jpg' | asset_url }}"
   };
-  (window.DOMIVIO_PRODUCTS || []).forEach(function(p) {
-    p.images = (p.images || []).map(function(img) {
-      return window.DOMIVIO_ASSET_MAP[img] || img;
-    });
-  });
+
+  // Apply Shopify Theme Editor Settings (Customize / Dostosuj)
+  (function() {
+    var cfg = window.DOMIVIO_CONFIG || {};
+    var i18nPL = (window.DOMIVIO_I18N && window.DOMIVIO_I18N.pl) || {};
+    var customFreeShip = {{ section.settings.free_shipping_pln | default: 890 | json }};
+    if (customFreeShip && Number(customFreeShip) > 0) {
+      cfg.freeShippingPLN = Number(customFreeShip);
+    }
+    var topPromo = {{ section.settings.top_promo | json }};
+    if (topPromo) i18nPL.top_promo = topPromo;
+    var s1Title = {{ section.settings.slide1_title | json }};
+    if (s1Title) i18nPL.slide1_title = s1Title;
+    var s1Sub = {{ section.settings.slide1_sub | json }};
+    if (s1Sub) i18nPL.slide1_sub = s1Sub;
+    var s1Btn = {{ section.settings.slide1_btn | json }};
+    if (s1Btn) i18nPL.slide1_btn = s1Btn;
+    var s2Title = {{ section.settings.slide2_title | json }};
+    if (s2Title) i18nPL.slide2_title = s2Title;
+    var s2Sub = {{ section.settings.slide2_sub | json }};
+    if (s2Sub) i18nPL.slide2_sub = s2Sub;
+    var hitsTitle = {{ section.settings.hits_title | json }};
+    if (hitsTitle) i18nPL.hits_title = hitsTitle;
+    var revTitle = {{ section.settings.reviews_title | json }};
+    if (revTitle) i18nPL.reviews_title = revTitle;
+    var revLeftText = {{ section.settings.review_left_text | json }};
+    if (revLeftText) i18nPL.review_left_text = revLeftText;
+
+    {% if section.settings.hero_1_image != blank %}
+    var s1El = document.getElementById("dwHeroSlide1");
+    if (s1El) s1El.style.backgroundImage = "url('{{ section.settings.hero_1_image | image_url: width: 1800 }}')";
+    {% endif %}
+    {% if section.settings.hero_2_image != blank %}
+    var s2El = document.getElementById("dwHeroSlide2");
+    if (s2El) s2El.style.backgroundImage = "url('{{ section.settings.hero_2_image | image_url: width: 1800 }}')";
+    {% endif %}
+
+    // Load products from Theme Editor blocks if present
+    var editorBlocks = [
+      {% for block in section.blocks %}
+      {% if block.type == "product_card" %}
+      {
+        id: {{ forloop.index | plus: 1000 }},
+        variantId: {{ forloop.index | plus: 1000 }},
+        handle: "produkt-" + {{ forloop.index }},
+        titlePL: {{ block.settings.title_pl | json }},
+        pricePLN: parseFloat({{ block.settings.price_pln | default: "369" | json }}) || 369,
+        comparePLN: parseFloat({{ block.settings.compare_pln | default: "459" | json }}) || 459,
+        category: {{ block.settings.category | default: "poduszki" | json }},
+        specHeight: {{ block.settings.spec_height | default: "8,5/10 cm" | json }},
+        specFirm: {{ block.settings.spec_firm | default: "Średnia twardość" | json }},
+        sizes: {{ block.settings.sizes | default: "Standard (8,5/10 cm), XL (10/12 cm)" | json }},
+        shortDesc: {{ block.settings.short_desc | json }},
+        img1: {% if block.settings.image_1 != blank %}"{{ block.settings.image_1 | image_url: width: 1000 }}"{% else %}""{% endif %},
+        img2: {% if block.settings.image_2 != blank %}"{{ block.settings.image_2 | image_url: width: 1000 }}"{% else %}""{% endif %},
+        img3: {% if block.settings.image_3 != blank %}"{{ block.settings.image_3 | image_url: width: 1000 }}"{% else %}""{% endif %},
+        defaultImg1: {{ block.settings.default_img_1 | default: "domivio_wave_1.jpg" | json }}
+      },
+      {% endif %}
+      {% endfor %}
+    ];
+
+    if (editorBlocks.length > 0) {
+      window.DOMIVIO_PRODUCTS = editorBlocks.map(function(b, idx) {
+        var imgs = [];
+        if (b.img1) imgs.push(b.img1);
+        else if (b.defaultImg1) imgs.push(window.DOMIVIO_ASSET_MAP[b.defaultImg1] || b.defaultImg1);
+        if (b.img2) imgs.push(b.img2);
+        else if (idx === 0) {
+          imgs.push(window.DOMIVIO_ASSET_MAP["domivio_wave_2.jpg"] || "domivio_wave_2.jpg");
+          imgs.push(window.DOMIVIO_ASSET_MAP["darwin_adult_cover.png"] || "darwin_adult_cover.png");
+          imgs.push(window.DOMIVIO_ASSET_MAP["darwin_adult_grid.png"] || "darwin_adult_grid.png");
+        }
+        if (b.img3) imgs.push(b.img3);
+
+        var catMap = { "poduszki": "PODUSZKI", "materace": "MATERACE", "dla-dzieci": "DLA DZIECI", "akcesoria": "AKCESORIA" };
+        return {
+          id: b.id,
+          variantId: b.variantId,
+          shopifyVariantId: null,
+          handle: idx === 0 ? "poduszka-ortopedyczna-adult-cell" : b.handle,
+          category: [b.category, "na-prezent"],
+          catLabelPL: catMap[b.category] || "PODUSZKI",
+          catLabelEN: "SLEEP",
+          isMysteryBox: idx === 0,
+          badges: [{ text: "HIT", type: "hit" }, { text: "SALE", type: "sale" }],
+          specTopPL: "≈ " + b.specFirm + "\n↕ " + b.specHeight,
+          specTopEN: "≈ " + b.specFirm + "\n↕ " + b.specHeight,
+          specHeightPL: "Wysokość — " + b.specHeight,
+          specHeightEN: "Height — " + b.specHeight,
+          specFirmPL: "Twardość — " + b.specFirm.toLowerCase(),
+          specFirmEN: "Firmness — medium",
+          pricePLN: b.pricePLN,
+          comparePLN: b.comparePLN,
+          priceEUR: Math.round(b.pricePLN / 4.25),
+          compareEUR: Math.round(b.comparePLN / 4.25),
+          rating: "4.9",
+          reviewsCount: 149,
+          sizes: (b.sizes || "Standard").split(",").map(function(s) { return s.trim(); }).filter(Boolean),
+          images: imgs,
+          title: { pl: b.titlePL, en: b.titlePL },
+          shortDesc: { pl: b.shortDesc, en: b.shortDesc },
+          bullets: {
+            pl: [
+              "💜 Opatentowana kratownica elastomerowa TPE CELL®",
+              "❄️ Termoregulacja 360° przez całą noc",
+              "🚚 Wysyłka 24h Paczkomatem InPost / DPD (Darmowa dostawa od " + (cfg.freeShippingPLN || 890) + " zł)"
+            ],
+            en: [
+              "💜 Patented TPE CELL® honeycomb grid",
+              "❄️ 360° airflow all night",
+              "🚚 Free shipping from " + (cfg.freeShippingPLN || 890) + " PLN"
+            ]
+          }
+        };
+      });
+    } else {
+      (window.DOMIVIO_PRODUCTS || []).forEach(function(p) {
+        p.images = (p.images || []).map(function(img) {
+          return window.DOMIVIO_ASSET_MAP[img] || img;
+        });
+      });
+    }
+  })();
 </script>
 <script src="{{ 'domivio-app.js' | asset_url }}"></script>
 
 {% schema %}
 {
-  "name": "Domivio Storefront",
-  "settings": []
+  "name": "Domivio Storefront (Edytor)",
+  "settings": [
+    {
+      "type": "header",
+      "content": "1. Górny pasek i Darmowa Dostawa"
+    },
+    {
+      "type": "text",
+      "id": "top_promo",
+      "label": "Tekst promocji na górnym pasku",
+      "default": "Podaruj zdrowy sen bliskim! Darmowa dostawa od 890 zł"
+    },
+    {
+      "type": "text",
+      "id": "contact_email",
+      "label": "E-mail kontaktowy",
+      "default": "domivio.official@gmail.com"
+    },
+    {
+      "type": "number",
+      "id": "free_shipping_pln",
+      "label": "Próg darmowej dostawy (w zł)",
+      "default": 890
+    },
+    {
+      "type": "header",
+      "content": "2. Baner Główny (Slajd 1 i 2)"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_1_image",
+      "label": "Zdjęcie baneru 1 (opcjonalne)"
+    },
+    {
+      "type": "text",
+      "id": "slide1_title",
+      "label": "Tytuł baneru 1",
+      "default": "PORANEK BEZ ŚLADÓW WCZORAJSZEGO ZMĘCZENIA ✨"
+    },
+    {
+      "type": "textarea",
+      "id": "slide1_sub",
+      "label": "Podtytuł baneru 1",
+      "default": "Siła głębokiego snu i opatentowanej siatki elastomerowej CELL® — podparcie szyi i mikroklimat przez całą noc."
+    },
+    {
+      "type": "text",
+      "id": "slide1_btn",
+      "label": "Tekst przycisku baneru 1",
+      "default": "ZOBACZ KOLEKCJĘ"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_2_image",
+      "label": "Zdjęcie baneru 2 (opcjonalne)"
+    },
+    {
+      "type": "text",
+      "id": "slide2_title",
+      "label": "Tytuł baneru 2",
+      "default": "PODUSZKI I MATERACE NOWEJ GENERACJI CELL®"
+    },
+    {
+      "type": "textarea",
+      "id": "slide2_sub",
+      "label": "Podtytuł baneru 2",
+      "default": "Elastyczna kratownica TPE redukuje nacisk, zapobiega zagnieceniom na twarzy i odprowadza ciepło 360°."
+    },
+    {
+      "type": "header",
+      "content": "3. Sekcje Katalogu i Opinii"
+    },
+    {
+      "type": "text",
+      "id": "hits_title",
+      "label": "Nagłówek katalogu produktów",
+      "default": "HITY SPRZEDAŻY"
+    },
+    {
+      "type": "text",
+      "id": "reviews_title",
+      "label": "Nagłówek sekcji opinii",
+      "default": "OPINIE"
+    },
+    {
+      "type": "textarea",
+      "id": "review_left_text",
+      "label": "Tekst głównej opinii (fioletowy blok)",
+      "default": "Sen nie ma ceny)) To prawdziwe dzieło sztuki inżynieryjnej... jedyny minus to walka w domu o to, kto śpi na niej pierwszy. Takiej wygody nie dawała żadna inna poduszka z pianki memory, a przetestowałem niemal wszystkie topowe marki. Zero zapachu po rozpakowaniu, od razu gotowa do snu, ciężka i stabilna na łóżku."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product_card",
+      "name": "Produkt w katalogu",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title_pl",
+          "label": "Nazwa produktu (PL)",
+          "default": "PODUSZKA ORTOPEDYCZNA TPE CELL® (8,5/10 CM)"
+        },
+        {
+          "type": "text",
+          "id": "price_pln",
+          "label": "Cena (w zł, np. 369)",
+          "default": "369"
+        },
+        {
+          "type": "text",
+          "id": "compare_pln",
+          "label": "Stara cena przekreślona (w zł, np. 459)",
+          "default": "459"
+        },
+        {
+          "type": "select",
+          "id": "category",
+          "label": "Kategoria",
+          "default": "poduszki",
+          "options": [
+            {
+              "value": "poduszki",
+              "label": "Poduszki"
+            },
+            {
+              "value": "materace",
+              "label": "Materace"
+            },
+            {
+              "value": "dla-dzieci",
+              "label": "Dla dzieci"
+            },
+            {
+              "value": "akcesoria",
+              "label": "Akcesoria"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "spec_height",
+          "label": "Wysokość (np. 8,5/10 cm)",
+          "default": "8,5/10 cm"
+        },
+        {
+          "type": "text",
+          "id": "spec_firm",
+          "label": "Twardość (np. Średnia twardość)",
+          "default": "Średnia twardość"
+        },
+        {
+          "type": "text",
+          "id": "sizes",
+          "label": "Rozmiary (oddzielone przecinkiem)",
+          "default": "Standard (8,5/10 cm), XL (10/12 cm)"
+        },
+        {
+          "type": "textarea",
+          "id": "short_desc",
+          "label": "Opis produktu na karcie",
+          "default": "Innowacyjna poduszka nowej generacji z technologią komórkową. Stworzona z wysokiej jakości materiału TPE (ТПЭ) — miękkiego, elastycznego i sprężystego, o minimalnej kompresji. Opatentowana geometria komórek o podwójnym profilu wysokości (8,5 / 10 cm) podtrzymuje głowę i szyję z taką precyzją, że sen daje uczucie nieważkości."
+        },
+        {
+          "type": "image_picker",
+          "id": "image_1",
+          "label": "Zdjęcie 1 (główne)"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_2",
+          "label": "Zdjęcie 2 (w galerii)"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_3",
+          "label": "Zdjęcie 3 (w galerii)"
+        },
+        {
+          "type": "text",
+          "id": "default_img_1",
+          "label": "Domyślny plik zdjęcia 1 (jeśli nie wgrano powyżej)",
+          "default": "domivio_wave_1.jpg"
+        }
+      ]
+    }
+  ]
 }
 {% endschema %}

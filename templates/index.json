@@ -2,6 +2,25 @@
   "sections": {
     "main": {
       "type": "domivio-storefront",
+      "blocks": {
+        "prod_1": {
+          "type": "product_card",
+          "settings": {
+            "title_pl": "PODUSZKA ORTOPEDYCZNA TPE CELL® (8,5/10 CM)",
+            "price_pln": "369",
+            "compare_pln": "459",
+            "category": "poduszki",
+            "spec_height": "8,5/10 cm",
+            "spec_firm": "Średnia twardość",
+            "sizes": "Standard (8,5/10 cm), XL (10/12 cm)",
+            "short_desc": "Innowacyjna poduszka nowej generacji z technologią komórkową. Stworzona z wysokiej jakości materiału TPE (ТПЭ) — miękkiego, elastycznego i sprężystego, o minimalnej kompresji. Opatentowana geometria komórek o podwójnym profilu wysokości (8,5 / 10 cm) podtrzymuje głowę i szyję z taką precyzją, że sen daje uczucie nieważkości. Unikalna struktura TPE zmniejsza nacisk na skórę, pomagając zredukować poranne obrzęki, ślady i zagniecenia na twarzy po śnie. Odpowiednia do spania na plecach, boku i brzuchu. Łatwa do mycia. Chłodna przez całą noc. Zawsze trzyma formę — bez odkształceń i bez zmęczenia materiału.",
+            "default_img_1": "domivio_wave_1.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "prod_1"
+      ],
       "settings": {}
     }
   },
