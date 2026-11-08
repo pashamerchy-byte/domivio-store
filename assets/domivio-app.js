@@ -132,7 +132,23 @@
     const bulletsEl = document.getElementById("heroCardBullets");
     const stickyPriceEl = document.getElementById("stickyBarPrice");
     const stickyTitleEl = document.getElementById("stickyBarTitle");
+    const priceBoxEl = document.querySelector(".hero__price-box");
+    const stickyBarEl = document.getElementById("stickyBottomBar");
 
+    if (!mb) {
+      if (priceBoxEl) priceBoxEl.style.display = "none";
+      if (stickyBarEl) stickyBarEl.style.display = "none";
+      if (bulletsEl) {
+        bulletsEl.innerHTML =
+          currentLang === "en"
+            ? `<li>✦ Engineered for deep REM & slow-wave sleep recovery</li><li>✦ Minimalist, zero-distraction bedroom aesthetics</li><li>✦ Complimentary InPost & DPD Locker delivery from 99 PLN</li>`
+            : `<li>✦ Zaprojektowane dla głębokiej fazy REM i regeneracji nocnej</li><li>✦ Minimalistyczna, wyciszająca estetyka sypialni</li><li>✦ Darmowa dostawa Paczkomatem InPost i DPD od 99 zł</li>`;
+      }
+      return;
+    }
+
+    if (priceBoxEl) priceBoxEl.style.display = "";
+    if (stickyBarEl) stickyBarEl.style.display = "";
     if (nowEl) nowEl.textContent = formatValue(getProductPrice(mb));
     if (oldEl) oldEl.textContent = formatValue(getProductCompare(mb));
     if (bulletsEl) {
@@ -161,6 +177,27 @@
       if (currentCategory === "all") return true;
       return p.category && p.category.includes(currentCategory);
     });
+
+    if (list.length === 0) {
+      grid.innerHTML = `
+        <div style="grid-column:1/-1;text-align:center;padding:64px 24px;background:#FFFFFF;border:1px solid #E5E0D8;border-radius:16px;max-width:680px;margin:0 auto;width:100%;">
+          <div style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#8C7355;font-weight:600;margin-bottom:12px;">
+            ${currentLang === "en" ? "DOMIVIO SLEEP ATELIER" : "DOMIVIO ATELIER SNU"}
+          </div>
+          <h3 style="font-family:'Cormorant Garamond', Georgia, serif;font-size:28px;font-weight:500;color:#121316;margin-bottom:10px;letter-spacing:-0.01em;">
+            ${currentLang === "en" ? "New Sleep Collection in Preparation" : "Nowa Kolekcja Snu w Przygotowaniu"}
+          </h3>
+          <p style="font-size:14px;color:#5A5852;line-height:1.65;max-width:460px;margin:0 auto;">
+            ${
+              currentLang === "en"
+                ? "All previous catalog items have been removed. We are preparing our minimalist collection dedicated to deep sleep and nighttime recovery."
+                : "Wszystkie dotychczasowe produkty zostały usunięte. Przygotowujemy nową, minimalistyczną kolekcję stworzoną dla głębokiego snu i wieczornej regeneracji."
+            }
+          </p>
+        </div>
+      `;
+      return;
+    }
 
     grid.innerHTML = list
       .map((p) => {
