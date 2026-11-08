@@ -1649,19 +1649,23 @@ button {
   .hero__price-box {
     width: 100%;
     justify-content: space-between;
-    padding: 10px 14px;
+    padding: 10px 12px;
     margin-bottom: 14px;
     gap: 8px;
+    flex-wrap: nowrap;
   }
   .hero__price-now {
-    font-size: 26px;
+    font-size: 23px;
+    white-space: nowrap;
   }
   .hero__price-old {
-    font-size: 15px;
+    font-size: 13.5px;
+    white-space: nowrap;
   }
   .hero__price-save {
-    font-size: 11px;
+    font-size: 10.5px;
     padding: 4px 8px;
+    white-space: nowrap;
   }
   .hero__ctas {
     flex-direction: column;
@@ -1830,45 +1834,51 @@ button {
 
   /* Sticky Bottom Bar & Welcome Pill mobile */
   .welcome-pill {
-    bottom: 68px;
-    left: 10px;
-    transform: scale(0.9);
-    transform-origin: bottom left;
+    display: none !important;
   }
   .sticky-bar {
     padding: 8px 12px;
   }
   .sticky-bar__inner {
-    gap: 10px;
+    gap: 8px;
+    justify-content: space-between;
   }
   .sticky-bar__prod {
     gap: 8px;
     min-width: 0;
     flex: 1;
+    overflow: hidden;
+  }
+  .sticky-bar__prod > div {
+    min-width: 0;
+    overflow: hidden;
   }
   .sticky-bar__prod img {
-    width: 38px;
-    height: 38px;
+    width: 36px;
+    height: 36px;
     flex-shrink: 0;
   }
   #stickyBarTitle {
-    font-size: 12px !important;
+    font-size: 11.5px !important;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 155px;
+    max-width: 115px;
   }
   .sticky-bar__prod-desc {
     display: none;
   }
   #stickyBarPrice {
     font-size: 15px !important;
+    font-weight: 900 !important;
     white-space: nowrap;
+    flex-shrink: 0;
   }
   .sticky-bar .btn-yellow {
     width: auto;
     padding: 9px 12px !important;
     font-size: 11.5px !important;
     white-space: nowrap;
+    flex-shrink: 0;
   }
 }
