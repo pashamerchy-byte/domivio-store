@@ -369,6 +369,7 @@ button {
 .dw-card {
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 .dw-card__box {
   background: transparent;
@@ -441,6 +442,7 @@ button {
   padding-top: 14px;
   display: flex;
   flex-direction: column;
+  flex: 1;
   gap: 5px;
 }
 .dw-card__cat {
@@ -457,6 +459,7 @@ button {
   text-transform: uppercase;
   letter-spacing: 0.01em;
   cursor: pointer;
+  flex: 1;
 }
 .dw-card__title:hover {
   color: #7B42F6;
@@ -465,7 +468,8 @@ button {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-top: 2px;
+  margin-top: auto;
+  padding-top: 4px;
 }
 .dw-card__price {
   font-size: 15px;

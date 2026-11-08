@@ -602,18 +602,6 @@
               ${savePct > 0 ? `<span class="dw-pdp__disc">-${savePct}%</span>` : ""}
             </div>
 
-            <div class="dw-pdp__bonus-row">
-              <span class="dw-pdp__bonus-badge">d</span>
-              <span>${currentLang === "en" ? `up to +${bonusPts} bonus points` : `do +${bonusPts} pkt bonusowych`}</span>
-            </div>
-
-            <div class="dw-pdp__pvz-row">
-              <button type="button" class="dw-pdp__pvz-pill" onclick="openApaczkaLockerMap('ALL')">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-                <span>${currentLang === "en" ? "Available for Parcel Locker" : "Można do Paczkomatu"}</span>
-              </button>
-            </div>
-
             <p class="dw-pdp__desc">${prod.shortDesc[currentLang]}</p>
 
             ${sizeAndPackHtml}
