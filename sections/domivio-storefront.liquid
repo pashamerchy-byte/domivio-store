@@ -5,6 +5,19 @@
     --yellow: {{ section.settings.accent_color }};
     --black: {{ section.settings.text_color }};
   }
+  @media (max-width: 860px) {
+    .hero__grid { display: flex !important; flex-direction: column !important; gap: 14px !important; }
+    .hero__card { order: -1 !important; width: 100% !important; }
+    .hero__grid > div:first-child { display: flex !important; flex-direction: column !important; width: 100% !important; }
+    .hero__price-box { order: 1 !important; width: 100% !important; justify-content: space-between !important; flex-wrap: nowrap !important; }
+    .hero__ctas { order: 2 !important; }
+    .hero__badge { order: 3 !important; align-self: flex-start !important; }
+    .hero__title { order: 4 !important; }
+    .hero__subtitle { order: 5 !important; }
+    .hero__urgency { order: 6 !important; }
+    .hero__trust-row { order: 7 !important; }
+    .hero__card-bullets { display: none !important; }
+  }
 </style>
 
 
@@ -69,7 +82,7 @@
           <div class="hero__price-box">
             <span class="hero__price-now" id="heroPriceNow">129,00 zł</span>
             <span class="hero__price-old" id="heroPriceOld">189,00 zł</span>
-            <span class="hero__price-save">-32% + DOSTAWA 0 ZŁ</span>
+            <span class="hero__price-save">-32% + PACZKOMAT 0 ZŁ</span>
           </div>
 
           <div class="hero__ctas">
@@ -257,22 +270,13 @@
       </div>
 
       <div class="cart-drawer__footer" id="cartDrawerFooter">
-        <div class="discount-row">
-          <input type="text" id="cartDiscountInput" data-i18n-placeholder="discount_placeholder" placeholder="Kod rabatowy (np. DOMIVIO10)" />
-          <button type="button" onclick="applyManualDiscount()" data-i18n="discount_apply">ZASTOSUJ</button>
-        </div>
-
         <div class="cart-summary-lines">
           <div class="cart-summary-line">
             <span data-i18n="cart_subtotal">Wartość produktów:</span>
             <span id="summarySubtotal">0,00 zł</span>
           </div>
-          <div class="cart-summary-line" id="summaryDiscountRow" style="display:none;color:#16A34A;">
-            <span data-i18n="cart_discount_row">Rabat (-10%):</span>
-            <span id="summaryDiscountVal">-0,00 zł</span>
-          </div>
           <div class="cart-summary-line">
-            <span data-i18n="cart_shipping_row">Dostawa (InPost / DPD):</span>
+            <span data-i18n="cart_shipping_row">Dostawa:</span>
             <span id="summaryShipping"></span>
           </div>
           <div class="cart-summary-line cart-summary-line--total">
@@ -289,82 +293,18 @@
     </div>
   </div>
 
-  <!-- Floating Welcome -10% Discount Pill -->
-  <div class="welcome-pill" id="welcomePill">
-    <button type="button" class="welcome-pill__btn" id="welcomePillLabel" onclick="openExitModal()">
-      🎁 ODBIERZ -10% NA 1. ZAMÓWIENIE
-    </button>
-    <button type="button" class="welcome-pill__close" onclick="dismissWelcomePill()" aria-label="Close">✕</button>
-  </div>
-
-  <!-- Welcome / Exit-Intent -10% Modal with Strict RODO Consent Validation -->
-  <div class="exit-modal" id="exitModal" role="dialog" aria-modal="true">
-    <div class="exit-modal__backdrop" onclick="closeExitModal()"></div>
-    <div class="exit-modal__dialog">
-      <button type="button" class="pdp-modal__close" onclick="closeExitModal()">✕</button>
-      <div style="display:inline-block;background:#FFD600;border:1.5px solid #111;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:900;margin-bottom:10px;" data-i18n="exit_eyebrow">
-        OFERTA POWITALNA DOMIVIO · TYLKO TERAZ
-      </div>
-
-      <div id="exitStepOffer">
-        <h2 style="font-size:22px;font-weight:900;margin-bottom:8px;" data-i18n="exit_title">ZAPISZ SIĘ I ODBIERZ -10% NA CAŁE ZAMÓWIENIE!</h2>
-        <p style="font-size:13.5px;color:#475569;margin-bottom:16px;" data-i18n="exit_desc"></p>
-
-        <form onsubmit="return submitExitDiscountForm(event)" novalidate>
-          <input
-            type="email"
-            id="exitEmailInput"
-            class="exit-modal__input"
-            data-i18n-placeholder="exit_email_placeholder"
-            placeholder="Wpisz swój adres e-mail (np. anna@domena.pl)..."
-          />
-
-          <label class="rodo-label" id="exitRodoLabel">
-            <input type="checkbox" id="exitRodoCheckbox" style="margin-top:3px;width:16px;height:16px;accent-color:#111111;" />
-            <div>
-              <div class="rodo-badge" data-i18n="exit_rodo_badge">WYMAGANA ZGODA — ZAZNACZ TUTAJ</div>
-              <div data-i18n="exit_rodo_text">Wyrażam zgodę na otrzymywanie newslettera oraz ofert promocyjnych zgodnie z Polityką Prywatności (RODO).</div>
-            </div>
-          </label>
-
-          <button type="submit" class="btn-yellow" style="width:100%;margin-bottom:10px;" data-i18n="exit_cta">
-            ZAPISZ SIĘ I ODBLOKUJ RABAT -10% →
-          </button>
-        </form>
-
-        <button type="button" style="background:none;border:none;font-size:12px;color:#64748B;text-decoration:underline;" onclick="closeExitModal()" data-i18n="exit_skip">
-          Nie, dziękuję — wolę kupić w pełnej cenie
-        </button>
-      </div>
-
-      <div id="exitStepSuccess" style="display:none;">
-        <div style="width:52px;height:52px;border-radius:50%;background:#16A34A;color:#fff;font-size:26px;font-weight:900;display:inline-flex;align-items:center;justify-content:center;margin-bottom:12px;">✓</div>
-        <h2 style="font-size:22px;font-weight:900;margin-bottom:8px;" data-i18n="exit_success_title">TWÓJ RABAT -10% ZOSTAŁ ODBLOKOWANY!</h2>
-        <p style="font-size:13.5px;color:#475569;margin-bottom:14px;" data-i18n="exit_success_desc"></p>
-        <div style="background:#FEF9C3;border:2px dashed #111111;border-radius:10px;padding:12px;margin-bottom:16px;">
-          <div style="font-size:11px;font-weight:800;color:#475569;" data-i18n="exit_code_label">TWÓJ KOD RABATOWY:</div>
-          <div style="font-size:22px;font-weight:900;letter-spacing:0.06em;">DOMIVIO10</div>
-        </div>
-        <button type="button" class="btn-yellow" style="width:100%;" onclick="closeExitModal()" data-i18n="exit_continue_btn">
-          WRÓĆ DO ZAKUPÓW Z RABATEM -10% →
-        </button>
-      </div>
-    </div>
-  </div>
-
   <!-- Sticky Bottom Add-to-Cart Bar -->
   <div class="sticky-bar">
     <div class="sticky-bar__inner">
-      <div class="sticky-bar__prod">
-        <img src="https://cdn.shopify.com/s/files/1/1032/7910/0230/files/img_1_80611bbd-a3f6-43ee-aa20-4ac914bef65b.jpg?v=1794089631" alt="Mystery Box" />
-        <div>
-          <div style="font-size:13.5px;font-weight:900;" id="stickyBarTitle">Kryształowa Lampka Nocna Projektor RGB 3D (16 Kolorów)</div>
-          <div class="sticky-bar__prod-desc" style="font-size:12px;color:#16A34A;font-weight:800;">● <span data-i18n="stock_in_stock">W magazynie — wysyłka dzisiaj (InPost / DPD)</span></div>
+      <div class="sticky-bar__prod" style="min-width:0;flex:1;overflow:hidden;">
+        <img src="https://cdn.shopify.com/s/files/1/1032/7910/0230/files/img_1_80611bbd-a3f6-43ee-aa20-4ac914bef65b.jpg?v=1794089631" alt="Lampka RGB 3D" />
+        <div style="min-width:0;overflow:hidden;">
+          <div style="font-size:12.5px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" id="stickyBarTitle">Kryształowa Lampka Nocna Projektor RGB 3D (16 Kolorów)</div>
+          <div style="font-size:15px;font-weight:900;color:#111111;" id="stickyBarPrice">129,00 zł</div>
         </div>
       </div>
-      <div style="display:flex;align-items:center;gap:12px;">
-        <span style="font-size:20px;font-weight:900;" id="stickyBarPrice">129,00 zł</span>
-        <button type="button" class="btn-yellow" style="padding:10px 18px;font-size:13px;" onclick="addToCart(57828996284742, 1, true)">
+      <div style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
+        <button type="button" class="btn-yellow" style="padding:10px 16px;font-size:12.5px;width:auto;white-space:nowrap;" onclick="addToCart(57828996284742, 1, true)">
           🛒 <span data-i18n="btn_add_to_cart">DODAJ DO KOSZYKA</span>
         </button>
       </div>
@@ -376,16 +316,9 @@
     <div id="cartToastMsg" style="font-size:13px;"></div>
   </div>
 
-  
-
 <script src="{{ 'domivio-products.js' | asset_url }}"></script>
 <script>
-  window.DOMIVIO_CONFIG.freeShippingPLN = {{ section.settings.free_shipping_pln | default: 99 }};
-  window.DOMIVIO_CONFIG.discountCode = {{ section.settings.discount_code | json }};
-  window.DOMIVIO_I18N.pl.hero_badge = {{ section.settings.hero_badge | json }};
-  window.DOMIVIO_I18N.pl.hero_title = {{ section.settings.hero_title | json }};
-  window.DOMIVIO_I18N.pl.hero_subtitle = {{ section.settings.hero_subtitle | json }};
-  window.DOMIVIO_I18N.pl.cat_title = {{ section.settings.cat_title | json }};
+  window.DOMIVIO_CONFIG.freeShippingPLN = 99.0;
 
   // Rewrite local montessori asset paths to Shopify CDN asset_url
   window.DOMIVIO_PRODUCTS.forEach(function(p) {
