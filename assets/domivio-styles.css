@@ -1455,6 +1455,13 @@ button {
   }
   .dw-header__inner {
     padding: 12px 16px;
+    gap: 10px;
+  }
+  .dw-header__icons {
+    gap: 10px;
+  }
+  .dw-header__icons a.dw-icon-btn {
+    display: none;
   }
   .dw-nav {
     display: none;
