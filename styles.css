@@ -980,7 +980,569 @@ button {
   color: #7B42F6;
 }
 
-/* ── 11. Product Detail Modal & Quantity Bundles (Darwin Sleep Style) ──── */
+/* ── 11. 1:1 Darwin Full-Page Product View (.dw-pdp) ────────────────────── */
+.dw-pdp {
+  background: #FFFFFF;
+}
+.dw-pdp__breadcrumbs {
+  padding: 20px 0 18px;
+  font-size: 12.5px;
+  color: #64748B;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.dw-pdp__breadcrumbs a {
+  text-decoration: underline;
+  color: #64748B;
+}
+.dw-pdp__breadcrumbs a:hover {
+  color: #7B42F6;
+}
+.dw-pdp__breadcrumbs .is-current {
+  color: #94A3B8;
+}
+.dw-pdp__main {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 64px;
+  align-items: start;
+  padding-bottom: 64px;
+}
+.dw-pdp__gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.dw-pdp__img-box {
+  background: #F5F5F7;
+  position: relative;
+  aspect-ratio: 1 / 1.04;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 36px 28px;
+  overflow: hidden;
+}
+.dw-pdp__img-badges {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  z-index: 3;
+}
+.dw-pdp__img-actions {
+  position: absolute;
+  top: 18px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  z-index: 3;
+}
+.dw-pdp__action-icon {
+  background: none;
+  border: none;
+  color: #242C34;
+  padding: 2px;
+  transition: color 0.15s;
+}
+.dw-pdp__action-icon:hover {
+  color: #7B42F6;
+}
+.dw-pdp__collab-head {
+  text-align: center;
+  margin-bottom: 12px;
+  z-index: 2;
+}
+.dw-pdp__collab-brand {
+  font-size: 46px;
+  font-weight: 500;
+  color: #475569;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+.dw-pdp__collab-brand span {
+  color: #8B5CF6;
+  font-weight: 400;
+  margin: 0 8px;
+}
+.dw-pdp__collab-sub {
+  font-size: 18px;
+  font-weight: 500;
+  color: #475569;
+  margin-top: 4px;
+}
+.dw-pdp__img {
+  width: 100%;
+  max-height: 82%;
+  object-fit: contain;
+}
+.dw-pdp__info {
+  position: sticky;
+  top: 94px;
+  max-width: 500px;
+  padding-top: 8px;
+}
+.dw-pdp__title-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.dw-pdp__title {
+  font-size: 16px;
+  font-weight: 500;
+  color: #242C34;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+.dw-pdp__sale-word {
+  color: #FF006B;
+  margin-left: 6px;
+  font-weight: 500;
+}
+.dw-pdp__reviews-link {
+  font-size: 12.5px;
+  color: #242C34;
+  white-space: nowrap;
+}
+.dw-pdp__star {
+  color: #7B42F6;
+  font-weight: 600;
+}
+.dw-pdp__rev-u {
+  text-decoration: underline;
+}
+.dw-pdp__price-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.dw-pdp__price {
+  font-size: 24px;
+  font-weight: 600;
+  color: #242C34;
+}
+.dw-pdp__old {
+  font-size: 15px;
+  color: #94A3B8;
+  text-decoration: line-through;
+}
+.dw-pdp__disc {
+  background: #FF5500;
+  color: #FFFFFF;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 7px;
+  border-radius: 2px;
+}
+.dw-pdp__bonus-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #242C34;
+  margin-bottom: 16px;
+}
+.dw-pdp__bonus-badge {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #242C34;
+  color: #FFFFFF;
+  font-size: 10.5px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.dw-pdp__pills-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.dw-pdp__spec-pill {
+  background: #F5F5F7;
+  color: #242C34;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 5px 14px;
+  border-radius: 20px;
+}
+.dw-pdp__pvz-row {
+  margin-bottom: 22px;
+}
+.dw-pdp__pvz-pill {
+  background: #0066FF;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.dw-pdp__gift-box {
+  background: #E6DEFC;
+  color: #242C34;
+  padding: 16px 20px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  margin-bottom: 22px;
+}
+.dw-pdp__gift-box strong {
+  text-decoration: underline;
+  cursor: pointer;
+}
+.dw-pdp__desc {
+  font-size: 14px;
+  line-height: 1.62;
+  color: #242C34;
+  margin-bottom: 22px;
+}
+.dw-pdp__options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.dw-pdp__opt-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12.5px;
+  color: #64748B;
+}
+.dw-pdp__opt-select {
+  flex: 1;
+  border: none;
+  border-bottom: 1px solid #CBD5E1;
+  background: transparent;
+  padding: 5px 0;
+  font-size: 13px;
+  color: #242C34;
+  font-weight: 500;
+}
+.dw-pdp__pack-pills {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.dw-pdp__pack-pill {
+  flex: 1;
+  background: #F5F5F7;
+  border: 1px solid transparent;
+  padding: 9px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #242C34;
+  transition: all 0.15s;
+}
+.dw-pdp__pack-pill span {
+  color: #7B42F6;
+  font-weight: 700;
+}
+.dw-pdp__pack-pill.is-active {
+  border-color: #7B42F6;
+  background: #F6F3FF;
+}
+.dw-pdp__addon {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 0;
+  font-size: 11.5px;
+  cursor: pointer;
+  user-select: none;
+  margin-bottom: 8px;
+}
+.dw-pdp__addon-icon {
+  font-size: 15px;
+  color: #242C34;
+  font-weight: 600;
+}
+.dw-pdp__addon.is-selected .dw-pdp__addon-icon {
+  color: #7B42F6;
+}
+.dw-pdp__addon-verb {
+  font-weight: 600;
+  color: #242C34;
+  letter-spacing: 0.03em;
+}
+.dw-pdp__addon-thumb {
+  width: 24px;
+  height: 24px;
+  background: #F5F5F7;
+  object-fit: contain;
+}
+.dw-pdp__addon-title {
+  color: #94A3B8;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+.dw-pdp__addon.is-selected .dw-pdp__addon-title {
+  color: #7B42F6;
+  font-weight: 600;
+}
+.dw-pdp__atc-btn {
+  width: 100%;
+  background: #242C34;
+  color: #FFFFFF;
+  border: none;
+  padding: 18px 24px;
+  font-size: 12.5px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  transition: background 0.15s;
+}
+.dw-pdp__atc-btn:hover {
+  background: #7B42F6;
+}
+.dw-pdp__splits {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.dw-pdp__split-box {
+  background: #F5F5F7;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #242C34;
+}
+.dw-pdp__split-left {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+.dw-pdp__split-logo {
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+}
+.dw-pdp__split-logo--raty {
+  background: #242C34;
+  color: #FACC15;
+}
+.dw-pdp__split-logo--split {
+  background: #16A34A;
+  color: #FFFFFF;
+  border-radius: 50%;
+}
+.dw-pdp__split-val {
+  font-weight: 500;
+}
+.dw-pdp__consult-row {
+  text-align: center;
+  margin: 26px 0 32px;
+}
+.dw-pdp__consult-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #242C34;
+}
+.dw-pdp__consult-link span:last-child {
+  text-decoration: underline;
+}
+.dw-pdp__consult-dot {
+  color: #7B42F6;
+  font-size: 10px;
+}
+.dw-pdp__tabs-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0;
+  margin-bottom: 18px;
+}
+.dw-pdp__tab-btn {
+  background: none;
+  border: none;
+  font-size: 12.5px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #242C34;
+}
+.dw-pdp__tab-btn:hover,
+.dw-pdp__tab-btn.is-open {
+  color: #7B42F6;
+}
+.dw-pdp__tab-drawer {
+  background: #F5F5F7;
+  padding: 18px 20px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: #242C34;
+  margin-bottom: 24px;
+}
+.dw-pdp__tab-drawer ul {
+  list-style: none;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.dw-pdp__spec-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 0;
+  border-bottom: 1px solid #E2E8F0;
+}
+.dw-pdp__spec-line:last-child {
+  border-bottom: none;
+}
+.dw-pdp__delivery {
+  margin-top: 16px;
+}
+.dw-pdp__del-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 14px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #242C34;
+}
+.dw-pdp__del-head button {
+  background: none;
+  border: none;
+  font-size: 12px;
+  color: #94A3B8;
+  text-decoration: underline;
+  text-transform: uppercase;
+}
+.dw-pdp__del-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 0;
+  border-top: 1px solid #EFEFEF;
+  font-size: 12.5px;
+}
+.dw-pdp__del-title {
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #242C34;
+}
+.dw-pdp__del-meta {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.dw-pdp__del-meta strong {
+  font-weight: 500;
+  color: #242C34;
+}
+.dw-pdp__del-meta span {
+  font-size: 11.5px;
+  color: #94A3B8;
+}
+.dw-pdp__del-free {
+  color: #7B42F6 !important;
+  font-weight: 500 !important;
+  text-transform: uppercase;
+}
+
+/* Full-Width Electric Violet Feature Showcase Section (Screenshot 1) */
+.dw-pdp__violet-sec {
+  background: #7B42F6;
+  color: #FFFFFF;
+  padding: 84px 0;
+}
+.dw-pdp__violet-grid {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: 48px;
+  align-items: stretch;
+}
+.dw-pdp__vf-left {
+  display: flex;
+  flex-direction: column;
+}
+.dw-pdp__vf-brand {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 36px;
+}
+.dw-pdp__vf-list {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 20px;
+}
+.dw-pdp__vf-item {
+  cursor: pointer;
+}
+.dw-pdp__vf-item.is-active {
+  margin-bottom: auto;
+  padding-bottom: 32px;
+}
+.dw-pdp__vf-title {
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+  transition: color 0.15s;
+}
+.dw-pdp__vf-item.is-active .dw-pdp__vf-title,
+.dw-pdp__vf-item:hover .dw-pdp__vf-title {
+  color: #FFFFFF;
+}
+.dw-pdp__vf-desc {
+  margin-top: 18px;
+  font-size: 14.5px;
+  line-height: 1.55;
+  max-width: 410px;
+  color: rgba(255, 255, 255, 0.95);
+}
+.dw-pdp__vf-right {
+  width: 100%;
+  overflow: hidden;
+}
+.dw-pdp__vf-img {
+  width: 100%;
+  height: 100%;
+  max-height: 520px;
+  object-fit: cover;
+  display: block;
+}
+
+/* ── 11b. Product Detail Modal & Quantity Bundles (Darwin Sleep Style) ──── */
 .pdp-modal {
   position: fixed;
   inset: 0;
@@ -1539,6 +2101,33 @@ button {
   .dw-footer__grid {
     grid-template-columns: 1fr;
     gap: 28px;
+  }
+  .dw-pdp__main {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .dw-pdp__info {
+    position: static;
+    max-width: 100%;
+  }
+  .dw-pdp__collab-brand {
+    font-size: 30px;
+  }
+  .dw-pdp__collab-sub {
+    font-size: 14px;
+  }
+  .dw-pdp__violet-sec {
+    padding: 48px 0;
+  }
+  .dw-pdp__violet-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .dw-pdp__vf-item.is-active {
+    padding-bottom: 12px;
+  }
+  .dw-pdp__vf-title {
+    font-size: 18px;
   }
   .pdp-modal {
     padding: 0;

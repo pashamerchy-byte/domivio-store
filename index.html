@@ -48,18 +48,18 @@
   <!-- 2. Main White Sticky Header (1:1 Darwin) -->
   <header class="dw-header">
     <div class="dw-header__inner">
-      <a href="#" class="dw-logo">domivio</a>
+      <a href="#" class="dw-logo" onclick="if(window.closeProductModal) closeProductModal();">domivio</a>
 
       <nav class="dw-nav">
-        <a href="#catalog" class="dw-nav__link" onclick="filterCatalog('materace')" data-i18n="nav_mattresses">MATERACE</a>
-        <a href="#catalog" class="dw-nav__link" onclick="filterCatalog('poduszki')" data-i18n="nav_pillows">PODUSZKI</a>
-        <a href="#catalog" class="dw-nav__link" onclick="filterCatalog('dla-dzieci')" data-i18n="nav_kids">DLA DZIECI</a>
-        <a href="#catalog" class="dw-nav__link" onclick="filterCatalog('lozka')" data-i18n="nav_beds">ŁÓŻKA</a>
-        <a href="#catalog" class="dw-nav__link" onclick="filterCatalog('sofy')" data-i18n="nav_sofas">SOFY</a>
-        <a href="#catalog" class="dw-nav__link" onclick="filterCatalog('all')" data-i18n="nav_furniture">MEBLE</a>
-        <a href="#catalog" class="dw-nav__link" onclick="filterCatalog('akcesoria')" data-i18n="nav_accessories">AKCESORIA</a>
-        <a href="#catalog" class="dw-nav__link" onclick="filterCatalog('na-prezent')" data-i18n="nav_gifts">NA PREZENT</a>
-        <a href="#faq" class="dw-nav__link" data-i18n="nav_customers">DLA KLIENTÓW</a>
+        <a href="#catalog" class="dw-nav__link" onclick="if(window.closeProductModal) closeProductModal(); filterCatalog('materace')" data-i18n="nav_mattresses">MATERACE</a>
+        <a href="#catalog" class="dw-nav__link" onclick="if(window.closeProductModal) closeProductModal(); filterCatalog('poduszki')" data-i18n="nav_pillows">PODUSZKI</a>
+        <a href="#catalog" class="dw-nav__link" onclick="if(window.closeProductModal) closeProductModal(); filterCatalog('dla-dzieci')" data-i18n="nav_kids">DLA DZIECI</a>
+        <a href="#catalog" class="dw-nav__link" onclick="if(window.closeProductModal) closeProductModal(); filterCatalog('lozka')" data-i18n="nav_beds">ŁÓŻKA</a>
+        <a href="#catalog" class="dw-nav__link" onclick="if(window.closeProductModal) closeProductModal(); filterCatalog('sofy')" data-i18n="nav_sofas">SOFY</a>
+        <a href="#catalog" class="dw-nav__link" onclick="if(window.closeProductModal) closeProductModal(); filterCatalog('all')" data-i18n="nav_furniture">MEBLE</a>
+        <a href="#catalog" class="dw-nav__link" onclick="if(window.closeProductModal) closeProductModal(); filterCatalog('akcesoria')" data-i18n="nav_accessories">AKCESORIA</a>
+        <a href="#catalog" class="dw-nav__link" onclick="if(window.closeProductModal) closeProductModal(); filterCatalog('na-prezent')" data-i18n="nav_gifts">NA PREZENT</a>
+        <a href="#faq" class="dw-nav__link" onclick="if(window.closeProductModal) closeProductModal();" data-i18n="nav_customers">DLA KLIENTÓW</a>
       </nav>
 
       <div class="dw-header__icons">
@@ -86,16 +86,17 @@
       </div>
     </div>
     <nav class="dw-mobile-nav" aria-label="Kategorie mobilne">
-      <a href="#catalog" onclick="filterCatalog('all')">WSZYSTKIE</a>
-      <a href="#catalog" onclick="filterCatalog('poduszki')" data-i18n="nav_pillows">PODUSZKI</a>
-      <a href="#catalog" onclick="filterCatalog('materace')" data-i18n="nav_mattresses">MATERACE</a>
-      <a href="#catalog" onclick="filterCatalog('dla-dzieci')" data-i18n="nav_kids">DLA DZIECI</a>
-      <a href="#catalog" onclick="filterCatalog('akcesoria')" data-i18n="nav_accessories">AKCESORIA</a>
-      <a href="#why-us" data-i18n="reviews_title">OPINIE</a>
-      <a href="#faq" data-i18n="contacts_label">KONTAKTY</a>
+      <a href="#catalog" onclick="if(window.closeProductModal) closeProductModal(); filterCatalog('all')">WSZYSTKIE</a>
+      <a href="#catalog" onclick="if(window.closeProductModal) closeProductModal(); filterCatalog('poduszki')" data-i18n="nav_pillows">PODUSZKI</a>
+      <a href="#catalog" onclick="if(window.closeProductModal) closeProductModal(); filterCatalog('materace')" data-i18n="nav_mattresses">MATERACE</a>
+      <a href="#catalog" onclick="if(window.closeProductModal) closeProductModal(); filterCatalog('dla-dzieci')" data-i18n="nav_kids">DLA DZIECI</a>
+      <a href="#catalog" onclick="if(window.closeProductModal) closeProductModal(); filterCatalog('akcesoria')" data-i18n="nav_accessories">AKCESORIA</a>
+      <a href="#why-us" onclick="if(window.closeProductModal) closeProductModal();" data-i18n="reviews_title">OPINIE</a>
+      <a href="#faq" onclick="if(window.closeProductModal) closeProductModal();" data-i18n="contacts_label">KONTAKTY</a>
     </nav>
   </header>
 
+  <main id="homeMainView">
   <!-- 3. Full-Width Hero Banner Slider (1:1 Darwin) -->
   <section class="dw-hero">
     <div class="dw-hero__slide is-active" id="dwHeroSlide1" style="background-image: url('darwin_hero_1.jpg');">
@@ -306,6 +307,10 @@
       </div>
     </div>
   </section>
+  </main>
+
+  <!-- 1:1 Darwin Full-Page Product View (#pdpPageView — darwinsleep.ru/shop/poduska/adult) -->
+  <main id="pdpPageView" class="dw-pdp" style="display: none;"></main>
 
   <!-- 10. Giant Watermark Logo + Violet CTA + 4-Column Footer (1:1 Darwin) -->
   <section class="dw-watermark-sec">

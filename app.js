@@ -339,16 +339,101 @@
       .join("");
   }
 
-  // ── Product Detail Modal & Quantity Bundles (1 / 2 -10% / 3 -15%) ──────
-  window.openProductModal = function (handle, packQty) {
+  // ── 1:1 Darwin Full-Page Product View (#pdpPageView — darwinsleep.ru/shop/poduska/adult) ──
+  let pdpCoverSelected = false;
+  let activePdpFeatureIdx = 0;
+  let activePdpAccordionTab = null;
+
+  function resolveAsset(filename) {
+    return (window.DOMIVIO_ASSET_MAP && window.DOMIVIO_ASSET_MAP[filename]) || filename;
+  }
+
+  const PDP_VIOLET_FEATURES = [
+    {
+      img: "darwin_feat_wash.jpg",
+      pl: {
+        title: "MOŻNA MYĆ",
+        desc: "TPE (ТПЭ) nie wymaga specjalnej pielęgnacji — wystarczy umyć poduszkę pod bieżącą wodą. Materiał jest odporny na pleśń i roztocza oraz zachowuje swoją nowość po 10.000 cykli czyszczenia."
+      },
+      en: {
+        title: "FULLY WASHABLE",
+        desc: "Hyper-elastic TPE requires effortless care — simply rinse the pillow under running water. Naturally resistant to mold and dust mites, keeping its freshness after 10,000 wash cycles."
+      }
+    },
+    {
+      img: "darwin_feat_air.jpg",
+      pl: {
+        title: "PRZEPUSZCZA POWIETRZE",
+        desc: "Setki otwartych komórek wentylacyjnych tworzą swobodną cyrkulację powietrza 360°. Poduszka odprowadza nadmiar ciepła i wilgoci, zapewniając przyjemny chłód przez całą noc."
+      },
+      en: {
+        title: "360° BREATHABLE AIRFLOW",
+        desc: "Hundreds of open honeycomb air channels create continuous 360° ventilation, dissipating heat and moisture so your head stays cool all night."
+      }
+    },
+    {
+      img: "darwin_feat_forever.jpg",
+      pl: {
+        title: "ZDROWY SEN NA ZAWSZE",
+        desc: "Opatentowana kratownica elastomerowa CELL® błyskawicznie wraca do pierwotnego kształtu i nie zapada się nawet po latach codziennego użytkowania."
+      },
+      en: {
+        title: "HEALTHY SLEEP FOREVER",
+        desc: "The patented CELL® elastomer grid rebounds instantaneously and retains its orthopedic geometry for years without sagging or flattening."
+      }
+    }
+  ];
+
+  window.switchPdpFeatureTab = function (idx) {
+    activePdpFeatureIdx = Number(idx) || 0;
+    if (activePdpProduct) {
+      openProductModal(activePdpProduct.handle, activePdpPackQty, true);
+    }
+  };
+
+  window.togglePdpCoverAddon = function () {
+    pdpCoverSelected = !pdpCoverSelected;
+    if (activePdpProduct) {
+      openProductModal(activePdpProduct.handle, activePdpPackQty, true);
+    }
+  };
+
+  window.togglePdpAccordion = function (tabKey) {
+    activePdpAccordionTab = activePdpAccordionTab === tabKey ? null : tabKey;
+    if (activePdpProduct) {
+      openProductModal(activePdpProduct.handle, activePdpPackQty, true);
+    }
+  };
+
+  window.addPdpSelectionToCart = function (variantId, packQty) {
+    addToCart(variantId, packQty || 1, true);
+    if (pdpCoverSelected) {
+      const coverProd = PRODUCTS.find((p) => p.handle === "poszewka-chlodzaca-tencel-cell");
+      if (coverProd && coverProd.variantId !== Number(variantId)) {
+        addToCart(coverProd.variantId, 1, true);
+      }
+      pdpCoverSelected = false;
+    }
+  };
+
+  window.openProductModal = function (handle, packQty, preserveScroll) {
     const prod = PRODUCTS.find((p) => p.handle === handle);
     if (!prod) return;
+    const isNewProduct = !activePdpProduct || activePdpProduct.handle !== prod.handle;
     activePdpProduct = prod;
     activePdpPackQty = packQty || 1;
+    if (isNewProduct && !preserveScroll) {
+      pdpCoverSelected = false;
+      activePdpFeatureIdx = 0;
+      activePdpAccordionTab = null;
+    }
 
+    const homeView = document.getElementById("homeMainView");
+    const pdpView = document.getElementById("pdpPageView");
     const modal = document.getElementById("pdpModal");
-    const content = document.getElementById("pdpModalContent");
-    if (!modal || !content) return;
+    if (modal) modal.classList.remove("is-open");
+
+    if (!pdpView) return;
 
     const unitPrice = getProductPrice(prod);
     const unitComp = getProductCompare(prod);
@@ -361,105 +446,338 @@
 
     const activeTotal =
       activePdpPackQty === 3 ? p3Disc : activePdpPackQty === 2 ? p2Disc : p1;
+    const origCompareTotal = unitComp
+      ? unitComp * activePdpPackQty
+      : activePdpPackQty > 1
+      ? unitPrice * activePdpPackQty
+      : 0;
+    const savePct = origCompareTotal
+      ? Math.round(((origCompareTotal - activeTotal) / origCompareTotal) * 100)
+      : 0;
+
+    const coverProd = PRODUCTS.find((p) => p.handle === "poszewka-chlodzaca-tencel-cell");
+    const coverAddonPrice = coverProd ? getProductPrice(coverProd) : (currentLang === "en" ? 23 : 99);
+    const displayGrandTotal = activeTotal + (pdpCoverSelected ? coverAddonPrice : 0);
+
+    const bonusPts = Math.max(10, Math.round(displayGrandTotal * 0.1));
+    const split6Val = Math.ceil(displayGrandTotal / 6);
+    const split4Val = Math.ceil(displayGrandTotal / 4);
+    const split6Str = currentLang === "en" ? "€" + split6Val : split6Val + " zł";
+    const split4Str = currentLang === "en" ? "€" + split4Val : split4Val + " zł";
 
     const currentSz = selectedSizes[prod.handle] || (prod.sizes && prod.sizes[0]) || "";
-    const pdpSizeHtml =
-      prod.sizes && prod.sizes.length > 0
-        ? `
-          <div style="margin-bottom:16px;">
-            <label style="display:block;font-size:11.5px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:#64748B;margin-bottom:6px;">${t("size_label")}</label>
-            <select style="width:100%;padding:11px 14px;border:1px solid #CBD5E1;background:#F8FAFC;font-size:13.5px;font-weight:600;color:#242C34;" onchange="setProductSize('${prod.handle}', this.value); renderCatalog();">
+    const catBreadcrumb =
+      currentLang === "en"
+        ? prod.catLabelEN || "Pillows"
+        : prod.catLabelPL === "MATERACE"
+        ? "Materace"
+        : prod.catLabelPL === "AKCESORIA"
+        ? "Akcesoria"
+        : "Poduszki";
+
+    const specHeight =
+      currentLang === "en"
+        ? prod.specHeightEN || "Height — 10/12 cm"
+        : prod.specHeightPL || "Wysokość — 10/12 cm";
+    const specFirm =
+      currentLang === "en"
+        ? prod.specFirmEN || "Firmness — medium"
+        : prod.specFirmPL || "Twardość — średnia";
+
+    const galleryHtml = (prod.images || [])
+      .map((imgSrc, idx) => {
+        const resolved = resolveAsset(imgSrc);
+        if (idx === 0) {
+          const badgesHtml = (prod.badges || [])
+            .map((b) => `<span class="dw-badge dw-badge--${b.type}">${b.text}</span>`)
+            .join("");
+          return `
+            <div class="dw-pdp__img-box dw-pdp__img-box--hero">
+              <div class="dw-pdp__img-badges">${badgesHtml}</div>
+              <div class="dw-pdp__img-actions">
+                <button type="button" class="dw-pdp__action-icon" aria-label="Porównaj">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 20V10M12 20V4M18 20v-8"/></svg>
+                </button>
+                <button type="button" class="dw-pdp__action-icon" aria-label="Ulubione">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-4.5-9-8.5C1.5 9 3.5 5 7.5 5c2.2 0 3.5 1.2 4.5 2.5C13 6.2 14.3 5 16.5 5 20.5 5 22.5 9 21 12.5c-2 4-9 8.5-9 8.5z"/></svg>
+                </button>
+              </div>
+              <div class="dw-pdp__collab-head">
+                <div class="dw-pdp__collab-brand">domivio <span>x</span> CELL®</div>
+                <div class="dw-pdp__collab-sub">${
+                  currentLang === "en"
+                    ? "Mornings without a trace of yesterday"
+                    : "Poranek bez śladów wczorajszego dnia"
+                }</div>
+              </div>
+              <img src="${resolved}" alt="${prod.title[currentLang]}" class="dw-pdp__img" />
+            </div>
+          `;
+        }
+        return `
+          <div class="dw-pdp__img-box">
+            <img src="${resolved}" alt="${prod.title[currentLang]} - ${idx + 1}" class="dw-pdp__img" loading="lazy" />
+          </div>
+        `;
+      })
+      .join("");
+
+    const sizeAndPackHtml = `
+      <div class="dw-pdp__options">
+        ${
+          prod.sizes && prod.sizes.length > 0
+            ? `
+          <div class="dw-pdp__opt-row">
+            <span class="dw-pdp__opt-label">${t("size_label")}</span>
+            <select class="dw-pdp__opt-select" onchange="setProductSize('${prod.handle}', this.value); renderCatalog();">
               ${prod.sizes.map((sz) => `<option value="${sz}" ${sz === currentSz ? "selected" : ""}>${sz}</option>`).join("")}
             </select>
           </div>
         `
-        : "";
-
-    const thumbsHtml =
-      prod.images.length > 1
-        ? `<div class="pdp-modal__thumbs">
-            ${prod.images
-              .map(
-                (src, i) => `
-              <div class="pdp-modal__thumb ${i === 0 ? "is-active" : ""}" onclick="switchPdpImage('${src}', this)">
-                <img src="${src}" alt="" loading="lazy" decoding="async">
-              </div>
-            `
-              )
-              .join("")}
-          </div>`
-        : "";
-
-    const packsHtml = !prod.isDigital
-      ? `
-        <div class="qty-packs">
-          <div class="qty-packs__header">${t("qty_header")}</div>
-          <div class="qty-packs__grid">
-            <button type="button" class="qty-pack ${activePdpPackQty === 1 ? "is-selected" : ""}" onclick="openProductModal('${prod.handle}', 1)">
-              <span class="qty-pack__title">${t("qty_1_title")}</span>
-              <span class="qty-pack__price">${formatValue(p1)}</span>
-              <span class="qty-pack__note">${t("qty_1_note")}</span>
-            </button>
-            <button type="button" class="qty-pack ${activePdpPackQty === 2 ? "is-selected" : ""}" onclick="openProductModal('${prod.handle}', 2)">
-              <span class="qty-pack__ribbon">${t("qty_2_ribbon")}</span>
-              <span class="qty-pack__title">${t("qty_2_title")}</span>
-              <span class="qty-pack__price">${formatValue(p2Disc)}</span>
-              <span class="qty-pack__old">${formatValue(p2Orig)}</span>
-              <span class="qty-pack__note">${t("qty_2_note")}</span>
-            </button>
-            <button type="button" class="qty-pack ${activePdpPackQty === 3 ? "is-selected" : ""}" onclick="openProductModal('${prod.handle}', 3)">
-              <span class="qty-pack__ribbon">${t("qty_3_ribbon")}</span>
-              <span class="qty-pack__title">${t("qty_3_title")}</span>
-              <span class="qty-pack__price">${formatValue(p3Disc)}</span>
-              <span class="qty-pack__old">${formatValue(p3Orig)}</span>
-              <span class="qty-pack__note">${t("qty_3_note")}</span>
-            </button>
-          </div>
-        </div>
-      `
-      : "";
-
-    content.innerHTML = `
-      <div class="pdp-modal__grid">
-        <div>
-          <div class="pdp-modal__main-img">
-            <img id="pdpMainImg" src="${prod.images[0]}" alt="${prod.title[currentLang]}">
-          </div>
-          ${thumbsHtml}
-        </div>
-        <div>
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
-            ${(prod.badges || []).map((b) => `<span class="dw-badge dw-badge--${b.type}" style="width:34px;height:34px;font-size:9.5px;">${b.text}</span>`).join("")}
-            <span style="font-size:11px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:#64748B;">
-              ${currentLang === "en" ? (prod.catLabelEN || "SLEEP") : (prod.catLabelPL || "PODUSZKI")}
-            </span>
-          </div>
-          <h2 style="font-size:21px;font-weight:600;line-height:1.25;margin-bottom:8px;color:#242C34;text-transform:uppercase;">${prod.title[currentLang]}</h2>
-          <div style="font-size:13px;font-weight:600;color:#7B42F6;margin-bottom:12px;">★★★★★ ${prod.rating} (${prod.reviewsCount})</div>
-          <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:14px;">
-            <span style="font-size:26px;font-weight:700;color:#242C34;">${formatValue(activeTotal)}</span>
-            ${unitComp ? `<span style="font-size:15px;color:#94A3B8;text-decoration:line-through;">${formatValue(unitComp * activePdpPackQty)}</span>` : ""}
-          </div>
-          <p style="font-size:13.5px;color:#475569;line-height:1.55;margin-bottom:14px;">${prod.shortDesc[currentLang]}</p>
-          ${pdpSizeHtml}
-          <ul style="list-style:none;display:flex;flex-direction:column;gap:6px;font-size:12.5px;font-weight:500;color:#242C34;margin-bottom:16px;">
-            ${prod.bullets[currentLang].map((b) => `<li>${b}</li>`).join("")}
-          </ul>
-          ${packsHtml}
-          <button type="button" class="btn-yellow" style="width:100%;margin-bottom:12px;" onclick="addToCart(${prod.variantId}, ${activePdpPackQty}, true); closeProductModal();">
-            ${t("btn_add_to_cart")} — ${formatValue(activeTotal)}
+            : ""
+        }
+        <div class="dw-pdp__pack-pills">
+          <button type="button" class="dw-pdp__pack-pill ${activePdpPackQty === 1 ? "is-active" : ""}" onclick="openProductModal('${prod.handle}', 1, true)">
+            1 ${currentLang === "en" ? "pc." : "szt."} — ${formatValue(p1)}
           </button>
-          <div style="background:#F5F5F7;padding:12px 14px;font-size:12px;display:flex;flex-direction:column;gap:5px;color:#242C34;">
-            <div style="color:#16A34A;font-weight:600;">● ${t("stock_in_stock")}</div>
-            <div>🚚 ${t("trust_fast_ship")}</div>
-            <div>📦 ${t("trust_locker")}</div>
-            <div>🔒 ${t("trust_payments")}</div>
-          </div>
+          <button type="button" class="dw-pdp__pack-pill ${activePdpPackQty === 2 ? "is-active" : ""}" onclick="openProductModal('${prod.handle}', 2, true)">
+            2 ${currentLang === "en" ? "pcs" : "szt."} <span>-10%</span>
+          </button>
+          <button type="button" class="dw-pdp__pack-pill ${activePdpPackQty === 3 ? "is-active" : ""}" onclick="openProductModal('${prod.handle}', 3, true)">
+            3 ${currentLang === "en" ? "pcs" : "szt."} <span>-15%</span>
+          </button>
         </div>
       </div>
     `;
 
-    modal.classList.add("is-open");
+    const addonHtml =
+      prod.handle !== "poszewka-chlodzaca-tencel-cell"
+        ? `
+      <div class="dw-pdp__addon ${pdpCoverSelected ? "is-selected" : ""}" onclick="togglePdpCoverAddon()">
+        <span class="dw-pdp__addon-icon">${pdpCoverSelected ? "✓" : "⊕"}</span>
+        <span class="dw-pdp__addon-verb">${currentLang === "en" ? "ADD:" : "DODAĆ:"}</span>
+        <img src="${resolveAsset("darwin_pillowcase.png")}" alt="" class="dw-pdp__addon-thumb" />
+        <span class="dw-pdp__addon-title">${
+          currentLang === "en"
+            ? `COOLING COVER FOR ${prod.title.en.split(" ")[0]} (+${formatValue(coverAddonPrice)})`
+            : `CHŁODZĄCA POSZEWKA DO ${prod.title.pl.split(" ")[0]} (+${formatValue(coverAddonPrice)})`
+        }</span>
+      </div>
+    `
+        : "";
+
+    let tabDrawerHtml = "";
+    if (activePdpAccordionTab === "opis") {
+      tabDrawerHtml = `
+        <div class="dw-pdp__tab-drawer">
+          <p>${prod.shortDesc[currentLang]}</p>
+          <ul>${(prod.bullets[currentLang] || []).map((b) => `<li>${b}</li>`).join("")}</ul>
+        </div>
+      `;
+    } else if (activePdpAccordionTab === "charakterystyka") {
+      tabDrawerHtml = `
+        <div class="dw-pdp__tab-drawer">
+          <div class="dw-pdp__spec-line"><span>Materiał rdzenia:</span><strong>100% hipoalergiczny elastomer TPE CELL®</strong></div>
+          <div class="dw-pdp__spec-line"><span>Poszewka zewnętrzna:</span><strong>Włókno chłodzące Tencel™ (zdejmowana, do prania)</strong></div>
+          <div class="dw-pdp__spec-line"><span>Wymiary / profil:</span><strong>${currentSz || specHeight}</strong></div>
+          <div class="dw-pdp__spec-line"><span>Twardość:</span><strong>${specFirm}</strong></div>
+          <div class="dw-pdp__spec-line"><span>Żywotność:</span><strong>10.000 cykli mycia / do 10 lat bez odkształceń</strong></div>
+        </div>
+      `;
+    } else if (activePdpAccordionTab === "detale") {
+      tabDrawerHtml = `
+        <div class="dw-pdp__tab-drawer">
+          <p>${
+            currentLang === "en"
+              ? "Every pillow includes a breathable cooling Tencel™ cover and a 14-day home trial. Can be washed directly under warm running water."
+              : "W zestawie z każdą poduszką otrzymujesz oddychającą poszewkę chłodzącą Tencel™ oraz 14 dni na test w domu. Poduszkę można myć pod bieżącą wodą."
+          }</p>
+        </div>
+      `;
+    }
+
+    const activeFeat = PDP_VIOLET_FEATURES[activePdpFeatureIdx] || PDP_VIOLET_FEATURES[0];
+    const featImgUrl = resolveAsset(activeFeat.img);
+
+    const violetFeaturesHtml = PDP_VIOLET_FEATURES.map((item, idx) => {
+      const loc = item[currentLang] || item.pl;
+      const isAct = idx === activePdpFeatureIdx;
+      if (isAct) {
+        return `
+          <div class="dw-pdp__vf-item is-active" onclick="switchPdpFeatureTab(${idx})">
+            <h3 class="dw-pdp__vf-title">→ ${loc.title}</h3>
+            <p class="dw-pdp__vf-desc">${loc.desc}</p>
+          </div>
+        `;
+      }
+      return `
+        <div class="dw-pdp__vf-item" onclick="switchPdpFeatureTab(${idx})">
+          <h3 class="dw-pdp__vf-title">${loc.title}</h3>
+        </div>
+      `;
+    }).join("");
+
+    pdpView.innerHTML = `
+      <div class="dw-container">
+        <!-- Breadcrumbs (1:1 Darwin) -->
+        <nav class="dw-pdp__breadcrumbs" aria-label="Breadcrumb">
+          <a href="#" onclick="event.preventDefault(); closeProductModal();">${currentLang === "en" ? "Home" : "Główna"}</a>
+          <span>/</span>
+          <a href="#catalog" onclick="closeProductModal();">${currentLang === "en" ? "Catalog" : "Katalog"}</a>
+          <span>/</span>
+          <a href="#catalog" onclick="closeProductModal();">${catBreadcrumb}</a>
+          <span>/</span>
+          <span class="is-current">${prod.title[currentLang]}</span>
+        </nav>
+
+        <!-- Main 2-Column Product Layout (Left Vertical Stack + Right Sticky Info) -->
+        <div class="dw-pdp__main">
+          <div class="dw-pdp__gallery">
+            ${galleryHtml}
+          </div>
+
+          <div class="dw-pdp__info">
+            <div class="dw-pdp__title-row">
+              <h1 class="dw-pdp__title">
+                ${prod.title[currentLang]}
+                <span class="dw-pdp__sale-word">${currentLang === "en" ? "SALE" : "RABAT"}</span>
+              </h1>
+              <a href="#why-us" class="dw-pdp__reviews-link" onclick="closeProductModal()">
+                <span class="dw-pdp__star">★ ${prod.rating}</span> / <span class="dw-pdp__rev-u">${currentLang === "en" ? "REVIEWS" : "OPINIE"} (${prod.reviewsCount})</span>
+              </a>
+            </div>
+
+            <div class="dw-pdp__price-row">
+              <span class="dw-pdp__price">${formatValue(displayGrandTotal)}</span>
+              ${origCompareTotal ? `<span class="dw-pdp__old">${formatValue(origCompareTotal)}</span>` : ""}
+              ${savePct > 0 ? `<span class="dw-pdp__disc">-${savePct}%</span>` : ""}
+            </div>
+
+            <div class="dw-pdp__bonus-row">
+              <span class="dw-pdp__bonus-badge">d</span>
+              <span>${currentLang === "en" ? `up to +${bonusPts} bonus points` : `do +${bonusPts} pkt bonusowych`}</span>
+            </div>
+
+            <div class="dw-pdp__pills-row">
+              <span class="dw-pdp__spec-pill">↕ ${specHeight}</span>
+              <span class="dw-pdp__spec-pill">≈ ${specFirm}</span>
+            </div>
+
+            <div class="dw-pdp__pvz-row">
+              <button type="button" class="dw-pdp__pvz-pill" onclick="openApaczkaLockerMap('ALL')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                <span>${currentLang === "en" ? "Available for Parcel Locker" : "Można do Paczkomatu"}</span>
+              </button>
+            </div>
+
+            <div class="dw-pdp__gift-box">
+              ${
+                currentLang === "en"
+                  ? "Partner gift included with your pillow order until November 15."
+                  : "Prezent od partnera przy zamówieniu poduszki do 15 listopada."
+              }
+              <strong onclick="togglePdpAccordion('detale')">${currentLang === "en" ? "Details" : "Szczegóły"}</strong>
+            </div>
+
+            <p class="dw-pdp__desc">${prod.shortDesc[currentLang]}</p>
+
+            ${sizeAndPackHtml}
+            ${addonHtml}
+
+            <button type="button" class="dw-pdp__atc-btn" onclick="addPdpSelectionToCart(${prod.variantId}, ${activePdpPackQty})">
+              ${t("btn_add_to_cart")}
+            </button>
+
+            <div class="dw-pdp__splits">
+              <div class="dw-pdp__split-box">
+                <div class="dw-pdp__split-left">
+                  <span class="dw-pdp__split-logo dw-pdp__split-logo--raty">0%</span>
+                  <span>${currentLang === "en" ? "Installments" : "Raty 0%"}</span>
+                </div>
+                <span class="dw-pdp__split-val">${currentLang === "en" ? "from " : "od "}${split6Str}</span>
+              </div>
+              <div class="dw-pdp__split-box">
+                <div class="dw-pdp__split-left">
+                  <span class="dw-pdp__split-logo dw-pdp__split-logo--split">S</span>
+                  <span>BLIK Split</span>
+                </div>
+                <span class="dw-pdp__split-val">${currentLang === "en" ? "from " : "od "}${split4Str}</span>
+              </div>
+            </div>
+
+            <div class="dw-pdp__consult-row">
+              <a href="mailto:domivio.official@gmail.com" class="dw-pdp__consult-link">
+                <span class="dw-pdp__consult-dot">●</span>
+                <span>${currentLang === "en" ? "GET A CONSULTATION" : "UZYSKAJ KONSULTACJĘ"}</span>
+              </a>
+            </div>
+
+            <div class="dw-pdp__tabs-bar">
+              <button type="button" class="dw-pdp__tab-btn ${activePdpAccordionTab === "opis" ? "is-open" : ""}" onclick="togglePdpAccordion('opis')">
+                ${currentLang === "en" ? "DESCRIPTION" : "OPIS"} ${activePdpAccordionTab === "opis" ? "−" : "+"}
+              </button>
+              <button type="button" class="dw-pdp__tab-btn ${activePdpAccordionTab === "charakterystyka" ? "is-open" : ""}" onclick="togglePdpAccordion('charakterystyka')">
+                ${currentLang === "en" ? "SPECIFICATIONS" : "CHARAKTERYSTYKA"} ${activePdpAccordionTab === "charakterystyka" ? "−" : "+"}
+              </button>
+              <button type="button" class="dw-pdp__tab-btn ${activePdpAccordionTab === "detale" ? "is-open" : ""}" onclick="togglePdpAccordion('detale')">
+                ${currentLang === "en" ? "DETAILS" : "DETALE"} ${activePdpAccordionTab === "detale" ? "−" : "+"}
+              </button>
+            </div>
+            ${tabDrawerHtml}
+
+            <div class="dw-pdp__delivery">
+              <div class="dw-pdp__del-head">
+                <span>${currentLang === "en" ? "DELIVERY IN POLAND" : "DOSTAWA W POLSCE"}</span>
+                <button type="button" onclick="openApaczkaLockerMap('ALL')">${currentLang === "en" ? "CHANGE" : "ZMIEŃ"}</button>
+              </div>
+              <div class="dw-pdp__del-row">
+                <div class="dw-pdp__del-title">${currentLang === "en" ? "PARCEL LOCKER (INPOST / DPD)" : "DOSTAWA DO PACZKOMATU"}</div>
+                <div class="dw-pdp__del-meta">
+                  <strong>0,00 zł (od 99 zł) — 14,90 zł</strong>
+                  <span>${currentLang === "en" ? "from 1 to 2 days" : "od 1 do 2 dni"}</span>
+                </div>
+              </div>
+              <div class="dw-pdp__del-row">
+                <div class="dw-pdp__del-title">${currentLang === "en" ? "COURIER DELIVERY DPD" : "DOSTAWA KURIEREM"}</div>
+                <div class="dw-pdp__del-meta">
+                  <strong>19,90 zł</strong>
+                  <span>${currentLang === "en" ? "from 1 to 2 days" : "od 1 do 2 dni"}</span>
+                </div>
+              </div>
+              <div class="dw-pdp__del-row">
+                <div class="dw-pdp__del-title">${currentLang === "en" ? "WAREHOUSE PICKUP / 14-DAY RETURN" : "ODBIÓR / ZWROT 14 DNI"}</div>
+                <div class="dw-pdp__del-meta">
+                  <strong class="dw-pdp__del-free">${currentLang === "en" ? "FREE" : "BEZPŁATNIE"}</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Full-Width Electric Violet Feature Showcase Section (1:1 Darwin Screenshot 1) -->
+      <section class="dw-pdp__violet-sec">
+        <div class="dw-container dw-pdp__violet-grid">
+          <div class="dw-pdp__vf-left">
+            <div class="dw-pdp__vf-brand">DOMIVIO</div>
+            <div class="dw-pdp__vf-list">
+              ${violetFeaturesHtml}
+            </div>
+          </div>
+          <div class="dw-pdp__vf-right">
+            <img src="${featImgUrl}" alt="${activeFeat[currentLang] ? activeFeat[currentLang].title : activeFeat.pl.title}" class="dw-pdp__vf-img" />
+          </div>
+        </div>
+      </section>
+    `;
+
+    if (homeView) homeView.style.display = "none";
+    pdpView.style.display = "block";
+    if (!preserveScroll) {
+      window.scrollTo(0, 0);
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    }
   };
 
   window.switchPdpImage = function (src, thumbEl) {
@@ -472,6 +790,10 @@
   window.closeProductModal = function () {
     const modal = document.getElementById("pdpModal");
     if (modal) modal.classList.remove("is-open");
+    const pdpView = document.getElementById("pdpPageView");
+    const homeView = document.getElementById("homeMainView");
+    if (pdpView) pdpView.style.display = "none";
+    if (homeView) homeView.style.display = "block";
     activePdpProduct = null;
   };
 
