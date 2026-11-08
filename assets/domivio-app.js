@@ -300,50 +300,23 @@
       .map((p) => {
         const price = getProductPrice(p);
         const comp = getProductCompare(p);
-        const savePct = comp ? Math.round(((comp - price) / comp) * 100) : 0;
-        const splitInstallment = Math.ceil(price / 4);
-        const splitStr = currentLang === "en" ? "€" + splitInstallment : splitInstallment + " zł";
+        const savePct = comp && comp > price ? Math.round(((comp - price) / comp) * 100) : 0;
         const catLabel = currentLang === "en" ? (p.catLabelEN || "SLEEP") : (p.catLabelPL || "PODUSZKI");
-        const specTop = currentLang === "en" ? (p.specTopEN || "") : (p.specTopPL || "");
-        const badgesHtml = (p.badges || [])
-          .map((b) => `<span class="dw-badge dw-badge--${b.type}">${b.text}</span>`)
-          .join("");
-        const currentSz = selectedSizes[p.handle] || (p.sizes && p.sizes[0]) || "";
-        if (currentSz && !selectedSizes[p.handle]) selectedSizes[p.handle] = currentSz;
-
-        const sizesHtml =
-          p.sizes && p.sizes.length > 0
-            ? `
-              <div class="dw-card__size-row">
-                <span>${t("size_label")}</span>
-                <select class="dw-card__size-select" aria-label="Rozmiar" onchange="setProductSize('${p.handle}', this.value)">
-                  ${p.sizes.map((sz) => `<option value="${sz}" ${sz === currentSz ? "selected" : ""}>${sz}</option>`).join("")}
-                </select>
-              </div>
-            `
-            : "";
+        const heroImg = resolveAsset((p.images && p.images[0]) || "domivio_wave_1.jpg");
 
         return `
           <article class="dw-card">
             <div class="dw-card__box" onclick="openProductModal('${p.handle}')">
-              <div class="dw-card__badges">
-                ${badgesHtml}
-                ${specTop ? `<div class="dw-card__spec">${specTop}</div>` : ""}
-              </div>
-              <img class="dw-card__img" src="${p.images[0]}" alt="${p.title[currentLang]}" width="320" height="320" loading="lazy" decoding="async" />
-              <button type="button" class="dw-card__atc-overlay" onclick="event.stopPropagation(); addToCart(${p.variantId}, 1, true)">
-                ${t("btn_add_to_cart")}
-              </button>
+              <img class="dw-card__img" src="${heroImg}" alt="${p.title[currentLang]}" width="320" height="320" loading="lazy" decoding="async" />
             </div>
             <div class="dw-card__info">
               <div class="dw-card__cat">${catLabel}</div>
               <h3 class="dw-card__title" onclick="openProductModal('${p.handle}')">${p.title[currentLang]}</h3>
               <div class="dw-card__price-row">
                 <span class="dw-card__price">${formatValue(price)}</span>
-                ${comp ? `<span class="dw-card__old">${formatValue(comp)}</span>` : ""}
+                ${comp && comp > price ? `<span class="dw-card__old">${formatValue(comp)}</span>` : ""}
                 ${savePct > 0 ? `<span class="dw-card__disc">-${savePct}%</span>` : ""}
               </div>
-              ${sizesHtml}
               <button type="button" class="dw-card__mobile-atc" onclick="addToCart(${p.variantId}, 1, true)">
                 ${t("btn_add_to_cart")}
               </button>
@@ -503,16 +476,8 @@
       .map((imgSrc, idx) => {
         const resolved = resolveAsset(imgSrc);
         if (idx === 0) {
-          const badgesHtml = (prod.badges || [])
-            .map((b) => `<span class="dw-badge dw-badge--${b.type}">${b.text}</span>`)
-            .join("");
-          const specTop = currentLang === "en" ? (prod.specTopEN || "") : (prod.specTopPL || "");
           return `
             <div class="dw-pdp__img-box dw-pdp__img-box--hero">
-              <div class="dw-pdp__img-badges">
-                ${badgesHtml}
-                ${specTop ? `<div class="dw-card__spec" style="margin-left:14px;font-size:13px;font-weight:600;">${specTop}</div>` : ""}
-              </div>
               <div class="dw-pdp__img-actions">
                 <button type="button" class="dw-pdp__action-icon" aria-label="Porównaj">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 20V10M12 20V4M18 20v-8"/></svg>
@@ -535,18 +500,6 @@
 
     const sizeAndPackHtml = `
       <div class="dw-pdp__options">
-        ${
-          prod.sizes && prod.sizes.length > 0
-            ? `
-          <div class="dw-pdp__opt-row">
-            <span class="dw-pdp__opt-label">${t("size_label")}</span>
-            <select class="dw-pdp__opt-select" onchange="setProductSize('${prod.handle}', this.value); renderCatalog();">
-              ${prod.sizes.map((sz) => `<option value="${sz}" ${sz === currentSz ? "selected" : ""}>${sz}</option>`).join("")}
-            </select>
-          </div>
-        `
-            : ""
-        }
         <div class="dw-pdp__pack-pills">
           <button type="button" class="dw-pdp__pack-pill ${activePdpPackQty === 1 ? "is-active" : ""}" onclick="openProductModal('${prod.handle}', 1, true)">
             1 ${currentLang === "en" ? "pc." : "szt."} — ${formatValue(p1)}
@@ -561,21 +514,7 @@
       </div>
     `;
 
-    const addonHtml =
-      prod.handle !== "poszewka-chlodzaca-tencel-cell"
-        ? `
-      <div class="dw-pdp__addon ${pdpCoverSelected ? "is-selected" : ""}" onclick="togglePdpCoverAddon()">
-        <span class="dw-pdp__addon-icon">${pdpCoverSelected ? "✓" : "⊕"}</span>
-        <span class="dw-pdp__addon-verb">${currentLang === "en" ? "ADD:" : "DODAĆ:"}</span>
-        <img src="${resolveAsset("darwin_pillowcase.png")}" alt="" class="dw-pdp__addon-thumb" />
-        <span class="dw-pdp__addon-title">${
-          currentLang === "en"
-            ? `COOLING COVER FOR ${prod.title.en.split(" ")[0]} (+${formatValue(coverAddonPrice)})`
-            : `CHŁODZĄCA POSZEWKA DO ${prod.title.pl.split(" ")[0]} (+${formatValue(coverAddonPrice)})`
-        }</span>
-      </div>
-    `
-        : "";
+    const addonHtml = "";
 
     let tabDrawerHtml = "";
     if (activePdpAccordionTab === "opis") {
@@ -651,27 +590,19 @@
             <div class="dw-pdp__title-row">
               <h1 class="dw-pdp__title">
                 ${prod.title[currentLang]}
-                <span class="dw-pdp__sale-word">${currentLang === "en" ? "SALE" : "RABAT"}</span>
+                ${origCompareTotal > displayGrandTotal ? `<span class="dw-pdp__sale-word">${currentLang === "en" ? "SALE" : "RABAT"}</span>` : ""}
               </h1>
-              <a href="#why-us" class="dw-pdp__reviews-link" onclick="closeProductModal()">
-                <span class="dw-pdp__star">★ ${prod.rating}</span> / <span class="dw-pdp__rev-u">${currentLang === "en" ? "REVIEWS" : "OPINIE"} (${prod.reviewsCount})</span>
-              </a>
             </div>
 
             <div class="dw-pdp__price-row">
               <span class="dw-pdp__price">${formatValue(displayGrandTotal)}</span>
-              ${origCompareTotal ? `<span class="dw-pdp__old">${formatValue(origCompareTotal)}</span>` : ""}
+              ${origCompareTotal > displayGrandTotal ? `<span class="dw-pdp__old">${formatValue(origCompareTotal)}</span>` : ""}
               ${savePct > 0 ? `<span class="dw-pdp__disc">-${savePct}%</span>` : ""}
             </div>
 
             <div class="dw-pdp__bonus-row">
               <span class="dw-pdp__bonus-badge">d</span>
               <span>${currentLang === "en" ? `up to +${bonusPts} bonus points` : `do +${bonusPts} pkt bonusowych`}</span>
-            </div>
-
-            <div class="dw-pdp__pills-row">
-              <span class="dw-pdp__spec-pill">↕ ${specHeight}</span>
-              <span class="dw-pdp__spec-pill">≈ ${specFirm}</span>
             </div>
 
             <div class="dw-pdp__pvz-row">
@@ -1622,97 +1553,105 @@
       if (!resp.ok) return;
       const data = await resp.json();
       const remoteProducts = data.products || [];
-      let updated = false;
+      if (!remoteProducts.length) return;
+
+      const stripHtml = (html) => {
+        const tmp = document.createElement("div");
+        tmp.innerHTML = html || "";
+        return (tmp.textContent || tmp.innerText || "").trim();
+      };
+
+      const dedupeShopifyImages = (imgArray) => {
+        const seen = new Set();
+        const result = [];
+        (imgArray || []).forEach((im) => {
+          const src = typeof im === "string" ? im : im && im.src;
+          if (!src) return;
+          const filePart = src.split("?")[0].split("/").pop() || src;
+          const cleanKey = filePart.replace(
+            /_[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}(?=\.[a-z0-9]+$)/i,
+            ""
+          );
+          if (!seen.has(cleanKey)) {
+            seen.add(cleanKey);
+            result.push(src);
+          }
+        });
+        return result;
+      };
+
+      const syncedList = [];
 
       remoteProducts.forEach((rp) => {
         if (!rp.variants || !rp.variants.length) return;
         const rv = rp.variants[0];
         const livePrice = parseFloat(rv.price) || 369.0;
         const liveComp = parseFloat(rv.compare_at_price) || 0;
-        const rpImgs = (rp.images || []).map((im) => im.src).filter(Boolean);
-        const stripHtml = (html) => {
-          const tmp = document.createElement("div");
-          tmp.innerHTML = html || "";
-          return (tmp.textContent || tmp.innerText || "").trim();
-        };
+        const rpImgs = dedupeShopifyImages(rp.images);
+        const bodyText = stripHtml(rp.body_html);
 
-        const local = PRODUCTS.find(
-          (p) => p.handle === rp.handle || p.id === rp.id || (p.title && p.title.pl === rp.title)
+        const existing = PRODUCTS.find(
+          (p) => p.id === rp.id || p.handle === rp.handle
         );
-        if (local) {
-          local.id = rp.id;
-          local.variantId = rv.id;
-          local.shopifyVariantId = rv.id;
-          if (livePrice > 0) {
-            local.pricePLN = livePrice;
-            local.priceEUR = Number((livePrice / 4.25).toFixed(2));
-          }
-          if (liveComp > livePrice) {
-            local.comparePLN = liveComp;
-            local.compareEUR = Number((liveComp / 4.25).toFixed(2));
-          }
-          if (rp.title) {
-            local.title.pl = rp.title;
-          }
-          if (rpImgs.length > 0 && rp.id !== 15837514432838) {
-            local.images = rpImgs;
-          }
-          updated = true;
-        } else {
-          // Automatically add any new product created in Shopify Admin -> Products!
-          const catTag = String(rp.product_type || rp.tags || "poduszki").toLowerCase();
-          const cats = [];
-          if (catTag.includes("materac")) cats.push("materace");
-          else if (catTag.includes("dziec") || catTag.includes("kid")) cats.push("dla-dzieci");
-          else if (catTag.includes("akcesor") || catTag.includes("poszewk")) cats.push("akcesoria");
-          else cats.push("poduszki");
 
-          PRODUCTS.push({
-            id: rp.id,
-            variantId: rv.id,
-            shopifyVariantId: rv.id,
-            handle: rp.handle,
-            category: cats,
-            catLabelPL: (rp.product_type || "PODUSZKI").toUpperCase(),
-            catLabelEN: (rp.product_type || "PILLOWS").toUpperCase(),
-            badges: [{ text: "HIT", type: "hit" }, ...(liveComp > livePrice ? [{ text: "SALE", type: "sale" }] : [])],
-            specTopPL: "≈ Średnia twardość\n↕ 8,5/10 cm",
-            specTopEN: "≈ Medium firmness\n↕ 8.5/10 cm",
-            specHeightPL: "Wysokość — 8,5/10 cm",
-            specHeightEN: "Height — 8.5/10 cm",
-            specFirmPL: "Twardość — średnia",
-            specFirmEN: "Firmness — medium",
-            pricePLN: livePrice,
-            comparePLN: liveComp > livePrice ? liveComp : Math.round(livePrice * 1.25),
-            priceEUR: Number((livePrice / 4.25).toFixed(2)),
-            compareEUR: Number(((liveComp > livePrice ? liveComp : livePrice * 1.25) / 4.25).toFixed(2)),
-            rating: "4.9",
-            reviewsCount: 64,
-            sizes: rp.variants.length > 1 ? rp.variants.map((v) => v.title) : ["Standard"],
-            images: rpImgs.length > 0 ? rpImgs : [resolveAsset("domivio_wave_1.jpg")],
-            title: { pl: rp.title, en: rp.title },
-            shortDesc: {
-              pl: stripHtml(rp.body_html) || "Innowacyjny produkt do snu nowej generacji z technologią komórkową TPE CELL®.",
-              en: stripHtml(rp.body_html) || "Innovative next-generation sleep product with cellular TPE CELL® technology."
-            },
-            bullets: {
-              pl: [
-                "💜 Opatentowana technologia TPE CELL®",
-                "❄️ Termoregulacja 360° przez całą noc",
-                "🚚 Darmowa dostawa od 890 zł"
-              ],
-              en: [
-                "💜 Patented TPE CELL® technology",
-                "❄️ 360° airflow all night",
-                "🚚 Free shipping from 890 PLN"
-              ]
-            }
-          });
-          updated = true;
-        }
+        const catTag = String(rp.product_type || rp.tags || "poduszki").toLowerCase();
+        const cats = [];
+        if (catTag.includes("materac")) cats.push("materace");
+        else if (catTag.includes("dziec") || catTag.includes("kid")) cats.push("dla-dzieci");
+        else if (catTag.includes("akcesor") || catTag.includes("poszewk")) cats.push("akcesoria");
+        else if (catTag.includes("prezent") || catTag.includes("gift")) cats.push("na-prezent");
+        else cats.push("poduszki");
+
+        syncedList.push({
+          id: rp.id,
+          variantId: rv.id,
+          shopifyVariantId: rv.id,
+          handle: rp.handle,
+          category: existing && existing.category ? existing.category : cats,
+          catLabelPL: (rp.product_type || (existing && existing.catLabelPL) || "PODUSZKI").toUpperCase(),
+          catLabelEN: (rp.product_type || (existing && existing.catLabelEN) || "PILLOWS").toUpperCase(),
+          isMysteryBox: existing ? existing.isMysteryBox : syncedList.length === 0,
+          badges: [],
+          specTopPL: "",
+          specTopEN: "",
+          specHeightPL: (existing && existing.specHeightPL) || "Wysokość — 8,5/10 cm",
+          specHeightEN: (existing && existing.specHeightEN) || "Height — 8.5/10 cm",
+          specFirmPL: (existing && existing.specFirmPL) || "Twardość — średnia",
+          specFirmEN: (existing && existing.specFirmEN) || "Firmness — medium",
+          pricePLN: livePrice,
+          comparePLN: liveComp > livePrice ? liveComp : 0,
+          priceEUR: Number((livePrice / 4.25).toFixed(2)),
+          compareEUR: liveComp > livePrice ? Number((liveComp / 4.25).toFixed(2)) : 0,
+          rating: "4.9",
+          reviewsCount: 149,
+          sizes: [],
+          images: rpImgs.length > 0 ? rpImgs : existing && existing.images ? existing.images : [resolveAsset("domivio_wave_1.jpg")],
+          title: {
+            pl: rp.title,
+            en: rp.title
+          },
+          shortDesc: {
+            pl: bodyText || (existing && existing.shortDesc && existing.shortDesc.pl) || "Innowacyjny produkt do snu nowej generacji z technologią komórkową TPE CELL®.",
+            en: bodyText || (existing && existing.shortDesc && existing.shortDesc.en) || "Innovative next-generation sleep product with cellular TPE CELL® technology."
+          },
+          bullets: (existing && existing.bullets) || {
+            pl: [
+              "💜 Opatentowana technologia TPE CELL®",
+              "❄️ Termoregulacja 360° przez całą noc",
+              "🚚 Darmowa dostawa od 890 zł"
+            ],
+            en: [
+              "💜 Patented TPE CELL® technology",
+              "❄️ 360° airflow all night",
+              "🚚 Free shipping from 890 PLN"
+            ]
+          }
+        });
       });
 
-      if (updated) {
+      if (syncedList.length > 0) {
+        PRODUCTS.length = 0;
+        syncedList.forEach((item) => PRODUCTS.push(item));
         renderHeroPrice();
         renderCatalog();
         renderCartUI();
