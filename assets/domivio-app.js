@@ -428,9 +428,9 @@
 
     const p1 = unitPrice;
     const p2Orig = unitPrice * 2;
-    const p2Disc = p2Orig * 0.9;
+    const p2Disc = p2Orig * 0.95;
     const p3Orig = unitPrice * 3;
-    const p3Disc = p3Orig * 0.85;
+    const p3Disc = p3Orig * 0.9;
 
     const activeTotal =
       activePdpPackQty === 3 ? p3Disc : activePdpPackQty === 2 ? p2Disc : p1;
@@ -497,10 +497,10 @@
             1 ${currentLang === "en" ? "pc." : "szt."} — ${formatValue(p1)}
           </button>
           <button type="button" class="dw-pdp__pack-pill ${activePdpPackQty === 2 ? "is-active" : ""}" onclick="openProductModal('${prod.handle}', 2, true)">
-            2 ${currentLang === "en" ? "pcs" : "szt."} <span>-10%</span>
+            2 ${currentLang === "en" ? "pcs" : "szt."} <span>-5%</span>
           </button>
           <button type="button" class="dw-pdp__pack-pill ${activePdpPackQty === 3 ? "is-active" : ""}" onclick="openProductModal('${prod.handle}', 3, true)">
-            3 ${currentLang === "en" ? "pcs" : "szt."} <span>-15%</span>
+            3 ${currentLang === "en" ? "pcs" : "szt."} <span>-10%</span>
           </button>
         </div>
       </div>
@@ -708,8 +708,8 @@
       if (!prod) return;
       const unit = getProductPrice(prod);
       let lineTotal = unit * item.qty;
-      if (item.qty === 2) lineTotal = lineTotal * 0.9;
-      else if (item.qty >= 3) lineTotal = lineTotal * 0.85;
+      if (item.qty === 2) lineTotal = lineTotal * 0.95;
+      else if (item.qty >= 3) lineTotal = lineTotal * 0.9;
       subtotal += lineTotal;
       totalCount += item.qty;
     });
@@ -820,11 +820,11 @@
         let lineTotal = unit * item.qty;
         let packBadge = "";
         if (item.qty === 2) {
+          lineTotal *= 0.95;
+          packBadge = `<span style="background:#7B42F6;color:#FFF;padding:2px 6px;font-size:10px;font-weight:600;margin-left:6px;">-5% PAKIET</span>`;
+        } else if (item.qty >= 3) {
           lineTotal *= 0.9;
           packBadge = `<span style="background:#7B42F6;color:#FFF;padding:2px 6px;font-size:10px;font-weight:600;margin-left:6px;">-10% PAKIET</span>`;
-        } else if (item.qty >= 3) {
-          lineTotal *= 0.85;
-          packBadge = `<span style="background:#7B42F6;color:#FFF;padding:2px 6px;font-size:10px;font-weight:600;margin-left:6px;">-15% PAKIET</span>`;
         }
         const itemSz = item.size || selectedSizes[prod.handle] || (prod.sizes && prod.sizes[0]) || "";
 
