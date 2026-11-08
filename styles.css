@@ -1,23 +1,23 @@
 /* ==========================================================================
-   DOMIVIO — High-Converting Yellow & Black Dropshipping Theme Styles
+   DOMIVIO — Minimalist Elite Sleep & Night Recovery Boutique Styles
    ========================================================================== */
 
 :root {
-  --bg-page: #FFFDF7;
+  --bg-page: #F7F5F0;
   --bg-card: #FFFFFF;
-  --bg-soft: #FEF9C3;
-  --bg-yellow: #FFD600;
-  --bg-yellow-hover: #F59E0B;
-  --text-main: #0F172A;
-  --text-muted: #475569;
-  --border-dark: #111111;
-  --border-light: #E2E8F0;
-  --red-sale: #DC2626;
-  --green-ok: #16A34A;
-  --shadow-hard: 4px 4px 0px #111111;
-  --shadow-hard-sm: 2px 2px 0px #111111;
-  --shadow-soft: 0 12px 32px rgba(15, 23, 42, 0.08);
-  --radius: 12px;
+  --bg-soft: #EFECE6;
+  --bg-yellow: #121316;
+  --bg-yellow-hover: #2A2C32;
+  --text-main: #121316;
+  --text-muted: #5A5852;
+  --border-dark: #E2DDD3;
+  --border-light: #EBE7DF;
+  --red-sale: #8C7355;
+  --green-ok: #2E5A44;
+  --shadow-hard: 0 10px 30px rgba(18, 19, 22, 0.04);
+  --shadow-hard-sm: 0 4px 14px rgba(18, 19, 22, 0.03);
+  --shadow-soft: 0 16px 40px rgba(18, 19, 22, 0.05);
+  --radius: 14px;
   --radius-sm: 8px;
 }
 
@@ -1898,3 +1898,163 @@ button {
     flex-shrink: 0;
   }
 }
+
+/* ==========================================================================
+   MINIMALIST ELITE SLEEP BOUTIQUE THEME OVERRIDES (DOMIVIO SLEEP™)
+   ========================================================================== */
+body {
+  background: #F7F5F0 !important;
+  color: #121316 !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+}
+.topbar {
+  background: #121316 !important;
+  color: #E8E3DA !important;
+  border-bottom: 1px solid #26282E !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.14em !important;
+}
+.topbar__pill {
+  background: #8C7355 !important;
+  color: #FFFFFF !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.12em !important;
+  border-radius: 3px !important;
+}
+.header {
+  background: rgba(247, 245, 240, 0.94) !important;
+  border-bottom: 1px solid #E2DDD3 !important;
+}
+.brand {
+  font-family: 'Plus Jakarta Sans', 'Inter', sans-serif !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
+  color: #121316 !important;
+}
+.brand__box {
+  display: none !important;
+}
+.brand__tag {
+  background: transparent !important;
+  color: #8C7355 !important;
+  border: 1px solid #D5CEC2 !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.14em !important;
+}
+.lang-switch {
+  border: 1px solid #D5CEC2 !important;
+  box-shadow: none !important;
+  background: #FFFFFF !important;
+  border-radius: 8px !important;
+}
+.lang-switch__btn.is-active {
+  background: #121316 !important;
+  color: #FFFFFF !important;
+}
+.cart-trigger {
+  background: #121316 !important;
+  color: #FFFFFF !important;
+  border: 1px solid #121316 !important;
+  box-shadow: none !important;
+  border-radius: 8px !important;
+}
+.cart-trigger__badge {
+  background: #8C7355 !important;
+  color: #FFFFFF !important;
+}
+.hero {
+  background: linear-gradient(180deg, #F7F5F0 0%, #EFECE6 100%) !important;
+  border-bottom: 1px solid #E2DDD3 !important;
+  padding: 56px 0 64px !important;
+}
+.hero__badge {
+  background: #FFFFFF !important;
+  color: #8C7355 !important;
+  border: 1px solid #D5CEC2 !important;
+  box-shadow: none !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.14em !important;
+  font-size: 11px !important;
+}
+.hero__title {
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.02em !important;
+  line-height: 1.08 !important;
+  color: #121316 !important;
+}
+.hero__subtitle {
+  color: #5A5852 !important;
+  font-weight: 400 !important;
+  line-height: 1.7 !important;
+}
+.hero__card,
+.p-card,
+.why-card,
+.faq-item {
+  background: #FFFFFF !important;
+  border: 1px solid #E2DDD3 !important;
+  box-shadow: 0 12px 32px rgba(18, 19, 22, 0.04) !important;
+  border-radius: 16px !important;
+}
+.hero__card-ribbon {
+  background: #121316 !important;
+  color: #F7F5F0 !important;
+  border: none !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.08em !important;
+}
+.btn-primary,
+.p-card__atc {
+  background: #121316 !important;
+  color: #FFFFFF !important;
+  border: 1px solid #121316 !important;
+  box-shadow: none !important;
+  border-radius: 10px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.06em !important;
+}
+.btn-yellow,
+.filter-btn.is-active {
+  background: #8C7355 !important;
+  color: #FFFFFF !important;
+  border: 1px solid #8C7355 !important;
+  box-shadow: none !important;
+  border-radius: 10px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.06em !important;
+}
+.filter-btn {
+  background: #FFFFFF !important;
+  color: #5A5852 !important;
+  border: 1px solid #E2DDD3 !important;
+  box-shadow: none !important;
+  border-radius: 10px !important;
+  font-weight: 500 !important;
+}
+.benefits-strip {
+  background: #FFFFFF !important;
+  border-bottom: 1px solid #E2DDD3 !important;
+}
+.benefits-strip__icon {
+  background: #F7F5F0 !important;
+  border: 1px solid #E2DDD3 !important;
+  box-shadow: none !important;
+}
+.why-section {
+  background: #EFECE6 !important;
+  border-top: 1px solid #E2DDD3 !important;
+  border-bottom: 1px solid #E2DDD3 !important;
+}
+.section-head__title {
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.01em !important;
+}
+.footer {
+  background: #121316 !important;
+  color: #D5CEC2 !important;
+  border-top: 1px solid #26282E !important;
+}
+
