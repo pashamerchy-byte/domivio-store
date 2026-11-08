@@ -901,44 +901,18 @@
       })
       .join("");
 
-    // Render 1-Click Second Product Order Bump + 3-Option Shipping Selector + Interactive Locker Map
-    const otherProd =
-      PRODUCTS.find((p) => p.handle === "poszewka-chlodzaca-tencel-cell" && !cart.some((i) => i.variantId === p.variantId)) ||
-      PRODUCTS.find((p) => !cart.some((i) => i.variantId === p.variantId));
-
-    const mysteryBumpHtml = otherProd
-      ? `
-        <div class="mystery-bump">
-          <div class="mystery-bump__top">
-            <span class="mystery-bump__tag">${t("mystery_upsell_tag")}</span>
-            <span class="mystery-bump__save">${t("mystery_upsell_save")}</span>
-          </div>
-          <div class="mystery-bump__row">
-            <img class="mystery-bump__img" src="${otherProd.images[0]}" alt="" loading="lazy" decoding="async">
-            <div>
-              <div style="font-size:13px;font-weight:700;color:#242C34;line-height:1.25;">${otherProd.title[currentLang]}</div>
-              <div style="font-size:11.5px;color:#64748B;margin-top:2px;">${t("mystery_upsell_desc")}</div>
-            </div>
-          </div>
-          <button type="button" class="mystery-bump__btn" onclick="addToCart(${otherProd.variantId}, 1, false)">
-            ${t("mystery_upsell_btn")} (${formatValue(getProductPrice(otherProd))})
-          </button>
-        </div>
-      `
-      : "";
-
     const selectedPointHtml =
       selectedLocker && selectedLocker.code
         ? `
           <div class="locker-selected" style="margin-bottom:10px;border:1.5px solid #7B42F6;background:#F6F3FF;padding:12px;">
             <div>
-              <span class="locker-selected__badge" style="background:#7B42F6;color:#FFF;padding:2px 7px;font-size:10px;font-weight:700;display:inline-block;margin-bottom:4px;">✅ ${selectedLocker.supplier === "DPD" ? "DPD PICKUP / PACZKOMAT" : "INPOST PACZKOMAT"}</span>
+              <span class="locker-selected__badge" style="background:#7B42F6;color:#FFF;padding:2px 7px;font-size:10px;font-weight:700;display:inline-block;margin-bottom:4px;">✓ ${selectedLocker.supplier === "DPD" ? "DPD PICKUP / PACZKOMAT" : "INPOST PACZKOMAT"}</span>
               <div style="font-size:13.5px;font-weight:700;color:#242C34;">${selectedLocker.code}</div>
               <div style="font-size:11.5px;color:#475569;">${selectedLocker.street}, ${selectedLocker.postal_code} ${selectedLocker.city}</div>
             </div>
             <div style="display:flex;flex-direction:column;gap:4px;">
-              <button type="button" class="acc-card__btn" onclick="openApaczkaLockerMap('${selectedLocker.supplier || "ALL"}')">${t("locker_change_btn")}</button>
-              <button type="button" style="background:none;border:none;font-size:10.5px;font-weight:700;color:#DC2626;cursor:pointer;" onclick="clearSelectedLocker()">${t("locker_remove_btn")}</button>
+              <button type="button" class="acc-card__btn" style="background:#7B42F6;color:#FFF;border:none;padding:5px 10px;font-size:10.5px;font-weight:700;cursor:pointer;" onclick="openApaczkaLockerMap('${selectedLocker.supplier || "ALL"}')">${t("locker_change_btn")}</button>
+              <button type="button" style="background:none;border:none;font-size:10.5px;font-weight:700;color:#7B42F6;cursor:pointer;" onclick="clearSelectedLocker()">${t("locker_remove_btn")}</button>
             </div>
           </div>
         `
@@ -946,58 +920,64 @@
 
     const searchPlaceholder =
       currentLang === "en"
-        ? "🔍 Enter city, street or locker code (e.g. Warszawa)..."
-        : "🔍 Wpisz miasto, ulicę lub kod Paczkomatu (np. Warszawa)...";
+        ? "Enter city, street or locker code (e.g. Warszawa)..."
+        : "Wpisz miasto, ulicę lub kod Paczkomatu (np. Warszawa)...";
     const openMapBtnText =
       currentLang === "en"
-        ? "🗺️ SELECT PARCEL LOCKER ON MAP"
-        : "🗺️ WYBIERZ PACZKOMAT NA MAPIE";
+        ? "SELECT PARCEL LOCKER ON MAP"
+        : "WYBIERZ PACZKOMAT NA MAPIE";
 
     const lockerHtml = `
-      <div class="locker-box">
-        <div class="locker-box__title">${t("locker_title")}</div>
+      <div class="locker-box" style="background:#F6F3FF;border:1.5px solid #EDE5FF;padding:14px;">
+        <div class="locker-box__title" style="color:#7B42F6;font-size:11.5px;font-weight:800;letter-spacing:0.05em;margin-bottom:10px;display:flex;align-items:center;gap:6px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#7B42F6" stroke-width="2.2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+          <span>${t("locker_title")}</span>
+        </div>
         ${selectedPointHtml}
-        <div style="position:relative;margin-bottom:8px;">
+        <div style="position:relative;margin-bottom:10px;">
           <input
             type="text"
             id="cartInlineLockerInput"
             placeholder="${searchPlaceholder}"
             oninput="handleCartInlineLockerSearch(this.value)"
             autocomplete="off"
-            style="width:100%;padding:10px 12px;border:1.5px solid #CBD5E1;font-size:12.5px;color:#1D1D1F;background:#FFFFFF;outline:none;box-sizing:border-box;"
+            style="width:100%;padding:10px 12px;border:1.5px solid #D8B4FE;font-size:12.5px;color:#242C34;background:#FFFFFF;outline:none;box-sizing:border-box;"
           />
           <div
             id="cartInlineLockerResults"
-            style="display:none;max-height:190px;overflow-y:auto;border:1.5px solid #7B42F6;border-top:none;background:#FFFFFF;box-shadow:0 8px 20px rgba(0,0,0,0.08);"
+            style="display:none;max-height:190px;overflow-y:auto;border:1.5px solid #7B42F6;border-top:none;background:#FFFFFF;box-shadow:0 8px 20px rgba(123,66,246,0.12);"
           ></div>
         </div>
         <button
           type="button"
           onclick="openApaczkaLockerMap('ALL')"
-          style="width:100%;padding:11px 14px;background:#7B42F6;color:#FFFFFF;border:none;font-size:12px;font-weight:700;letter-spacing:0.04em;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:6px;"
+          style="width:100%;padding:11px 14px;background:#7B42F6;color:#FFFFFF;border:none;font-size:12px;font-weight:700;letter-spacing:0.05em;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px;"
         >
-          ${openMapBtnText}
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span>${openMapBtnText}</span>
         </button>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
           <button
             type="button"
             onclick="selectShippingMethod('inpost_paczkomat'); openApaczkaLockerMap('INPOST');"
-            style="padding:8px 10px;background:#F8FAFC;border:1px solid #E2E8F0;font-size:11.5px;font-weight:700;color:#242C34;cursor:pointer;"
+            style="padding:10px 10px;background:#FFFFFF;border:1.5px solid #D8B4FE;font-size:11.5px;font-weight:700;color:#242C34;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all 0.15s;"
           >
-            📦 Mapa InPost
+            <span style="width:8px;height:8px;border-radius:50%;background:#7B42F6;display:inline-block;"></span>
+            <span>InPost Paczkomat</span>
           </button>
           <button
             type="button"
             onclick="selectShippingMethod('dpd_paczkomat'); openApaczkaLockerMap('DPD');"
-            style="padding:8px 10px;background:#F8FAFC;border:1px solid #E2E8F0;font-size:11.5px;font-weight:700;color:#242C34;cursor:pointer;"
+            style="padding:10px 10px;background:#FFFFFF;border:1.5px solid #D8B4FE;font-size:11.5px;font-weight:700;color:#242C34;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all 0.15s;"
           >
-            📦 Mapa DPD
+            <span style="width:8px;height:8px;border-radius:50%;background:#7B42F6;display:inline-block;"></span>
+            <span>DPD Pickup</span>
           </button>
         </div>
       </div>
     `;
 
-    upsellWrap.innerHTML = mysteryBumpHtml + lockerHtml;
+    upsellWrap.innerHTML = lockerHtml;
 
     // Summary totals (safe support for both ID naming conventions)
     const subEl = document.getElementById("cartSubtotalVal") || document.getElementById("summarySubtotal");
@@ -1161,15 +1141,15 @@
     const st = document.createElement("style");
     st.id = "domivio-apaczka-styles";
     st.textContent = `
-      .apaczkaMapWrapper { z-index: 2147483647 !important; }
+      .apaczkaMapWrapper { z-index: 2147483647 !important; font-family: 'Inter', -apple-system, sans-serif !important; }
       .apaczkaMapWrapper img { width: auto; height: auto; max-width: none; display: inline-block; }
       .apaczkaMapWrapper .apaczkaCellIcon { width: 64px !important; height: 40px !important; object-fit: contain !important; }
       .apaczkaMapWrapper .popupLogo img { width: 88px !important; height: auto !important; object-fit: contain !important; }
       .apaczkaMapFilterCod, .apaczkaMapWrapper .popupServices, .apaczkaMapWrapper .apaczkaMapFilter, .apaczkaMapWrapper .apaczkaMapLogo { display: none !important; }
       .apaczkaMapWrapper .apaczkaMapRow1 {
         display: flex !important; flex-wrap: wrap !important; align-items: center !important;
-        justify-content: space-between !important; gap: 10px !important; padding: 12px 14px !important;
-        background: #FFFDF7 !important; border-bottom: 2px solid #111111 !important;
+        justify-content: space-between !important; gap: 10px !important; padding: 12px 16px !important;
+        background: #F6F3FF !important; border-bottom: 1.5px solid #EDE5FF !important;
         height: auto !important; min-height: 64px !important; box-sizing: border-box !important; overflow: visible !important;
       }
       .apaczkaMapWrapper .apaczkaMapMobileHide { overflow: visible !important; }
@@ -1178,48 +1158,51 @@
         max-width: 520px !important; margin: 0 !important; float: none !important; overflow: visible !important;
       }
       .apaczkaMapWrapper .apaczkaMapSearch input[name="search"] {
-        width: 100% !important; height: 42px !important; padding: 0 64px 0 12px !important;
-        border: 2px solid #111111 !important; border-radius: 8px !important;
-        font-size: 13.5px !important; font-weight: 600 !important; color: #111111 !important;
-        background: #ffffff !important; box-sizing: border-box !important; outline: none !important;
+        width: 100% !important; height: 42px !important; padding: 0 64px 0 14px !important;
+        border: 1.5px solid #7B42F6 !important; border-radius: 4px !important;
+        font-size: 13.5px !important; font-weight: 500 !important; color: #242C34 !important;
+        background: #FFFFFF !important; box-sizing: border-box !important; outline: none !important;
       }
       .dom-map-header-controls { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
       .dom-map-carrier-tab {
-        appearance: none; border: 2px solid #111111; background: #ffffff; color: #111111;
-        padding: 9px 13px; font-size: 11px; font-weight: 800; text-transform: uppercase;
-        cursor: pointer; border-radius: 8px; line-height: 1;
+        appearance: none; border: 1.5px solid #D8B4FE; background: #FFFFFF; color: #242C34;
+        padding: 9px 14px; font-size: 11px; font-weight: 700; text-transform: uppercase;
+        cursor: pointer; border-radius: 4px; line-height: 1; transition: all 0.15s;
       }
-      .dom-map-carrier-tab.is-active { background: #FFD600 !important; color: #111111 !important; box-shadow: 2px 2px 0 #111111; }
+      .dom-map-carrier-tab:hover { background: #F6F3FF; border-color: #7B42F6; color: #7B42F6; }
+      .dom-map-carrier-tab.is-active { background: #7B42F6 !important; color: #FFFFFF !important; border-color: #7B42F6 !important; box-shadow: 0 4px 12px rgba(123,66,246,0.22); }
       .dom-map-close-desktop {
-        appearance: none; border: 2px solid #111111; background: #111111; color: #FFD600;
-        padding: 9px 12px; font-size: 11px; font-weight: 800; text-transform: uppercase;
-        cursor: pointer; border-radius: 8px; line-height: 1;
+        appearance: none; border: 1.5px solid #242C34; background: #242C34; color: #FFFFFF;
+        padding: 9px 14px; font-size: 11px; font-weight: 700; text-transform: uppercase;
+        cursor: pointer; border-radius: 4px; line-height: 1;
       }
       .dom-map-autocomplete {
-        position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: #ffffff;
-        border: 2px solid #111111; border-radius: 10px; box-shadow: 0 12px 32px rgba(0,0,0,0.25);
+        position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: #FFFFFF;
+        border: 1.5px solid #7B42F6; border-radius: 4px; box-shadow: 0 12px 32px rgba(123,66,246,0.18);
         z-index: 2147483647; max-height: 360px; overflow-y: auto; display: none; text-align: left;
       }
       .dom-map-autocomplete.is-open { display: block; }
       .dom-map-ac-section {
-        padding: 6px 10px; background: #FEF9C3; border-bottom: 1.5px solid #111111;
-        font-size: 10px; font-weight: 900; text-transform: uppercase; color: #111111;
+        padding: 7px 12px; background: #F6F3FF; border-bottom: 1px solid #EDE5FF;
+        font-size: 10px; font-weight: 800; text-transform: uppercase; color: #7B42F6; letter-spacing: 0.04em;
       }
       .dom-map-ac-item {
-        padding: 9px 12px; border-bottom: 1px solid #eeeeee; cursor: pointer;
-        display: flex; align-items: center; justify-content: space-between; gap: 8px; background: #ffffff;
+        padding: 9px 12px; border-bottom: 1px solid #F1F5F9; cursor: pointer;
+        display: flex; align-items: center; justify-content: space-between; gap: 8px; background: #FFFFFF;
       }
-      .dom-map-ac-item:hover { background: #FFFBEB; }
-      .dom-map-ac-main { font-size: 12.5px; font-weight: 800; color: #111111; }
+      .dom-map-ac-item:hover { background: #F6F3FF; }
+      .dom-map-ac-main { font-size: 12.5px; font-weight: 700; color: #242C34; }
       .dom-map-ac-sub { font-size: 11px; color: #64748B; }
       .dom-map-ac-pick-btn {
-        background: #FFD600; color: #111111; border: 1.5px solid #111111; border-radius: 6px;
-        padding: 5px 9px; font-size: 10px; font-weight: 900; text-transform: uppercase; cursor: pointer;
+        background: #7B42F6; color: #FFFFFF; border: none; border-radius: 4px;
+        padding: 5px 10px; font-size: 10px; font-weight: 700; text-transform: uppercase; cursor: pointer;
       }
-      .apaczkaMapWrapper .popupButtons a {
-        background: #FFD600 !important; color: #111111 !important; border: 2px solid #111111 !important;
-        border-radius: 8px !important; font-weight: 900 !important; text-transform: uppercase !important;
+      .apaczkaMapWrapper .popupButtons a,
+      .apaczkaMapWrapper .apaczkaMapSelectPoint {
+        background: #7B42F6 !important; color: #FFFFFF !important; border: none !important;
+        border-radius: 4px !important; font-weight: 700 !important; text-transform: uppercase !important;
       }
+      .apaczkaMapWrapper .apaczkaTableRow:hover { background: #F6F3FF !important; }
     `;
     document.head.appendChild(st);
   }
@@ -1248,7 +1231,7 @@
       const c = btn.getAttribute("data-dom-carrier-tab");
       btn.classList.toggle("is-active", c === currentCarrierFilter);
       const labelBase =
-        c === "INPOST" ? "📦 InPost Paczkomat" : c === "DPD" ? "📦 DPD Pickup" : "Wszystkie";
+        c === "INPOST" ? "InPost Paczkomat" : c === "DPD" ? "DPD Pickup" : "Wszystkie";
       btn.textContent = c === currentCarrierFilter ? `✓ ${labelBase}` : labelBase;
     });
   }
@@ -1395,8 +1378,8 @@
       const controls = document.createElement("div");
       controls.className = "dom-map-header-controls";
       controls.innerHTML = `
-        <button type="button" class="dom-map-carrier-tab" data-dom-carrier-tab="INPOST">📦 InPost Paczkomat</button>
-        <button type="button" class="dom-map-carrier-tab" data-dom-carrier-tab="DPD">📦 DPD Pickup</button>
+        <button type="button" class="dom-map-carrier-tab" data-dom-carrier-tab="INPOST">InPost Paczkomat</button>
+        <button type="button" class="dom-map-carrier-tab" data-dom-carrier-tab="DPD">DPD Pickup</button>
         <button type="button" class="dom-map-carrier-tab" data-dom-carrier-tab="ALL">Wszystkie</button>
         <button type="button" class="dom-map-close-desktop" data-dom-map-close>✕ Zamknij</button>
       `;
@@ -1580,7 +1563,7 @@
   // ── Live Sync with Shopify Backend (1tvnzn-zf.myshopify.com) ──────────
   async function syncWithShopifyBackend() {
     try {
-      const colHandles = ["poduszki", "dla-dzieci", "akcesoria", "na-prezent"];
+      const colHandles = ["poduszki", "dla-dzieci", "akcesoria", "zestawy", "na-prezent"];
       const [prodResp, ...colResps] = await Promise.allSettled([
         fetch(`/products.json?limit=250`).then((r) => (r.ok ? r.json() : null)),
         ...colHandles.map((h) =>
@@ -1596,8 +1579,9 @@
       const prodColMap = {};
       const addColMapping = (pid, handle) => {
         const key = String(pid);
+        const normHandle = handle === "na-prezent" ? "zestawy" : handle;
         if (!prodColMap[key]) prodColMap[key] = [];
-        if (!prodColMap[key].includes(handle)) prodColMap[key].push(handle);
+        if (!prodColMap[key].includes(normHandle)) prodColMap[key].push(normHandle);
       };
 
       if (window.DOMIVIO_COLLECTION_MAP) {
@@ -1642,13 +1626,13 @@
         "poduszki": "PODUSZKI",
         "dla-dzieci": "DLA DZIECI",
         "akcesoria": "AKCESORIA",
-        "na-prezent": "NA PREZENT"
+        "zestawy": "ZESTAWY"
       };
       const catLabelENMap = {
         "poduszki": "PILLOWS",
         "dla-dzieci": "FOR KIDS",
         "akcesoria": "ACCESSORIES",
-        "na-prezent": "GIFTS"
+        "zestawy": "SETS"
       };
 
       const syncedList = [];
@@ -1667,7 +1651,8 @@
 
         const cats = [];
         const addCat = (c) => {
-          if (c && !cats.includes(c)) cats.push(c);
+          const norm = c === "na-prezent" ? "zestawy" : c;
+          if (norm && !cats.includes(norm)) cats.push(norm);
         };
 
         // 1. Categories from Shopify Admin "Kolekcje"
@@ -1686,7 +1671,7 @@
         if (tagStr.includes("poduszk") || tagStr.includes("pillow")) addCat("poduszki");
         if (tagStr.includes("dziec") || tagStr.includes("kid")) addCat("dla-dzieci");
         if (tagStr.includes("akcesor") || tagStr.includes("poszewk") || tagStr.includes("access")) addCat("akcesoria");
-        if (tagStr.includes("prezent") || tagStr.includes("gift")) addCat("na-prezent");
+        if (tagStr.includes("zestaw") || tagStr.includes("prezent") || tagStr.includes("set") || tagStr.includes("bundle")) addCat("zestawy");
 
         // 3. Fallback if no category was assigned yet in Shopify Admin
         if (cats.length === 0) {
