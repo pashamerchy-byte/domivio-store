@@ -143,8 +143,8 @@
       if (bulletsEl) {
         bulletsEl.innerHTML =
           currentLang === "en"
-            ? `<li>✦ Engineered for deep REM & slow-wave sleep recovery</li><li>✦ Minimalist, zero-distraction bedroom aesthetics</li><li>✦ Complimentary InPost & DPD Locker delivery from 99 PLN</li>`
-            : `<li>✦ Zaprojektowane dla głębokiej fazy REM i regeneracji nocnej</li><li>✦ Minimalistyczna, wyciszająca estetyka sypialni</li><li>✦ Darmowa dostawa Paczkomatem InPost i DPD od 99 zł</li>`;
+            ? `<li>✦ Engineered for deep REM & slow-wave sleep recovery</li><li>✦ Minimalist, zero-distraction bedroom aesthetics</li><li>✦ Complimentary shipping from 890 PLN</li>`
+            : `<li>✦ Zaprojektowane dla głębokiej fazy REM i regeneracji nocnej</li><li>✦ Minimalistyczna, wyciszająca estetyka sypialni</li><li>✦ Darmowa dostawa od 890 zł</li>`;
       }
       return;
     }
@@ -505,9 +505,13 @@
           const badgesHtml = (prod.badges || [])
             .map((b) => `<span class="dw-badge dw-badge--${b.type}">${b.text}</span>`)
             .join("");
+          const specTop = currentLang === "en" ? (prod.specTopEN || "") : (prod.specTopPL || "");
           return `
             <div class="dw-pdp__img-box dw-pdp__img-box--hero">
-              <div class="dw-pdp__img-badges">${badgesHtml}</div>
+              <div class="dw-pdp__img-badges">
+                ${badgesHtml}
+                ${specTop ? `<div class="dw-card__spec" style="margin-left:14px;font-size:13px;font-weight:600;">${specTop}</div>` : ""}
+              </div>
               <div class="dw-pdp__img-actions">
                 <button type="button" class="dw-pdp__action-icon" aria-label="Porównaj">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 20V10M12 20V4M18 20v-8"/></svg>
@@ -515,14 +519,6 @@
                 <button type="button" class="dw-pdp__action-icon" aria-label="Ulubione">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-4.5-9-8.5C1.5 9 3.5 5 7.5 5c2.2 0 3.5 1.2 4.5 2.5C13 6.2 14.3 5 16.5 5 20.5 5 22.5 9 21 12.5c-2 4-9 8.5-9 8.5z"/></svg>
                 </button>
-              </div>
-              <div class="dw-pdp__collab-head">
-                <div class="dw-pdp__collab-brand">domivio <span>x</span> CELL®</div>
-                <div class="dw-pdp__collab-sub">${
-                  currentLang === "en"
-                    ? "Mornings without a trace of yesterday"
-                    : "Poranek bez śladów wczorajszego dnia"
-                }</div>
               </div>
               <img src="${resolved}" alt="${prod.title[currentLang]}" class="dw-pdp__img" />
             </div>
@@ -747,14 +743,14 @@
               <div class="dw-pdp__del-row">
                 <div class="dw-pdp__del-title">${currentLang === "en" ? "PARCEL LOCKER (INPOST / DPD)" : "DOSTAWA DO PACZKOMATU"}</div>
                 <div class="dw-pdp__del-meta">
-                  <strong>0,00 zł (od 99 zł) — 14,90 zł</strong>
+                  <strong>0,00 zł (od 890 zł) — 14,90 zł</strong>
                   <span>${currentLang === "en" ? "from 1 to 2 days" : "od 1 do 2 dni"}</span>
                 </div>
               </div>
               <div class="dw-pdp__del-row">
                 <div class="dw-pdp__del-title">${currentLang === "en" ? "COURIER DELIVERY DPD" : "DOSTAWA KURIEREM"}</div>
                 <div class="dw-pdp__del-meta">
-                  <strong>19,90 zł</strong>
+                  <strong>0,00 zł (od 890 zł) — 19,90 zł</strong>
                   <span>${currentLang === "en" ? "from 1 to 2 days" : "od 1 do 2 dni"}</span>
                 </div>
               </div>
@@ -875,7 +871,7 @@
 
     const discountAmount = 0;
     const totalAfterDiscount = subtotal;
-    const threshold = currentLang === "en" ? (CFG.freeShippingEUR || 25.0) : (CFG.freeShippingPLN || 99.0);
+    const threshold = currentLang === "en" ? (CFG.freeShippingEUR || 210.0) : (CFG.freeShippingPLN || 890.0);
     const remainingForFreeShip = Math.max(0, threshold - totalAfterDiscount);
     const progressPct = Math.min(100, (totalAfterDiscount / threshold) * 100);
     const isDigitalOnly =
@@ -893,7 +889,7 @@
         shippingCost = 0;
         shippingMethodLabel = currentLang === "en" ? "Instant PDF Email Delivery" : "Wysyłka PDF na e-mail (0 zł)";
       } else if (selectedShippingMethod === "kurier_dpd") {
-        shippingCost = currentLang === "en" ? 4.70 : 19.90;
+        shippingCost = isFreeLocker ? 0 : (currentLang === "en" ? 4.70 : 19.90);
         shippingMethodLabel = currentLang === "en" ? "Kurier DPD" : "Kurier DPD";
       } else if (selectedShippingMethod === "dpd_paczkomat") {
         shippingCost = isFreeLocker ? 0 : (currentLang === "en" ? 3.50 : 14.90);
@@ -1046,10 +1042,13 @@
       : "";
 
     const lockerPriceBase = currentLang === "en" ? "€3.50" : "14,90 zł";
-    const courierPriceStr = currentLang === "en" ? "€4.70" : "19,90 zł";
+    const courierPriceBase = currentLang === "en" ? "€4.70" : "19,90 zł";
     const lockerPriceDisplay = totals.isFreeLocker
       ? `<span style="color:#16A34A;font-weight:700;">0,00 zł (GRATIS)</span> <span style="text-decoration:line-through;color:#94A3B8;font-size:11px;">${lockerPriceBase}</span>`
       : `<span style="font-weight:700;">${lockerPriceBase}</span>`;
+    const courierPriceStr = totals.isFreeLocker
+      ? `<span style="color:#16A34A;font-weight:700;">0,00 zł (GRATIS)</span> <span style="text-decoration:line-through;color:#94A3B8;font-size:11px;">${courierPriceBase}</span>`
+      : courierPriceBase;
 
     const selectedPointHtml =
       selectedLocker && selectedLocker.code && selectedShippingMethod !== "kurier_dpd"
@@ -1177,7 +1176,7 @@
 
     params.set(
       "attributes[Sposób dostawy]",
-      `${totals.shippingMethodLabel} (${totals.shippingCost === 0 ? "0,00 zł GRATIS od 99 zł" : formatValue(totals.shippingCost)})`
+      `${totals.shippingMethodLabel} (${totals.shippingCost === 0 ? "0,00 zł GRATIS od 890 zł" : formatValue(totals.shippingCost)})`
     );
 
     if (selectedLocker && selectedLocker.code && selectedShippingMethod !== "kurier_dpd") {
