@@ -173,10 +173,13 @@
         const totalComp = unitComp ? unitComp * packQty : 0;
         const savePct = totalComp ? Math.round(((totalComp - totalPrice) / totalComp) * 100) : 0;
         const badgeText = p.isMysteryBox
-          ? currentLang === "en" ? "Best Seller" : "Bestseller"
-          : currentLang === "en" ? "Educational Kids Game" : "Gra Rozwijająca dla Dzieci";
+          ? currentLang === "en" ? "✦ Best Seller" : "✦ Bestseller"
+          : currentLang === "en" ? "✦ Educational Kids Game" : "✦ Gra Rozwijająca dla Dzieci";
+        const eyebrowText = p.isMysteryBox
+          ? currentLang === "en" ? "3D AMBIENT LIGHTING · 16 RGB COLORS" : "OŚWIETLENIE AMBIENT 3D · 16 KOLORÓW RGB"
+          : currentLang === "en" ? "EDUCATIONAL KIDS GAME · AGES 1–5" : "EDUKACYJNA GRA ROZWIJAJĄCA DLA DZIECI (1–5 LAT)";
         const activeImg = (p.images && p.images[imgIdx]) || p.images[0];
-        const maxDots = Math.min((p.images || []).length, 4);
+        const maxDots = Math.min((p.images || []).length, 5);
 
         const dotsHtml =
           maxDots > 1
@@ -201,12 +204,13 @@
               ${dotsHtml}
             </div>
             <div class="p-card__body">
+              <div class="p-card__eyebrow">${eyebrowText}</div>
               <h3 class="p-card__title" onclick="openProductModal('${p.handle}', ${packQty})">${p.title[currentLang]}</h3>
-              <p class="p-card__desc">${p.shortDesc[currentLang]}</p>
               <div class="p-card__rating">
                 <span class="p-card__stars">★★★★★</span>
-                <span class="p-card__rev-count">${p.reviewsCount} ${currentLang === "en" ? "Reviews" : "Opinii"}</span>
+                <span class="p-card__rev-count">4.9 · ${p.reviewsCount} ${currentLang === "en" ? "verified reviews" : "zweryfikowanych opinii"}</span>
               </div>
+              <p class="p-card__desc">${p.shortDesc[currentLang]}</p>
 
               <div class="p-card__variants">
                 <button type="button" class="p-card__pill ${packQty === 1 ? "is-active" : ""}" onclick="selectCardPack('${p.handle}', 1, event)">
@@ -218,20 +222,24 @@
                 <button type="button" class="p-card__pill ${packQty === 3 ? "is-active" : ""}" onclick="selectCardPack('${p.handle}', 3, event)">
                   ${currentLang === "en" ? "3 pcs (-15%)" : "3 szt. (-15%)"}
                 </button>
-                <span class="p-card__ship-pill">
-                  🚚 ${currentLang === "en" ? "Free shipping from 99 PLN ✓" : "Darmowa dostawa od 99 zł ✓"}
-                </span>
               </div>
 
               <div class="p-card__price-row">
-                <span class="p-card__price">${formatValue(totalPrice)}</span>
-                ${totalComp ? `<span class="p-card__old">${formatValue(totalComp)}</span>` : ""}
+                <div class="p-card__price-group">
+                  <span class="p-card__price">${formatValue(totalPrice)}</span>
+                  ${totalComp ? `<span class="p-card__old">${formatValue(totalComp)}</span>` : ""}
+                </div>
+                <span class="p-card__ship-pill">
+                  ✓ ${currentLang === "en" ? "Free shipping (99+ PLN)" : "Darmowa dostawa od 99 zł"}
+                </span>
               </div>
 
               <div class="p-card__actions">
                 <button type="button" class="p-card__atc" onclick="addToCart(${p.variantId}, ${packQty}, true)">
-                  <span>${currentLang === "en" ? "Add to Cart" : "Dodaj do koszyka"}</span>
-                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                  <span>${currentLang === "en" ? "Add to Bag" : "Dodaj do koszyka"} — ${formatValue(totalPrice)}</span>
+                </button>
+                <button type="button" class="p-card__quickview" onclick="openProductModal('${p.handle}', ${packQty})">
+                  ${currentLang === "en" ? "View full gallery & details →" : "Zobacz pełną galerię i szczegóły →"}
                 </button>
               </div>
             </div>
