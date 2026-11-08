@@ -602,8 +602,6 @@
               ${savePct > 0 ? `<span class="dw-pdp__disc">-${savePct}%</span>` : ""}
             </div>
 
-            <p class="dw-pdp__desc">${prod.shortDesc[currentLang]}</p>
-
             ${sizeAndPackHtml}
             ${addonHtml}
 
