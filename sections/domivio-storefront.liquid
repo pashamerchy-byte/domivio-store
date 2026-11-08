@@ -511,9 +511,9 @@
 
         var catMap = { "poduszki": "PODUSZKI", "materace": "MATERACE", "dla-dzieci": "DLA DZIECI", "akcesoria": "AKCESORIA" };
         return {
-          id: b.id,
-          variantId: b.variantId,
-          shopifyVariantId: null,
+          id: idx === 0 ? 15837514432838 : b.id,
+          variantId: idx === 0 ? 57832934801734 : b.variantId,
+          shopifyVariantId: idx === 0 ? 57832934801734 : null,
           handle: idx === 0 ? "poduszka-ortopedyczna-adult-cell" : b.handle,
           category: [b.category, "na-prezent"],
           catLabelPL: catMap[b.category] || "PODUSZKI",
