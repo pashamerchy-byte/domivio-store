@@ -254,28 +254,34 @@ window.DOMIVIO_PRODUCTS = [
       { text: "HIT", type: "hit" },
       { text: "SALE", type: "sale" }
     ],
-    specTopPL: "≈ Średnia twardość · ↕ 9,5 cm",
-    specTopEN: "≈ Medium firmness · ↕ 9.5 cm",
+    specTopPL: "≈ Średnia twardość · ↕ 10/12 cm",
+    specTopEN: "≈ Medium firmness · ↕ 10/12 cm",
+    specHeightPL: "Wysokość — 10/12 cm",
+    specHeightEN: "Height — 10/12 cm",
+    specFirmPL: "Twardość — średnia",
+    specFirmEN: "Firmness — medium",
     overlaySubPL: "domivio × CELL®\nPoranek bez śladów wczorajszego dnia",
     overlaySubEN: "domivio × CELL®\nMornings without sleep creases",
     pricePLN: 349.00,
     comparePLN: 429.00,
     priceEUR: 79.00,
     compareEUR: 99.00,
-    rating: "5.0",
-    reviewsCount: 418,
-    sizes: ["60×40×9,5 cm (Standard)", "70×50 cm (XL)"],
+    rating: "4.9",
+    reviewsCount: 60,
+    sizes: ["60×40×10/12 cm (Standard)", "70×50 cm (XL)"],
     images: [
       "darwin_adult_1.png",
-      "darwin_adult_2.png"
+      "darwin_adult_cover.png",
+      "darwin_adult_2.png",
+      "darwin_adult_grid.png"
     ],
     title: {
-      pl: "ADULT® (KLASYCZNA CELL)",
+      pl: "ADULT® (KLASYCZNA)",
       en: "ADULT® (CLASSIC CELL)"
     },
     shortDesc: {
-      pl: "Innowacyjna poduszka ortopedyczna z hipoalergiczną siatką elastomerową TPE CELL®. Idealnie dopasowuje się do głowy i szyi, nie nagrzewa się i zapobiega porannym obrzękom.",
-      en: "Innovative orthopedic pillow with hyper-elastic TPE CELL® honeycomb grid. Adapts instantly to head and neck while maintaining 360° airflow."
+      pl: "Innowacyjna poduszka nowej generacji z technologią komórkową. Stworzona z wysokiej jakości materiału TPE (ТПЭ) — miękkiego, elastycznego i sprężystego, o minimalnej kompresji. Opatentowana geometria komórek podtrzymuje głowę i szyję z taką precyzją, że sen daje uczucie nieważkości. Unikalna struktura TPE zmniejsza nacisk na skórę, pomagając zredukować poranne obrzęki, ślady i zagniecenia na twarzy po śnie. Odpowiednia do spania na plecach, boku i brzuchu. Łatwa do mycia. Chłodna przez całą noc. Zawsze trzyma formę — bez odkształceń i bez zmęczenia materiału.",
+      en: "Innovative next-generation pillow with cellular TPE technology. Engineered from medical-grade hyper-elastic TPE — soft, flexible, and resilient with minimal compression. The patented cell geometry supports your head and neck with weightless precision, reducing facial pressure, morning puffiness, and sleep creases. Ideal for back, side, and stomach sleepers. Fully washable under running water, cool all night, and holds its shape for years without sagging."
     },
     bullets: {
       pl: [
@@ -315,7 +321,9 @@ window.DOMIVIO_PRODUCTS = [
     sizes: ["Wave M (8,5/10 cm)", "Wave L (10/12 cm)"],
     images: [
       "darwin_wave_1.png",
-      "darwin_wave_2.png"
+      "darwin_adult_cover.png",
+      "darwin_wave_2.png",
+      "darwin_adult_grid.png"
     ],
     title: {
       pl: "WAVE M® (FALA ANATOMICZNA)",
@@ -363,7 +371,8 @@ window.DOMIVIO_PRODUCTS = [
     reviewsCount: 94,
     sizes: ["160×200", "180×200", "200×200"],
     images: [
-      "darwin_cell_premium.png"
+      "darwin_cell_premium.png",
+      "darwin_adult_grid.png"
     ],
     title: {
       pl: "CELL PREMIUM (MATERAC HYBRYDOWY)",
@@ -410,7 +419,8 @@ window.DOMIVIO_PRODUCTS = [
     reviewsCount: 167,
     sizes: ["80×200", "90×200", "140×200", "160×200", "180×200", "200×200"],
     images: [
-      "darwin_evofoam.png"
+      "darwin_evofoam.png",
+      "darwin_adult_grid.png"
     ],
     title: {
       pl: "EVO FOAM (MATERAC ANATOMICZNY)",
@@ -458,7 +468,9 @@ window.DOMIVIO_PRODUCTS = [
     reviewsCount: 204,
     sizes: ["55×38×9 cm"],
     images: [
-      "darwin_dream.png"
+      "darwin_dream.png",
+      "darwin_adult_cover.png",
+      "darwin_adult_grid.png"
     ],
     title: {
       pl: "DREAM® (PODUSZKA HYBRYDOWA)",
@@ -503,7 +515,9 @@ window.DOMIVIO_PRODUCTS = [
     reviewsCount: 128,
     sizes: ["52×35×6,5 cm"],
     images: [
-      "darwin_flat.png"
+      "darwin_flat.png",
+      "darwin_adult_cover.png",
+      "darwin_adult_grid.png"
     ],
     title: {
       pl: "FLAT® / TEENAGER® (NISKI PROFIL)",
@@ -548,7 +562,8 @@ window.DOMIVIO_PRODUCTS = [
     reviewsCount: 143,
     sizes: ["140×200", "160×200", "180×200"],
     images: [
-      "darwin_topper.png"
+      "darwin_topper.png",
+      "darwin_adult_grid.png"
     ],
     title: {
       pl: "CELL TOP® (MATERAC-TOPPER)",
@@ -594,7 +609,8 @@ window.DOMIVIO_PRODUCTS = [
     reviewsCount: 289,
     sizes: ["Do Adult® (60×40 cm)", "Do Wave M/L®", "Do Dream® / Flat®"],
     images: [
-      "darwin_pillowcase.png"
+      "darwin_pillowcase.png",
+      "darwin_adult_cover.png"
     ],
     title: {
       pl: "POSZEWKA CHŁODZĄCA TENCEL™ CELL",
