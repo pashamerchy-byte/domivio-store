@@ -6,7 +6,7 @@
   <title>{{ page_title }}{% unless page_title contains shop.name %} – {{ shop.name }}{% endunless %}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   {{ 'domivio-styles.css' | asset_url | stylesheet_tag }}
   {{ content_for_header }}
 </head>
@@ -17,16 +17,9 @@
   {% else %}
     <div style="display:none">{{ layout_output }}</div>
 <div id="domivio-root-marker"></div>
-<style>
-  :root {
-    --bg-page: {{ settings.bg_color | default: "#FFFFFF" }};
-    --accent-flame: {{ settings.accent_color | default: "#E85D22" }};
-    --text-main: {{ settings.text_color | default: "#000000" }};
-  }
-</style>
 
 
-  <!-- Solo Stove Style Top Announcement Bar -->
+  <!-- Luxury Boutique Top Announcement Bar -->
   <div class="topbar">
     <div class="topbar__inner">
       <span class="topbar__arrow">‹</span>
@@ -37,32 +30,22 @@
     </div>
   </div>
 
-  <!-- Solo Stove Minimalist Dark Header -->
+  <!-- European Luxury Boutique Translucent Header -->
   <header class="header">
     <div class="header__inner">
       <div class="header__left">
-        <button type="button" class="header__icon-btn" onclick="document.getElementById('catalog').scrollIntoView({behavior:'smooth'})" aria-label="Menu">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="3" y1="8" x2="21" y2="8"/><line x1="3" y1="16" x2="21" y2="16"/></svg>
-        </button>
-        <button type="button" class="header__icon-btn" onclick="document.getElementById('catalog').scrollIntoView({behavior:'smooth'})" aria-label="Szukaj">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        </button>
         <nav class="nav">
-          <a href="#catalog" class="nav__link" onclick="filterCatalog('all')" data-i18n="nav_all">Nowości i Bestsellery</a>
+          <a href="#catalog" class="nav__link" onclick="filterCatalog('all')" data-i18n="nav_all">Kolekcja Butikowa</a>
           <a href="#catalog" class="nav__link" onclick="filterCatalog('home')" data-i18n="nav_mystery">Oświetlenie 3D</a>
           <a href="#catalog" class="nav__link" onclick="filterCatalog('pets')" data-i18n="nav_pets">Gra Rozwijająca dla Dzieci</a>
           <a href="#faq" class="nav__link" data-i18n="nav_faq">FAQ i Dostawa</a>
         </nav>
       </div>
 
-      <!-- Solo Stove Style Wordmark + Flame Mark -->
+      <!-- Luxury Editorial Serif Wordmark -->
       <a href="#" class="brand">
-        <span>Domivio</span>
-        <span class="brand__flame">
-          <svg width="24" height="26" viewBox="0 0 24 26" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-            <path d="M13.5 1.2C13.5 1.2 18.8 6.4 18.8 12.6C18.8 16.5 16.2 19.8 12.6 20.8C14.1 18.9 14.3 15.8 12.2 13.4C12.2 13.4 12.8 16.9 9.8 18.7C7.6 20.0 6.8 22.4 7.7 24.4C4.2 22.7 2.2 19.1 2.2 14.8C2.2 8.9 7.2 5.4 9.6 1.8C9.6 1.8 9.2 5.4 11.4 7.1C12.1 4.6 13.5 1.2 13.5 1.2Z"/>
-          </svg>
-        </span>
+        <span class="brand__flame">✦</span>
+        <span>DOMIVIO</span>
       </a>
 
       <div class="header__actions">
@@ -76,36 +59,36 @@
         </button>
 
         <button type="button" class="cart-trigger" onclick="openCartDrawer()" aria-label="Koszyk">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
           <span class="cart-trigger__badge" id="headerCartCount">0</span>
         </button>
       </div>
     </div>
   </header>
 
-  <!-- Full-Bleed Dark Atmospheric Solo Stove Hero -->
+  <!-- Editorial Luxury Boutique Hero -->
   <section class="hero">
     <div class="container">
       <div class="hero__grid">
         <div>
-          <div class="hero__eyebrow" data-i18n="hero_badge">DO -33% NA WYBRANE PREZENTY · DARMOWA DOSTAWA OD 99 ZŁ</div>
-          <h1 class="hero__title" data-i18n="hero_title">Rozświetl Swój Dom i Wieczory</h1>
+          <div class="hero__eyebrow" data-i18n="hero_badge">KOLEKCJA AUTORSKA · DARMOWA DOSTAWA OD 99 ZŁ</div>
+          <h1 class="hero__title" data-i18n="hero_title">Sztuka Światła i Mądrej Zabawy</h1>
           <p class="hero__subtitle" data-i18n="hero_subtitle">
-            Zacznij tworzyć wyjątkowy klimat w sypialni, salonie i pokoju dziecka dzięki Kryształowej Lampce Projektorowi RGB 3D (129,00 zł) oraz Drewnianej Tablicy Sensorycznej Montessori LED (119,90 zł). Darmowa wysyłka od 99 zł w 24h.
+            Odkryj starannie wyselekcjonowane przedmioty do nowoczesnego domu: Kryształową Lampkę Projektor RGB 3D (129,00 zł) oraz Drewnianą Grę Rozwijającą Montessori LED dla dzieci (119,90 zł). Wysyłka 24h z Polski, 0 zł od 99 zł.
           </p>
 
           <div class="hero__price-box">
             <span class="hero__price-now" id="heroPriceNow">129,00 zł</span>
             <span class="hero__price-old" id="heroPriceOld">189,00 zł</span>
-            <span class="hero__price-save">-32% · Dostawa 0 zł (od 99 zł)</span>
+            <span class="hero__price-save">Zestaw Prezentowy · Dostawa 0 zł</span>
           </div>
 
           <div class="hero__ctas">
             <button type="button" class="btn-primary" onclick="addToCart(57828996284742, 1, true)" data-i18n="hero_cta_primary">
-              Kup Lampkę Kryształ RGB — 129 zł
+              Zamów Lampkę Kryształ RGB — 129 zł
             </button>
             <a href="#catalog" class="btn-yellow" data-i18n="hero_cta_secondary">
-              Zobacz Nowości i Bestsellery
+              Odkryj Kolekcję (2)
             </a>
           </div>
 
@@ -116,12 +99,30 @@
           </div>
         </div>
 
-        <div class="hero__card">
-          <div class="hero__card-ribbon">Bestseller · ★ 4.9 (342)</div>
-          <div class="hero__img-wrap" onclick="openProductModal('krysztalowa-lampka-nocna-projektor-rgb-3d-dekoracyjna-kostka-led-z-pilotem-16-kolorow')" style="cursor:pointer;">
-            <img src="https://cdn.shopify.com/s/files/1/1032/7910/0230/files/img_1_80611bbd-a3f6-43ee-aa20-4ac914bef65b.jpg?v=1794089631" alt="Kryształowa Lampka Nocna Projektor RGB 3D" />
+        <div class="hero__showcase">
+          <div class="hero__card">
+            <div class="hero__card-ribbon">Bestseller · ★ 4.9 (342)</div>
+            <div class="hero__img-wrap" onclick="openProductModal('krysztalowa-lampka-nocna-projektor-rgb-3d-dekoracyjna-kostka-led-z-pilotem-16-kolorow')" style="cursor:pointer;">
+              <img src="https://cdn.shopify.com/s/files/1/1032/7910/0230/files/img_2_563c2db4-dd92-454e-b62c-0174fa0d2ab9.jpg?v=1794089634" alt="Kryształowa Lampka Nocna Projektor RGB 3D" />
+              <div class="hero__img-caption">
+                <div>
+                  <div class="hero__img-caption-tag">Projekcja Wodnej Zorzy 3D</div>
+                  <div class="hero__img-caption-title">Kryształowa Lampka RGB · 16 Kolorów</div>
+                </div>
+                <div class="hero__img-caption-price">129,00 zł</div>
+              </div>
+            </div>
+            <ul class="hero__card-bullets" id="heroCardBullets"></ul>
           </div>
-          <ul class="hero__card-bullets" id="heroCardBullets"></ul>
+
+          <div class="hero__mini-card" onclick="openProductModal('drewniana-tablica-sensoryczna-montessori-led-10-przelacznikow-19-diod-led')">
+            <img src="https://cdn.shopify.com/s/files/1/1032/7910/0230/files/studio_6_lifestyle_png_1794068137773.jpg?v=1794088664" alt="Drewniana Gra Rozwijająca dla Dzieci Montessori LED" />
+            <div>
+              <div class="hero__mini-tag">✦ Gra Rozwijająca dla Dzieci</div>
+              <div class="hero__mini-title">Drewniana Tablica Montessori 19 LED</div>
+              <div class="hero__mini-price">119,90 zł · Dostawa 0 zł</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -426,8 +427,8 @@
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:14px;">
-        <span style="font-size:18px;font-weight:600;" id="stickyBarPrice">129,00 zł</span>
-        <button type="button" class="btn-yellow" style="padding:10px 22px;font-size:13px;" onclick="addToCart(57828996284742, 1, true)">
+        <span style="font-size:18px;font-weight:700;" id="stickyBarPrice">129,00 zł</span>
+        <button type="button" class="btn-primary" style="padding:11px 24px;font-size:13px;" onclick="addToCart(57828996284742, 1, true)">
           <span data-i18n="btn_add_to_cart">Dodaj do koszyka</span>
         </button>
       </div>
