@@ -371,13 +371,13 @@ button {
   flex-direction: column;
 }
 .dw-card__box {
-  background: #F5F5F7;
+  background: transparent;
   position: relative;
-  aspect-ratio: 1 / 1.06;
+  aspect-ratio: 1 / 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 28px 24px;
+  padding: 0;
   overflow: hidden;
   cursor: pointer;
 }
@@ -425,10 +425,10 @@ button {
 }
 .dw-card__img {
   width: 100%;
-  max-height: 86%;
-  object-fit: contain;
-  mix-blend-mode: multiply;
-  filter: brightness(1.04) contrast(1.04);
+  height: 100%;
+  max-height: 100%;
+  object-fit: cover;
+  display: block;
   transition: transform 0.3s ease;
 }
 .dw-card__box:hover .dw-card__img {
@@ -1008,14 +1008,13 @@ button {
   gap: 16px;
 }
 .dw-pdp__img-box {
-  background: #F5F5F7;
+  background: transparent;
   position: relative;
-  aspect-ratio: 1 / 1.04;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 36px 28px;
+  padding: 0;
   overflow: hidden;
 }
 .dw-pdp__img-badges {
@@ -1069,10 +1068,10 @@ button {
 }
 .dw-pdp__img {
   width: 100%;
-  max-height: 86%;
-  object-fit: contain;
-  mix-blend-mode: multiply;
-  filter: brightness(1.04) contrast(1.04);
+  height: auto;
+  max-height: none;
+  object-fit: cover;
+  display: block;
 }
 .dw-pdp__info {
   position: sticky;
@@ -1793,9 +1792,9 @@ button {
 .cart-item__img {
   width: 68px;
   height: 68px;
-  background: #FFFFFF;
-  padding: 6px;
-  object-fit: contain;
+  padding: 0;
+  object-fit: cover;
+  display: block;
 }
 .cart-item__title {
   font-size: 13px;
