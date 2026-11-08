@@ -1623,28 +1623,54 @@ button {
     font-size: 13px;
   }
 
-  /* Hero mobile */
+  /* Hero mobile — Product image FIRST, then title & price underneath */
   .hero {
-    padding: 20px 0 28px;
+    padding: 16px 0 24px;
   }
   .hero__grid {
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 16px;
+  }
+  .hero__card {
+    order: -1;
+    padding: 12px;
+    box-shadow: 5px 5px 0 #111111;
+  }
+  .hero__img-wrap {
+    aspect-ratio: auto;
+    height: 215px;
+    padding: 10px;
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #FFFDF7;
+  }
+  .hero__img-wrap img {
+    width: auto;
+    height: auto;
+    max-width: 82%;
+    max-height: 190px;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+  }
+  .hero__card-bullets {
+    display: none;
   }
   .hero__badge {
     font-size: 10.5px;
     padding: 5px 10px;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
   }
   .hero__title {
-    font-size: 25px;
+    font-size: 22px;
     line-height: 1.15;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
   }
   .hero__subtitle {
-    font-size: 13.5px;
-    line-height: 1.45;
-    margin-bottom: 14px;
+    font-size: 13px;
+    line-height: 1.4;
+    margin-bottom: 12px;
   }
   .hero__price-box {
     width: 100%;
