@@ -32,6 +32,11 @@
     try {
       const raw = JSON.parse(localStorage.getItem("domivio_cart") || "[]");
       if (Array.isArray(raw) && raw.length > 0) {
+        raw.forEach((item) => {
+          if (item.variantId === 1001 || item.variantId === 101) {
+            item.variantId = 57832934801734;
+          }
+        });
         return raw.filter((item) => PRODUCTS.some((p) => p.variantId === item.variantId));
       }
     } catch (e) {}
@@ -1161,8 +1166,9 @@
       params.set("locale", "pl");
     }
     params.set("attributes[Sklep]", "DOMIVIO");
+    params.set("skip_shop_pay", "true");
 
-    const checkoutHost = CFG.myshopifyDomain || CFG.shopDomain;
+    const checkoutHost = CFG.shopDomain || CFG.myshopifyDomain;
     const checkoutUrl = `https://${checkoutHost}/cart/${pairs}?${params.toString()}`;
     window.location.href = checkoutUrl;
   };
@@ -1630,7 +1636,9 @@
           return (tmp.textContent || tmp.innerText || "").trim();
         };
 
-        const local = PRODUCTS.find((p) => p.handle === rp.handle || p.id === rp.id);
+        const local = PRODUCTS.find(
+          (p) => p.handle === rp.handle || p.id === rp.id || (p.title && p.title.pl === rp.title)
+        );
         if (local) {
           local.id = rp.id;
           local.variantId = rv.id;
@@ -1646,7 +1654,7 @@
           if (rp.title) {
             local.title.pl = rp.title;
           }
-          if (rpImgs.length > 0) {
+          if (rpImgs.length > 0 && rp.id !== 15837514432838) {
             local.images = rpImgs;
           }
           updated = true;

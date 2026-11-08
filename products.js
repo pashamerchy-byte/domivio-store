@@ -38,7 +38,7 @@ window.DOMIVIO_CONFIG = {
       supplier: null
     }
   },
-  mysteryBoxVariantId: 1001,
+  mysteryBoxVariantId: 57832934801734,
   mysteryBoxHandle: "poduszka-ortopedyczna-adult-cell"
 };
 
@@ -242,9 +242,9 @@ window.DOMIVIO_I18N = {
 /* Prepared 1:1 Darwin Sleep Product Catalog for Poland */
 window.DOMIVIO_PRODUCTS = [
   {
-    id: 1001,
-    variantId: 1001,
-    shopifyVariantId: null,
+    id: 15837514432838,
+    variantId: 57832934801734,
+    shopifyVariantId: 57832934801734,
     handle: "poduszka-ortopedyczna-adult-cell",
     temuSourceUrl: "https://share.temu.com/SqsqX1auNSB",
     category: ["poduszki", "na-prezent"],
