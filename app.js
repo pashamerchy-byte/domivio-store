@@ -478,14 +478,6 @@
         if (idx === 0) {
           return `
             <div class="dw-pdp__img-box dw-pdp__img-box--hero">
-              <div class="dw-pdp__img-actions">
-                <button type="button" class="dw-pdp__action-icon" aria-label="Porównaj">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 20V10M12 20V4M18 20v-8"/></svg>
-                </button>
-                <button type="button" class="dw-pdp__action-icon" aria-label="Ulubione">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-4.5-9-8.5C1.5 9 3.5 5 7.5 5c2.2 0 3.5 1.2 4.5 2.5C13 6.2 14.3 5 16.5 5 20.5 5 22.5 9 21 12.5c-2 4-9 8.5-9 8.5z"/></svg>
-                </button>
-              </div>
               <img src="${resolved}" alt="${prod.title[currentLang]}" class="dw-pdp__img" />
             </div>
           `;
@@ -518,54 +510,64 @@
 
     let tabDrawerHtml = "";
     if (activePdpAccordionTab === "opis") {
+      const rawOpis = (prod.opisText && prod.opisText[currentLang]) || (prod.shortDesc && prod.shortDesc[currentLang]) || "";
+      const opisLines = String(rawOpis).split("\n").map((l) => l.trim()).filter(Boolean);
+      const paragraphsHtml = opisLines.map((line) => `<p style="margin-bottom:8px;">${line}</p>`).join("");
+      const bulletsList = (prod.bullets && prod.bullets[currentLang]) || [];
       tabDrawerHtml = `
         <div class="dw-pdp__tab-drawer">
-          <p>${prod.shortDesc[currentLang]}</p>
-          <ul>${(prod.bullets[currentLang] || []).map((b) => `<li>${b}</li>`).join("")}</ul>
+          ${paragraphsHtml}
+          ${bulletsList.length && !prod.hasCustomOpis ? `<ul>${bulletsList.map((b) => `<li>${b}</li>`).join("")}</ul>` : ""}
         </div>
       `;
     } else if (activePdpAccordionTab === "charakterystyka") {
-      tabDrawerHtml = `
-        <div class="dw-pdp__tab-drawer">
-          <div class="dw-pdp__spec-line"><span>Materiał rdzenia:</span><strong>100% hipoalergiczny elastomer TPE CELL®</strong></div>
-          <div class="dw-pdp__spec-line"><span>Poszewka zewnętrzna:</span><strong>Włókno chłodzące Tencel™ (zdejmowana, do prania)</strong></div>
-          <div class="dw-pdp__spec-line"><span>Wymiary / profil:</span><strong>${currentSz || specHeight}</strong></div>
-          <div class="dw-pdp__spec-line"><span>Twardość:</span><strong>${specFirm}</strong></div>
-          <div class="dw-pdp__spec-line"><span>Żywotność:</span><strong>10.000 cykli mycia / do 10 lat bez odkształceń</strong></div>
-        </div>
-      `;
-    } else if (activePdpAccordionTab === "detale") {
-      tabDrawerHtml = `
-        <div class="dw-pdp__tab-drawer">
-          <p>${
-            currentLang === "en"
-              ? "Every pillow includes a breathable cooling Tencel™ cover and a 14-day home trial. Can be washed directly under warm running water."
-              : "W zestawie z każdą poduszką otrzymujesz oddychającą poszewkę chłodzącą Tencel™ oraz 14 dni na test w domu. Poduszkę można myć pod bieżącą wodą."
-          }</p>
-        </div>
-      `;
-    }
-
-    const activeFeat = PDP_VIOLET_FEATURES[activePdpFeatureIdx] || PDP_VIOLET_FEATURES[0];
-    const featImgUrl = resolveAsset(activeFeat.img);
-
-    const violetFeaturesHtml = PDP_VIOLET_FEATURES.map((item, idx) => {
-      const loc = item[currentLang] || item.pl;
-      const isAct = idx === activePdpFeatureIdx;
-      if (isAct) {
-        return `
-          <div class="dw-pdp__vf-item is-active" onclick="switchPdpFeatureTab(${idx})">
-            <h3 class="dw-pdp__vf-title">→ ${loc.title}</h3>
-            <p class="dw-pdp__vf-desc">${loc.desc}</p>
+      const customChar = (prod.charakterystykaText && prod.charakterystykaText[currentLang]) || "";
+      if (customChar.trim()) {
+        const charLines = customChar.split("\n").map((l) => l.trim()).filter(Boolean);
+        const rowsHtml = charLines
+          .map((line) => {
+            const colonIdx = line.indexOf(":");
+            if (colonIdx > 0) {
+              const label = line.slice(0, colonIdx + 1).trim();
+              const val = line.slice(colonIdx + 1).trim();
+              return `<div class="dw-pdp__spec-line"><span>${label}</span><strong>${val}</strong></div>`;
+            }
+            return `<div class="dw-pdp__spec-line"><strong>${line}</strong></div>`;
+          })
+          .join("");
+        tabDrawerHtml = `<div class="dw-pdp__tab-drawer">${rowsHtml}</div>`;
+      } else {
+        tabDrawerHtml = `
+          <div class="dw-pdp__tab-drawer">
+            <div class="dw-pdp__spec-line"><span>Materiał rdzenia:</span><strong>100% hipoalergiczny elastomer TPE CELL®</strong></div>
+            <div class="dw-pdp__spec-line"><span>Poszewka zewnętrzna:</span><strong>Włókno chłodzące Tencel™ (zdejmowana, do prania)</strong></div>
+            <div class="dw-pdp__spec-line"><span>Wymiary / profil:</span><strong>${currentSz || specHeight}</strong></div>
+            <div class="dw-pdp__spec-line"><span>Twardość:</span><strong>${specFirm}</strong></div>
+            <div class="dw-pdp__spec-line"><span>Żywotność:</span><strong>10.000 cykli mycia / do 10 lat bez odkształceń</strong></div>
           </div>
         `;
       }
-      return `
-        <div class="dw-pdp__vf-item" onclick="switchPdpFeatureTab(${idx})">
-          <h3 class="dw-pdp__vf-title">${loc.title}</h3>
-        </div>
-      `;
-    }).join("");
+    } else if (activePdpAccordionTab === "detale") {
+      const customDetale = (prod.detaleText && prod.detaleText[currentLang]) || "";
+      if (customDetale.trim()) {
+        const detLines = customDetale.split("\n").map((l) => l.trim()).filter(Boolean);
+        tabDrawerHtml = `
+          <div class="dw-pdp__tab-drawer">
+            ${detLines.map((line) => `<p style="margin-bottom:8px;">${line}</p>`).join("")}
+          </div>
+        `;
+      } else {
+        tabDrawerHtml = `
+          <div class="dw-pdp__tab-drawer">
+            <p>${
+              currentLang === "en"
+                ? "Every pillow includes a breathable cooling Tencel™ cover and a 14-day home trial. Can be washed directly under warm running water."
+                : "W zestawie z każdą poduszką otrzymujesz oddychającą poszewkę chłodzącą Tencel™ oraz 14 dni na test w domu. Poduszkę można myć pod bieżącą wodą."
+            }</p>
+          </div>
+        `;
+      }
+    }
 
     pdpView.innerHTML = `
       <div class="dw-container">
@@ -633,51 +635,9 @@
               </button>
             </div>
             ${tabDrawerHtml}
-
-            <div class="dw-pdp__delivery">
-              <div class="dw-pdp__del-head">
-                <span>${currentLang === "en" ? "DELIVERY IN POLAND" : "DOSTAWA W POLSCE"}</span>
-                <button type="button" onclick="openApaczkaLockerMap('ALL')">${currentLang === "en" ? "CHANGE" : "ZMIEŃ"}</button>
-              </div>
-              <div class="dw-pdp__del-row">
-                <div class="dw-pdp__del-title">${currentLang === "en" ? "PARCEL LOCKER (INPOST / DPD)" : "DOSTAWA DO PACZKOMATU"}</div>
-                <div class="dw-pdp__del-meta">
-                  <strong>0,00 zł (od 890 zł) — 14,90 zł</strong>
-                  <span>${currentLang === "en" ? "from 1 to 2 days" : "od 1 do 2 dni"}</span>
-                </div>
-              </div>
-              <div class="dw-pdp__del-row">
-                <div class="dw-pdp__del-title">${currentLang === "en" ? "COURIER DELIVERY DPD" : "DOSTAWA KURIEREM"}</div>
-                <div class="dw-pdp__del-meta">
-                  <strong>0,00 zł (od 890 zł) — 19,90 zł</strong>
-                  <span>${currentLang === "en" ? "from 1 to 2 days" : "od 1 do 2 dni"}</span>
-                </div>
-              </div>
-              <div class="dw-pdp__del-row">
-                <div class="dw-pdp__del-title">${currentLang === "en" ? "WAREHOUSE PICKUP / 14-DAY RETURN" : "ODBIÓR / ZWROT 14 DNI"}</div>
-                <div class="dw-pdp__del-meta">
-                  <strong class="dw-pdp__del-free">${currentLang === "en" ? "FREE" : "BEZPŁATNIE"}</strong>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
-
-      <!-- Full-Width Electric Violet Feature Showcase Section (1:1 Darwin Screenshot 1) -->
-      <section class="dw-pdp__violet-sec">
-        <div class="dw-container dw-pdp__violet-grid">
-          <div class="dw-pdp__vf-left">
-            <div class="dw-pdp__vf-brand">DOMIVIO</div>
-            <div class="dw-pdp__vf-list">
-              ${violetFeaturesHtml}
-            </div>
-          </div>
-          <div class="dw-pdp__vf-right">
-            <img src="${featImgUrl}" alt="${activeFeat[currentLang] ? activeFeat[currentLang].title : activeFeat.pl.title}" class="dw-pdp__vf-img" />
-          </div>
-        </div>
-      </section>
     `;
 
     if (homeView) homeView.style.display = "none";
@@ -1567,9 +1527,54 @@
       });
 
       const stripHtml = (html) => {
+        if (!html) return "";
+        const formatted = String(html)
+          .replace(/<\s*br\s*\/?>/gi, "\n")
+          .replace(/<\/\s*(p|div|li|h[1-6]|tr)\s*>/gi, "\n")
+          .replace(/<\s*li[^>]*>/gi, "• ");
         const tmp = document.createElement("div");
-        tmp.innerHTML = html || "";
-        return (tmp.textContent || tmp.innerText || "").trim();
+        tmp.innerHTML = formatted;
+        return (tmp.textContent || tmp.innerText || "")
+          .replace(/\r\n/g, "\n")
+          .replace(/\n{3,}/g, "\n\n")
+          .trim();
+      };
+
+      const parseProductTabs = (rawHtml, pid) => {
+        const fullText = stripHtml(rawHtml);
+        const sections = { opis: "", charakterystyka: "", detale: "", hasCustomOpis: false };
+        const matches = [...fullText.matchAll(/(?:^|\n)[ \t]*(OPIS|CHARAKTERYSTYKA|DETALE)[ \t]*(?::[ \t]*\n?|\n)/gi)];
+        if (matches.length > 0) {
+          sections.hasCustomOpis = true;
+          const firstIdx = matches[0].index || 0;
+          const beforeFirst = fullText.slice(0, firstIdx).trim();
+          for (let i = 0; i < matches.length; i++) {
+            const key = matches[i][1].toLowerCase();
+            const start = (matches[i].index || 0) + matches[i][0].length;
+            const end = i + 1 < matches.length ? (matches[i + 1].index || fullText.length) : fullText.length;
+            sections[key] = fullText.slice(start, end).trim();
+          }
+          if (!sections.opis && beforeFirst) {
+            sections.opis = beforeFirst;
+          }
+        } else {
+          sections.opis = fullText;
+          if (fullText) sections.hasCustomOpis = true;
+        }
+
+        const metaMap = window.DOMIVIO_METAFIELDS_MAP || {};
+        const meta = metaMap[String(pid)] || {};
+        if (meta.opis) {
+          sections.opis = String(meta.opis).trim();
+          sections.hasCustomOpis = true;
+        }
+        if (meta.charakterystyka) {
+          sections.charakterystyka = String(meta.charakterystyka).trim();
+        }
+        if (meta.detale) {
+          sections.detale = String(meta.detale).trim();
+        }
+        return sections;
       };
 
       const dedupeShopifyImages = (imgArray) => {
@@ -1612,7 +1617,8 @@
         const livePrice = parseFloat(rv.price) || 369.0;
         const liveComp = parseFloat(rv.compare_at_price) || 0;
         const rpImgs = dedupeShopifyImages(rp.images);
-        const bodyText = stripHtml(rp.body_html);
+        const parsedTabs = parseProductTabs(rp.body_html, rp.id);
+        const bodyText = parsedTabs.opis;
 
         const existing = PRODUCTS.find(
           (p) => p.id === rp.id || p.handle === rp.handle
@@ -1684,6 +1690,19 @@
           shortDesc: {
             pl: bodyText || (existing && existing.shortDesc && existing.shortDesc.pl) || "Innowacyjny produkt do snu nowej generacji z technologią komórkową TPE CELL®.",
             en: bodyText || (existing && existing.shortDesc && existing.shortDesc.en) || "Innovative next-generation sleep product with cellular TPE CELL® technology."
+          },
+          hasCustomOpis: parsedTabs.hasCustomOpis,
+          opisText: {
+            pl: bodyText || (existing && existing.shortDesc && existing.shortDesc.pl) || "",
+            en: bodyText || (existing && existing.shortDesc && existing.shortDesc.en) || ""
+          },
+          charakterystykaText: {
+            pl: parsedTabs.charakterystyka || "",
+            en: parsedTabs.charakterystyka || ""
+          },
+          detaleText: {
+            pl: parsedTabs.detale || "",
+            en: parsedTabs.detale || ""
           },
           bullets: (existing && existing.bullets) || {
             pl: [
