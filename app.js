@@ -338,10 +338,6 @@
                 ${comp ? `<span class="dw-card__old">${formatValue(comp)}</span>` : ""}
                 ${savePct > 0 ? `<span class="dw-card__disc">-${savePct}%</span>` : ""}
               </div>
-              <div class="dw-card__split">
-                <span class="dw-card__split-pill">🌙 ${splitStr}</span>
-                <span>${t("split_label")}</span>
-              </div>
               ${sizesHtml}
               <button type="button" class="dw-card__mobile-atc" onclick="addToCart(${p.variantId}, 1, true)">
                 ${t("btn_add_to_cart")}
@@ -697,30 +693,6 @@
             <button type="button" class="dw-pdp__atc-btn" onclick="addPdpSelectionToCart(${prod.variantId}, ${activePdpPackQty})">
               ${t("btn_add_to_cart")}
             </button>
-
-            <div class="dw-pdp__splits">
-              <div class="dw-pdp__split-box">
-                <div class="dw-pdp__split-left">
-                  <span class="dw-pdp__split-logo dw-pdp__split-logo--raty">0%</span>
-                  <span>${currentLang === "en" ? "Installments" : "Raty 0%"}</span>
-                </div>
-                <span class="dw-pdp__split-val">${currentLang === "en" ? "from " : "od "}${split6Str}</span>
-              </div>
-              <div class="dw-pdp__split-box">
-                <div class="dw-pdp__split-left">
-                  <span class="dw-pdp__split-logo dw-pdp__split-logo--split">S</span>
-                  <span>BLIK Split</span>
-                </div>
-                <span class="dw-pdp__split-val">${currentLang === "en" ? "from " : "od "}${split4Str}</span>
-              </div>
-            </div>
-
-            <div class="dw-pdp__consult-row">
-              <a href="mailto:domivio.official@gmail.com" class="dw-pdp__consult-link">
-                <span class="dw-pdp__consult-dot">●</span>
-                <span>${currentLang === "en" ? "GET A CONSULTATION" : "UZYSKAJ KONSULTACJĘ"}</span>
-              </a>
-            </div>
 
             <div class="dw-pdp__tabs-bar">
               <button type="button" class="dw-pdp__tab-btn ${activePdpAccordionTab === "opis" ? "is-open" : ""}" onclick="togglePdpAccordion('opis')">
@@ -1646,10 +1618,10 @@
     }
   };
 
-  // ── Live Sync with Shopify Backend (1084d2-13.myshopify.com) ──────────
+  // ── Live Sync with Shopify Backend (1tvnzn-zf.myshopify.com) ──────────
   async function syncWithShopifyBackend() {
     try {
-      const resp = await fetch(`https://${CFG.shopDomain}/products.json?limit=250`);
+      const resp = await fetch(`/products.json?limit=250`);
       if (!resp.ok) return;
       const data = await resp.json();
       const remoteProducts = data.products || [];
@@ -1658,35 +1630,85 @@
       remoteProducts.forEach((rp) => {
         if (!rp.variants || !rp.variants.length) return;
         const rv = rp.variants[0];
-        const isDomivioTagged =
-          (Array.isArray(rp.tags) && rp.tags.some((t) => String(t).toLowerCase().includes("domivio"))) ||
-          (typeof rp.tags === "string" && rp.tags.toLowerCase().includes("domivio")) ||
-          String(rp.vendor || "").toLowerCase() === "domivio";
+        const livePrice = parseFloat(rv.price) || 369.0;
+        const liveComp = parseFloat(rv.compare_at_price) || 0;
+        const rpImgs = (rp.images || []).map((im) => im.src).filter(Boolean);
+        const stripHtml = (html) => {
+          const tmp = document.createElement("div");
+          tmp.innerHTML = html || "";
+          return (tmp.textContent || tmp.innerText || "").trim();
+        };
 
-        if (
-          !isDomivioTagged &&
-          !String(rp.handle || "").includes("montessori") &&
-          !String(rp.handle || "").includes("krysztal")
-        ) {
-          return; // Keep DOMIVIO products & prices completely independent from Aeterna!
-        }
-
-        const local = PRODUCTS.find(
-          (p) =>
-            p.handle === rp.handle ||
-            p.id === rp.id ||
-            (String(p.handle || "").includes("montessori") && String(rp.handle || "").includes("montessori")) ||
-            (String(p.handle || "").includes("krysztal") && String(rp.handle || "").includes("krysztal"))
-        );
+        const local = PRODUCTS.find((p) => p.handle === rp.handle || p.id === rp.id);
         if (local) {
           local.id = rp.id;
           local.variantId = rv.id;
           local.shopifyVariantId = rv.id;
-          const livePrice = parseFloat(rv.price);
-          if (!isNaN(livePrice) && livePrice > 0) {
+          if (livePrice > 0) {
             local.pricePLN = livePrice;
             local.priceEUR = Number((livePrice / 4.25).toFixed(2));
           }
+          if (liveComp > livePrice) {
+            local.comparePLN = liveComp;
+            local.compareEUR = Number((liveComp / 4.25).toFixed(2));
+          }
+          if (rp.title) {
+            local.title.pl = rp.title;
+          }
+          if (rpImgs.length > 0) {
+            local.images = rpImgs;
+          }
+          updated = true;
+        } else {
+          // Automatically add any new product created in Shopify Admin -> Products!
+          const catTag = String(rp.product_type || rp.tags || "poduszki").toLowerCase();
+          const cats = [];
+          if (catTag.includes("materac")) cats.push("materace");
+          else if (catTag.includes("dziec") || catTag.includes("kid")) cats.push("dla-dzieci");
+          else if (catTag.includes("akcesor") || catTag.includes("poszewk")) cats.push("akcesoria");
+          else cats.push("poduszki");
+
+          PRODUCTS.push({
+            id: rp.id,
+            variantId: rv.id,
+            shopifyVariantId: rv.id,
+            handle: rp.handle,
+            category: cats,
+            catLabelPL: (rp.product_type || "PODUSZKI").toUpperCase(),
+            catLabelEN: (rp.product_type || "PILLOWS").toUpperCase(),
+            badges: [{ text: "HIT", type: "hit" }, ...(liveComp > livePrice ? [{ text: "SALE", type: "sale" }] : [])],
+            specTopPL: "≈ Średnia twardość\n↕ 8,5/10 cm",
+            specTopEN: "≈ Medium firmness\n↕ 8.5/10 cm",
+            specHeightPL: "Wysokość — 8,5/10 cm",
+            specHeightEN: "Height — 8.5/10 cm",
+            specFirmPL: "Twardość — średnia",
+            specFirmEN: "Firmness — medium",
+            pricePLN: livePrice,
+            comparePLN: liveComp > livePrice ? liveComp : Math.round(livePrice * 1.25),
+            priceEUR: Number((livePrice / 4.25).toFixed(2)),
+            compareEUR: Number(((liveComp > livePrice ? liveComp : livePrice * 1.25) / 4.25).toFixed(2)),
+            rating: "4.9",
+            reviewsCount: 64,
+            sizes: rp.variants.length > 1 ? rp.variants.map((v) => v.title) : ["Standard"],
+            images: rpImgs.length > 0 ? rpImgs : [resolveAsset("domivio_wave_1.jpg")],
+            title: { pl: rp.title, en: rp.title },
+            shortDesc: {
+              pl: stripHtml(rp.body_html) || "Innowacyjny produkt do snu nowej generacji z technologią komórkową TPE CELL®.",
+              en: stripHtml(rp.body_html) || "Innovative next-generation sleep product with cellular TPE CELL® technology."
+            },
+            bullets: {
+              pl: [
+                "💜 Opatentowana technologia TPE CELL®",
+                "❄️ Termoregulacja 360° przez całą noc",
+                "🚚 Darmowa dostawa od 890 zł"
+              ],
+              en: [
+                "💜 Patented TPE CELL® technology",
+                "❄️ 360° airflow all night",
+                "🚚 Free shipping from 890 PLN"
+              ]
+            }
+          });
           updated = true;
         }
       });
@@ -1701,22 +1723,24 @@
     }
   }
 
-  // ── Init on DOMContentLoaded ──────────────────────────────────────────
-  document.addEventListener("DOMContentLoaded", () => {
+  // ── Init on DOMContentLoaded & Shopify Theme Editor Live Reload ───────
+  function initDomivioStorefront() {
     window.setDomivioLang(currentLang);
     syncWithShopifyBackend();
 
-    // Interactive OPINIE story avatars & numbers
     document.querySelectorAll(".dw-avatar").forEach((el, idx) => {
       el.style.cursor = "pointer";
-      el.addEventListener("click", () => window.switchDarwinStory(idx));
+      el.onclick = () => window.switchDarwinStory(idx);
     });
     document.querySelectorAll(".dw-reviews__nums span").forEach((el, idx) => {
       el.style.cursor = "pointer";
-      el.addEventListener("click", () => window.switchDarwinStory(idx));
+      el.onclick = () => window.switchDarwinStory(idx);
     });
+  }
 
-    // Auto-rotate Hero Slider every 7s unless hovered
+  document.addEventListener("DOMContentLoaded", () => {
+    initDomivioStorefront();
+
     const heroSec = document.querySelector(".dw-hero");
     let heroHovered = false;
     if (heroSec) {
@@ -1728,5 +1752,9 @@
         }
       }, 7000);
     }
+  });
+
+  document.addEventListener("shopify:section:load", () => {
+    initDomivioStorefront();
   });
 })();
