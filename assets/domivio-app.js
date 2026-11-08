@@ -428,8 +428,11 @@
           ${thumbsHtml}
         </div>
         <div>
-          <div style="display:inline-block;background:#7B42F6;color:#FFFFFF;padding:4px 10px;font-size:10.5px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:10px;">
-            ${currentLang === "en" ? prod.badgeEN : prod.badgePL}
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+            ${(prod.badges || []).map((b) => `<span class="dw-badge dw-badge--${b.type}" style="width:34px;height:34px;font-size:9.5px;">${b.text}</span>`).join("")}
+            <span style="font-size:11px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:#64748B;">
+              ${currentLang === "en" ? (prod.catLabelEN || "SLEEP") : (prod.catLabelPL || "PODUSZKI")}
+            </span>
           </div>
           <h2 style="font-size:21px;font-weight:600;line-height:1.25;margin-bottom:8px;color:#242C34;text-transform:uppercase;">${prod.title[currentLang]}</h2>
           <div style="font-size:13px;font-weight:600;color:#7B42F6;margin-bottom:12px;">★★★★★ ${prod.rating} (${prod.reviewsCount})</div>
