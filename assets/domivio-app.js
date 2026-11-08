@@ -275,6 +275,8 @@
     renderCatalog();
   };
 
+  let collectionOrderMap = {};
+
   function renderCatalog() {
     const grid = document.getElementById("productGrid");
     if (!grid) return;
@@ -282,7 +284,21 @@
     const list = PRODUCTS.filter((p) => {
       if (currentCategory === "all") return true;
       return p.category && p.category.includes(currentCategory);
-    });
+    }).slice();
+
+    if (currentCategory !== "all" && collectionOrderMap[currentCategory]) {
+      const colOrder = collectionOrderMap[currentCategory];
+      list.sort((a, b) => {
+        const tagA = typeof a.sortTagOrder === "number" ? a.sortTagOrder : 999999;
+        const tagB = typeof b.sortTagOrder === "number" ? b.sortTagOrder : 999999;
+        if (tagA !== tagB) return tagA - tagB;
+        const idxA = colOrder.indexOf(String(a.id));
+        const idxB = colOrder.indexOf(String(b.id));
+        const posA = idxA !== -1 ? idxA : 999999;
+        const posB = idxB !== -1 ? idxB : 999999;
+        return posA - posB;
+      });
+    }
 
     if (list.length === 0) {
       grid.innerHTML = `
@@ -1478,7 +1494,8 @@
   // ── Live Sync with Shopify Backend (1tvnzn-zf.myshopify.com) ──────────
   async function syncWithShopifyBackend() {
     try {
-      const colHandles = ["poduszki", "dla-dzieci", "akcesoria", "zestawy", "na-prezent"];
+      const colHandles = ["frontpage", "hity-sprzedazy", "poduszki", "dla-dzieci", "akcesoria", "zestawy", "na-prezent"];
+      const catColHandles = ["poduszki", "dla-dzieci", "akcesoria", "zestawy", "na-prezent"];
       const [prodResp, ...colResps] = await Promise.allSettled([
         fetch(`/products.json?limit=250`).then((r) => (r.ok ? r.json() : null)),
         ...colHandles.map((h) =>
@@ -1491,7 +1508,9 @@
       if (!remoteProducts.length) return;
 
       // Map product ID -> array of collection handles from Shopify Admin "Kolekcje"
+      // Also record exact product order inside each collection for drag-and-drop sorting
       const prodColMap = {};
+      const nextColOrderMap = {};
       const addColMapping = (pid, handle) => {
         const key = String(pid);
         const normHandle = handle === "na-prezent" ? "zestawy" : handle;
@@ -1501,16 +1520,26 @@
 
       if (window.DOMIVIO_COLLECTION_MAP) {
         Object.keys(window.DOMIVIO_COLLECTION_MAP).forEach((h) => {
-          (window.DOMIVIO_COLLECTION_MAP[h] || []).forEach((pid) => addColMapping(pid, h));
+          const normH = h === "na-prezent" ? "zestawy" : h;
+          const ids = (window.DOMIVIO_COLLECTION_MAP[h] || []).map((id) => String(id));
+          if (ids.length > 0 && !nextColOrderMap[normH]) {
+            nextColOrderMap[normH] = ids.slice();
+          }
+          ids.forEach((pid) => addColMapping(pid, h));
         });
       }
 
       colHandles.forEach((h, idx) => {
         const cRes = colResps[idx];
         if (cRes && cRes.status === "fulfilled" && cRes.value && Array.isArray(cRes.value.products)) {
+          const normH = h === "na-prezent" ? "zestawy" : h;
+          if (cRes.value.products.length > 0) {
+            nextColOrderMap[normH] = cRes.value.products.map((cp) => String(cp.id));
+          }
           cRes.value.products.forEach((cp) => addColMapping(cp.id, h));
         }
       });
+      collectionOrderMap = nextColOrderMap;
 
       const stripHtml = (html) => {
         if (!html) return "";
@@ -1618,14 +1647,27 @@
 
         // 1. Categories from Shopify Admin "Kolekcje"
         (prodColMap[String(rp.id)] || []).forEach((h) => {
-          if (colHandles.includes(h)) addCat(h);
+          if (catColHandles.includes(h)) addCat(h);
         });
 
         // 2. Categories from Shopify Admin "Typ" (product_type) and "Tagi" (tags)
-        const tagStr = [
-          rp.product_type || "",
-          Array.isArray(rp.tags) ? rp.tags.join(" ") : String(rp.tags || "")
-        ]
+        const rawTagsList = Array.isArray(rp.tags)
+          ? rp.tags.map((t) => String(t).trim())
+          : String(rp.tags || "")
+              .split(",")
+              .map((t) => t.trim())
+              .filter(Boolean);
+
+        let sortTagOrder = null;
+        for (const tg of rawTagsList) {
+          const m = tg.match(/^(?:poz(?:ycja)?[-_:\s]*|nr[-_:\s]*|order[-_:\s]*|kolejnosc[-_:\s]*)?(\d{1,3})$/i);
+          if (m) {
+            sortTagOrder = parseInt(m[1], 10);
+            break;
+          }
+        }
+
+        const tagStr = [rp.product_type || "", rawTagsList.join(" ")]
           .join(" ")
           .toLowerCase();
 
@@ -1651,6 +1693,7 @@
           shopifyVariantId: rv.id,
           handle: rp.handle,
           category: cats,
+          sortTagOrder: sortTagOrder,
           catLabelPL: catLabelPLMap[primaryCat] || (rp.product_type || "PODUSZKI").toUpperCase(),
           catLabelEN: catLabelENMap[primaryCat] || (rp.product_type || "PILLOWS").toUpperCase(),
           isMysteryBox: existing ? existing.isMysteryBox : syncedList.length === 0,
@@ -1706,6 +1749,25 @@
       });
 
       if (syncedList.length > 0) {
+        const homeOrder =
+          (collectionOrderMap["hity-sprzedazy"] && collectionOrderMap["hity-sprzedazy"].length > 0
+            ? collectionOrderMap["hity-sprzedazy"]
+            : collectionOrderMap["frontpage"]) || [];
+
+        syncedList.sort((a, b) => {
+          const tagA = typeof a.sortTagOrder === "number" ? a.sortTagOrder : 999999;
+          const tagB = typeof b.sortTagOrder === "number" ? b.sortTagOrder : 999999;
+          if (tagA !== tagB) return tagA - tagB;
+          if (homeOrder.length > 0) {
+            const idxA = homeOrder.indexOf(String(a.id));
+            const idxB = homeOrder.indexOf(String(b.id));
+            const posA = idxA !== -1 ? idxA : 999999;
+            const posB = idxB !== -1 ? idxB : 999999;
+            if (posA !== posB) return posA - posB;
+          }
+          return 0;
+        });
+
         PRODUCTS.length = 0;
         syncedList.forEach((item) => PRODUCTS.push(item));
         renderHeroPrice();
