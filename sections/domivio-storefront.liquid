@@ -233,7 +233,7 @@
           <span data-i18n="cart_subtotal">Wartość produktów:</span>
           <span id="cartSubtotalVal">0,00 zł</span>
         </div>
-        <div class="cart-summary-row" id="cartShippingRow">
+        <div class="cart-summary-row" id="cartShippingRow" style="display: none;">
           <span data-i18n="cart_shipping_row">Dostawa:</span>
           <span id="cartShippingVal">0,00 zł</span>
         </div>
@@ -290,6 +290,12 @@
     "darwin_pillowcase.png": "{{ 'darwin_pillowcase.png' | asset_url }}",
     "domivio_wave_1.jpg": "{{ 'domivio_wave_1.jpg' | asset_url }}",
     "domivio_wave_2.jpg": "{{ 'domivio_wave_2.jpg' | asset_url }}"
+  };
+
+  window.DOMIVIO_COLLECTION_MAP = {
+    {% for col in collections %}
+      "{{ col.handle }}": [{% for p in col.products %}{{ p.id }}{% unless forloop.last %},{% endunless %}{% endfor %}]{% unless forloop.last %},{% endunless %}
+    {% endfor %}
   };
 
   // Apply Shopify Theme Editor Settings (Customize / Dostosuj)
