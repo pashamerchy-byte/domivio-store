@@ -21,8 +21,10 @@
   let currentLang = detectInitialLang();
   let currentCategory = "all";
   let cart = loadCart();
-  let activeDiscount = localStorage.getItem("domivio_discount_unlocked") === "1" ? CFG.discountCode : "";
+  let activeDiscount = "";
+  localStorage.removeItem("domivio_discount_unlocked");
   let selectedLocker = loadLocker();
+  let selectedShippingMethod = localStorage.getItem("domivio_shipping_method") || "inpost_paczkomat";
   let activePdpProduct = null;
   let activePdpPackQty = 1;
 
@@ -51,11 +53,25 @@
     selectedLocker = lk;
     if (lk && lk.code) {
       localStorage.setItem("domivio_selected_locker", JSON.stringify(lk));
+      if (lk.supplier === "DPD") {
+        selectedShippingMethod = "dpd_paczkomat";
+      } else {
+        selectedShippingMethod = "inpost_paczkomat";
+      }
+      localStorage.setItem("domivio_shipping_method", selectedShippingMethod);
     } else {
       localStorage.removeItem("domivio_selected_locker");
     }
     renderCartUI();
   }
+
+  window.selectShippingMethod = function (methodId) {
+    if (methodId === "inpost_paczkomat" || methodId === "dpd_paczkomat" || methodId === "kurier_dpd") {
+      selectedShippingMethod = methodId;
+      localStorage.setItem("domivio_shipping_method", selectedShippingMethod);
+      renderCartUI();
+    }
+  };
 
   function t(key) {
     return (I18N[currentLang] && I18N[currentLang][key]) || I18N.pl[key] || key;
@@ -174,11 +190,11 @@
                 🚚 ${
                   currentLang === "pl"
                     ? p.pricePLN >= 99
-                      ? "DARMOWA DOSTAWA (OD 99 ZŁ) ✓"
-                      : "Darmowa dostawa od 99 zł"
+                      ? "DARMOWY PACZKOMAT (OD 99 ZŁ) ✓"
+                      : "Darmowy Paczkomat od 99 zł"
                     : p.pricePLN >= 99
-                    ? "FREE SHIPPING (FROM 99 PLN) ✓"
-                    : "Free shipping from 99 PLN"
+                    ? "FREE LOCKER SHIPPING (FROM 99 PLN) ✓"
+                    : "Free Locker shipping from 99 PLN"
                 }
               </div>
               <div class="p-card__actions">
@@ -186,7 +202,7 @@
                   🛒 ${t("btn_add_to_cart")}
                 </button>
                 <button type="button" class="p-card__info-btn" onclick="openProductModal('${p.handle}')">
-                  📦 -15%
+                  🔍
                 </button>
               </div>
             </div>
@@ -196,7 +212,7 @@
       .join("");
   }
 
-  // ── Product Detail Modal & Quantity Bundles (1 / 2 -10% / 3 -15%) ──────
+  // ── Product Detail Modal ────────────────────────────────────────────────
   window.openProductModal = function (handle, packQty) {
     const prod = PRODUCTS.find((p) => p.handle === handle);
     if (!prod) return;
@@ -212,9 +228,9 @@
 
     const p1 = unitPrice;
     const p2Orig = unitPrice * 2;
-    const p2Disc = p2Orig * 0.9;
+    const p2Disc = p2Orig;
     const p3Orig = unitPrice * 3;
-    const p3Disc = p3Orig * 0.85;
+    const p3Disc = p3Orig;
 
     const activeTotal =
       activePdpPackQty === 3 ? p3Disc : activePdpPackQty === 2 ? p2Disc : p1;
@@ -248,14 +264,12 @@
               <span class="qty-pack__ribbon">${t("qty_2_ribbon")}</span>
               <span class="qty-pack__title">${t("qty_2_title")}</span>
               <span class="qty-pack__price">${formatValue(p2Disc)}</span>
-              <span class="qty-pack__old">${formatValue(p2Orig)}</span>
               <span class="qty-pack__note">${t("qty_2_note")}</span>
             </button>
             <button type="button" class="qty-pack ${activePdpPackQty === 3 ? "is-selected" : ""}" onclick="openProductModal('${prod.handle}', 3)">
               <span class="qty-pack__ribbon">${t("qty_3_ribbon")}</span>
               <span class="qty-pack__title">${t("qty_3_title")}</span>
               <span class="qty-pack__price">${formatValue(p3Disc)}</span>
-              <span class="qty-pack__old">${formatValue(p3Orig)}</span>
               <span class="qty-pack__note">${t("qty_3_note")}</span>
             </button>
           </div>
@@ -367,26 +381,43 @@
       const prod = PRODUCTS.find((p) => p.variantId === item.variantId);
       if (!prod) return;
       const unit = getProductPrice(prod);
-      let lineTotal = unit * item.qty;
-      // Bundle discount on non-mystery-box items if qty === 2 (-10%) or qty >= 3 (-15%)
-      if (!prod.isMysteryBox) {
-        if (item.qty === 2) lineTotal = lineTotal * 0.9;
-        else if (item.qty >= 3) lineTotal = lineTotal * 0.85;
-      }
+      const lineTotal = unit * item.qty;
       subtotal += lineTotal;
       totalCount += item.qty;
     });
 
-    const discountAmount = activeDiscount ? subtotal * 0.1 : 0;
-    const totalAfterDiscount = Math.max(0, subtotal - discountAmount);
-    const threshold = currentLang === "en" ? CFG.freeShippingEUR : CFG.freeShippingPLN;
+    const discountAmount = 0;
+    const totalAfterDiscount = subtotal;
+    const threshold = currentLang === "en" ? (CFG.freeShippingEUR || 25.0) : (CFG.freeShippingPLN || 99.0);
     const remainingForFreeShip = Math.max(0, threshold - totalAfterDiscount);
     const progressPct = Math.min(100, (totalAfterDiscount / threshold) * 100);
+    const isFreeLocker = totalAfterDiscount >= threshold && totalCount > 0;
+
+    let shippingCost = 0;
+    let shippingMethodLabel = "";
+    if (totalCount > 0) {
+      if (selectedShippingMethod === "kurier_dpd") {
+        shippingCost = currentLang === "en" ? 4.70 : 19.90;
+        shippingMethodLabel = currentLang === "en" ? "Kurier DPD" : "Kurier DPD";
+      } else if (selectedShippingMethod === "dpd_paczkomat") {
+        shippingCost = isFreeLocker ? 0 : (currentLang === "en" ? 3.50 : 14.90);
+        shippingMethodLabel = "DPD Paczkomaty";
+      } else {
+        shippingCost = isFreeLocker ? 0 : (currentLang === "en" ? 3.50 : 14.90);
+        shippingMethodLabel = "InPost Paczkomaty";
+      }
+    }
+
+    const grandTotal = totalAfterDiscount + shippingCost;
 
     return {
       subtotal,
       discountAmount,
       totalAfterDiscount,
+      shippingCost,
+      shippingMethodLabel,
+      isFreeLocker,
+      grandTotal,
       totalCount,
       threshold,
       remainingForFreeShip,
@@ -402,8 +433,8 @@
     if (totals.remainingForFreeShip > 0) {
       msg.innerHTML =
         currentLang === "en"
-          ? `Added to cart! Only <strong>${formatValue(totals.remainingForFreeShip)}</strong> away from FREE shipping!`
-          : `Dodano do koszyka! Do darmowej dostawy brakuje Ci tylko <strong>${formatValue(totals.remainingForFreeShip)}</strong>`;
+          ? `Added to cart! Only <strong>${formatValue(totals.remainingForFreeShip)}</strong> away from FREE Locker shipping!`
+          : `Dodano do koszyka! Do darmowej dostawy Paczkomatem brakuje tylko <strong>${formatValue(totals.remainingForFreeShip)}</strong>`;
     } else {
       msg.innerHTML = `<strong>${t("shipping_bar_unlocked")}</strong>`;
     }
@@ -419,7 +450,7 @@
     const countBadge = document.getElementById("headerCartCount");
     if (countBadge) countBadge.textContent = String(totals.totalCount);
 
-    // Free Shipping Bar
+    // Free Shipping Bar (for InPost / DPD Paczkomaty from 99 PLN)
     const shipLabel = document.getElementById("shipBarLabel");
     const shipFill = document.getElementById("shipBarFill");
     if (shipLabel && shipFill) {
@@ -427,7 +458,7 @@
       if (totals.remainingForFreeShip > 0) {
         shipLabel.innerHTML =
           currentLang === "en"
-            ? `${t("shipping_bar_pre")}<strong>${formatValue(totals.remainingForFreeShip)}</strong> away from FREE shipping!`
+            ? `${t("shipping_bar_pre")}<strong>${formatValue(totals.remainingForFreeShip)}</strong> away from FREE Locker shipping!`
             : `${t("shipping_bar_pre")}<strong>${formatValue(totals.remainingForFreeShip)}</strong>!`;
       } else {
         shipLabel.innerHTML = `<span style="color:#16A34A;">${t("shipping_bar_unlocked")}</span>`;
@@ -462,22 +493,14 @@
         const prod = PRODUCTS.find((p) => p.variantId === item.variantId);
         if (!prod) return "";
         const unit = getProductPrice(prod);
-        let lineTotal = unit * item.qty;
-        let packBadge = "";
-        if (item.qty === 2) {
-          lineTotal *= 0.9;
-          packBadge = `<span style="background:#FFD600;padding:1px 5px;border-radius:4px;font-size:10px;font-weight:900;margin-left:6px;">-10% PAKIET</span>`;
-        } else if (item.qty >= 3) {
-          lineTotal *= 0.85;
-          packBadge = `<span style="background:#FFD600;padding:1px 5px;border-radius:4px;font-size:10px;font-weight:900;margin-left:6px;">-15% PAKIET</span>`;
-        }
+        const lineTotal = unit * item.qty;
 
         return `
           <div class="cart-item">
             <img class="cart-item__img" src="${prod.images[0]}" alt="${prod.title[currentLang]}">
             <div>
               <div class="cart-item__title">${prod.title[currentLang]}</div>
-              <div class="cart-item__price">${formatValue(lineTotal)} ${packBadge}</div>
+              <div class="cart-item__price">${formatValue(lineTotal)}</div>
               <div class="cart-item__qty-ctrl">
                 <button type="button" class="cart-item__qty-btn" onclick="updateCartQty(${prod.variantId}, -1)">−</button>
                 <span class="cart-item__qty-val">${item.qty}</span>
@@ -490,7 +513,7 @@
       })
       .join("");
 
-    // Render 1-Click Mystery Box Order Bump (if not already in cart) + 1-Click Accessories Cross-Sell + InPost/DPD Map Picker
+    // Render 1-Click Second Product Order Bump + 3-Option Shipping Selector + Interactive Locker Map
     const otherProd = PRODUCTS.find((p) => !cart.some((i) => i.variantId === p.variantId));
 
     const mysteryBumpHtml = otherProd
@@ -514,45 +537,18 @@
       `
       : "";
 
-    const accProducts = PRODUCTS.filter(
-      (p) => p.isAccessoryUpsell && !cart.some((i) => i.variantId === p.variantId)
-    );
+    const lockerPriceBase = currentLang === "en" ? "€3.50" : "14,90 zł";
+    const courierPriceStr = currentLang === "en" ? "€4.70" : "19,90 zł";
+    const lockerPriceDisplay = totals.isFreeLocker
+      ? `<span style="color:#16A34A;font-weight:900;">0,00 zł (GRATIS)</span> <span style="text-decoration:line-through;color:#94A3B8;font-size:11px;">${lockerPriceBase}</span>`
+      : `<span style="font-weight:900;">${lockerPriceBase}</span>`;
 
-    const accHtml =
-      accProducts.length > 0
+    const selectedPointHtml =
+      selectedLocker && selectedLocker.code && selectedShippingMethod !== "kurier_dpd"
         ? `
-        <div class="acc-upsell">
-          <div class="acc-upsell__title">${t("acc_upsell_title")}</div>
-          <div class="acc-upsell__list">
-            ${accProducts
-              .map(
-                (acc) => `
-              <div class="acc-card">
-                <img src="${acc.images[0]}" alt="${acc.title[currentLang]}">
-                <div>
-                  <div style="font-size:12px;font-weight:800;line-height:1.2;">${acc.title[currentLang]}</div>
-                  <div style="font-size:12px;font-weight:900;color:#D97706;">${formatValue(getProductPrice(acc))}</div>
-                </div>
-                <button type="button" class="acc-card__btn" onclick="addToCart(${acc.variantId}, 1, false)">
-                  ${t("acc_add_btn")}
-                </button>
-              </div>
-            `
-              )
-              .join("")}
-          </div>
-        </div>
-      `
-        : "";
-
-    const lockerHtml =
-      selectedLocker && selectedLocker.code
-        ? `
-        <div class="locker-box">
-          <div class="locker-box__title">${t("locker_selected_label")}</div>
-          <div class="locker-selected">
+          <div class="locker-selected" style="margin-top:8px;">
             <div>
-              <span class="locker-selected__badge">${selectedLocker.supplier === "INPOST" ? "INPOST PACZKOMAT" : "DPD PICKUP"}</span>
+              <span class="locker-selected__badge">${selectedLocker.supplier === "INPOST" ? "INPOST PACZKOMATY" : "DPD PACZKOMATY"}</span>
               <div style="font-size:13px;font-weight:900;">${selectedLocker.code}</div>
               <div style="font-size:11.5px;color:#475569;">${selectedLocker.street}, ${selectedLocker.postal_code} ${selectedLocker.city}</div>
             </div>
@@ -561,64 +557,88 @@
               <button type="button" style="background:none;border:none;font-size:10.5px;font-weight:800;color:#DC2626;" onclick="clearSelectedLocker()">${t("locker_remove_btn")}</button>
             </div>
           </div>
-        </div>
-      `
-        : `
-        <div class="locker-box">
-          <div class="locker-box__title">${t("locker_title")}</div>
-          <div class="locker-box__btns">
-            <button type="button" class="locker-btn" onclick="openApaczkaLockerMap('INPOST')">
-              <span class="locker-btn__name">📦 INPOST PACZKOMAT</span>
-              <span class="locker-btn__sub">${t("locker_inpost_sub")}</span>
-            </button>
-            <button type="button" class="locker-btn" onclick="openApaczkaLockerMap('DPD')">
-              <span class="locker-btn__name">📦 DPD PICKUP</span>
-              <span class="locker-btn__sub">${t("locker_dpd_sub")}</span>
-            </button>
+        `
+        : "";
+
+    const lockerHtml = `
+      <div class="locker-box">
+        <div class="locker-box__title">${t("locker_title")}</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div
+            onclick="selectShippingMethod('inpost_paczkomat')"
+            style="border:2px solid ${selectedShippingMethod === "inpost_paczkomat" ? "#111111" : "#CBD5E1"};background:${selectedShippingMethod === "inpost_paczkomat" ? "#FEF9C3" : "#FFFFFF"};border-radius:8px;padding:10px 12px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;"
+          >
+            <div style="display:flex;align-items:center;gap:8px;">
+              <input type="radio" name="dom_ship_method" ${selectedShippingMethod === "inpost_paczkomat" ? "checked" : ""} style="accent-color:#111111;width:16px;height:16px;" />
+              <div>
+                <div style="font-size:13px;font-weight:900;color:#111111;">📦 InPost Paczkomaty</div>
+                <button type="button" onclick="event.stopPropagation(); selectShippingMethod('inpost_paczkomat'); openApaczkaLockerMap('INPOST');" style="background:none;border:none;padding:0;font-size:11px;font-weight:800;color:#D97706;text-decoration:underline;">
+                  ${t("locker_inpost_sub")}
+                </button>
+              </div>
+            </div>
+            <div style="text-align:right;font-size:12.5px;white-space:nowrap;">${lockerPriceDisplay}</div>
+          </div>
+
+          <div
+            onclick="selectShippingMethod('dpd_paczkomat')"
+            style="border:2px solid ${selectedShippingMethod === "dpd_paczkomat" ? "#111111" : "#CBD5E1"};background:${selectedShippingMethod === "dpd_paczkomat" ? "#FEF9C3" : "#FFFFFF"};border-radius:8px;padding:10px 12px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;"
+          >
+            <div style="display:flex;align-items:center;gap:8px;">
+              <input type="radio" name="dom_ship_method" ${selectedShippingMethod === "dpd_paczkomat" ? "checked" : ""} style="accent-color:#111111;width:16px;height:16px;" />
+              <div>
+                <div style="font-size:13px;font-weight:900;color:#111111;">📦 DPD Paczkomaty</div>
+                <button type="button" onclick="event.stopPropagation(); selectShippingMethod('dpd_paczkomat'); openApaczkaLockerMap('DPD');" style="background:none;border:none;padding:0;font-size:11px;font-weight:800;color:#D97706;text-decoration:underline;">
+                  ${t("locker_dpd_sub")}
+                </button>
+              </div>
+            </div>
+            <div style="text-align:right;font-size:12.5px;white-space:nowrap;">${lockerPriceDisplay}</div>
+          </div>
+
+          <div
+            onclick="selectShippingMethod('kurier_dpd')"
+            style="border:2px solid ${selectedShippingMethod === "kurier_dpd" ? "#111111" : "#CBD5E1"};background:${selectedShippingMethod === "kurier_dpd" ? "#FEF9C3" : "#FFFFFF"};border-radius:8px;padding:10px 12px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;"
+          >
+            <div style="display:flex;align-items:center;gap:8px;">
+              <input type="radio" name="dom_ship_method" ${selectedShippingMethod === "kurier_dpd" ? "checked" : ""} style="accent-color:#111111;width:16px;height:16px;" />
+              <div>
+                <div style="font-size:13px;font-weight:900;color:#111111;">🚚 Kurier DPD</div>
+                <div style="font-size:11px;color:#475569;font-weight:600;">${t("locker_courier_sub")}</div>
+              </div>
+            </div>
+            <div style="text-align:right;font-size:13px;font-weight:900;white-space:nowrap;">${courierPriceStr}</div>
           </div>
         </div>
-      `;
+        ${selectedPointHtml}
+      </div>
+    `;
 
-    upsellWrap.innerHTML = mysteryBumpHtml + lockerHtml + accHtml;
+    upsellWrap.innerHTML = mysteryBumpHtml + lockerHtml;
 
     // Summary totals
     document.getElementById("summarySubtotal").textContent = formatValue(totals.subtotal);
     const discRow = document.getElementById("summaryDiscountRow");
-    const discVal = document.getElementById("summaryDiscountVal");
-    if (discRow && discVal) {
-      if (totals.discountAmount > 0) {
-        discRow.style.display = "flex";
-        discVal.textContent = "−" + formatValue(totals.discountAmount);
+    if (discRow) discRow.style.display = "none";
+
+    const shipEl = document.getElementById("summaryShipping");
+    if (shipEl) {
+      if (totals.shippingCost === 0 && totals.isFreeLocker) {
+        shipEl.innerHTML = `<span style="color:#16A34A;font-weight:900;">${totals.shippingMethodLabel}: 0,00 zł (GRATIS od 99 zł)</span>`;
       } else {
-        discRow.style.display = "none";
+        shipEl.textContent = `${totals.shippingMethodLabel}: ${formatValue(totals.shippingCost)}`;
       }
     }
-    document.getElementById("summaryShipping").textContent =
-      totals.remainingForFreeShip === 0 ? t("cart_shipping_free") : t("cart_shipping_calc");
-    document.getElementById("summaryTotal").textContent = formatValue(totals.totalAfterDiscount);
+    document.getElementById("summaryTotal").textContent = formatValue(totals.grandTotal);
   }
 
   window.clearSelectedLocker = function () {
     saveLocker(null);
   };
 
-  window.applyManualDiscount = function () {
-    const inp = document.getElementById("cartDiscountInput");
-    if (!inp) return;
-    const val = (inp.value || "").trim().toUpperCase();
-    if (val === "AETERNA10" || val === "DOMIVIO10" || val === "WELCOME10" || val === "RABAT10") {
-      activeDiscount = CFG.discountCode;
-      localStorage.setItem("domivio_discount_unlocked", "1");
-      inp.value = CFG.discountCode;
-      renderCartUI();
-      updateWelcomePillUI();
-    } else {
-      inp.style.borderColor = "#DC2626";
-      setTimeout(() => (inp.style.borderColor = "#111111"), 1200);
-    }
-  };
+  window.applyManualDiscount = function () {};
 
-  // ── Direct Shopify Cart Permalink Checkout (Passes Variants + Discount + Paczkomat) ──
+  // ── Direct Shopify Cart Permalink Checkout (Passes Variants + Shipping Method + Paczkomat) ──
   window.proceedToShopifyCheckout = function () {
     if (cart.length === 0) return;
     const pairs = cart
@@ -629,12 +649,14 @@
       })
       .join(",");
     const params = new URLSearchParams();
+    const totals = getCartTotals();
 
-    if (activeDiscount) {
-      params.set("discount", activeDiscount);
-    }
+    params.set(
+      "attributes[Sposób dostawy]",
+      `${totals.shippingMethodLabel} (${totals.shippingCost === 0 ? "0,00 zł GRATIS od 99 zł" : formatValue(totals.shippingCost)})`
+    );
 
-    if (selectedLocker && selectedLocker.code) {
+    if (selectedLocker && selectedLocker.code && selectedShippingMethod !== "kurier_dpd") {
       const companyVal = `${selectedLocker.supplier} ${selectedLocker.code} (${selectedLocker.street}, ${selectedLocker.city})`;
       const addr2Val = `Paczkomat / Punkt: ${selectedLocker.code}`;
       params.set("checkout[shipping_address][company]", companyVal);
@@ -659,91 +681,16 @@
     window.location.href = checkoutUrl;
   };
 
-  // ── Welcome -10% Modal & Strict RODO Validation (Exact Aeterna Parity) ──
   function updateWelcomePillUI() {
     const pill = document.getElementById("welcomePill");
-    const label = document.getElementById("welcomePillLabel");
-    if (!pill || !label) return;
-    if (localStorage.getItem("domivio_pill_dismissed") === "1") {
-      pill.style.display = "none";
-      return;
-    }
-    pill.style.display = "inline-flex";
-    if (activeDiscount) {
-      label.textContent = t("pill_unlocked");
-    } else {
-      label.textContent = t("pill_label");
-    }
+    if (pill) pill.style.display = "none";
   }
 
-  window.openExitModal = function () {
-    const m = document.getElementById("exitModal");
-    if (!m) return;
-    const offerStep = document.getElementById("exitStepOffer");
-    const successStep = document.getElementById("exitStepSuccess");
-    if (activeDiscount) {
-      offerStep.style.display = "none";
-      successStep.style.display = "block";
-    } else {
-      offerStep.style.display = "block";
-      successStep.style.display = "none";
-    }
-    m.classList.add("is-open");
-  };
-
-  window.closeExitModal = function () {
-    const m = document.getElementById("exitModal");
-    if (m) m.classList.remove("is-open");
-    sessionStorage.setItem("domivio_exit_seen", "1");
-  };
-
-  window.dismissWelcomePill = function () {
-    localStorage.setItem("domivio_pill_dismissed", "1");
-    updateWelcomePillUI();
-  };
-
+  window.openExitModal = function () {};
+  window.closeExitModal = function () {};
+  window.dismissWelcomePill = function () {};
   window.submitExitDiscountForm = function (ev) {
-    ev.preventDefault();
-    const emailInput = document.getElementById("exitEmailInput");
-    const rodoCheckbox = document.getElementById("exitRodoCheckbox");
-    const rodoLabel = document.getElementById("exitRodoLabel");
-
-    const emailVal = (emailInput.value || "").trim();
-    const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(emailVal);
-    const rodoChecked = Boolean(rodoCheckbox && rodoCheckbox.checked);
-
-    let hasError = false;
-    if (!emailValid) {
-      emailInput.classList.add("is-invalid");
-      emailInput.focus();
-      hasError = true;
-    } else {
-      emailInput.classList.remove("is-invalid");
-    }
-
-    if (!rodoChecked) {
-      rodoLabel.classList.remove("is-invalid");
-      void rodoLabel.offsetWidth;
-      rodoLabel.classList.add("is-invalid");
-      hasError = true;
-    } else {
-      rodoLabel.classList.remove("is-invalid");
-    }
-
-    if (hasError) return false;
-
-    // Unlock -10% discount
-    activeDiscount = CFG.discountCode;
-    localStorage.setItem("domivio_discount_unlocked", "1");
-    localStorage.setItem("domivio_subscriber_email", emailVal);
-    try {
-      navigator.clipboard.writeText(CFG.discountCode);
-    } catch (e) {}
-
-    document.getElementById("exitStepOffer").style.display = "none";
-    document.getElementById("exitStepSuccess").style.display = "block";
-    renderCartUI();
-    updateWelcomePillUI();
+    if (ev) ev.preventDefault();
     return false;
   };
 
@@ -1235,17 +1182,5 @@
   document.addEventListener("DOMContentLoaded", () => {
     window.setDomivioLang(currentLang);
     syncWithShopifyBackend();
-
-    // Desktop Exit-Intent trigger
-    document.addEventListener("mouseout", (e) => {
-      if (
-        e.clientY <= 0 &&
-        !activeDiscount &&
-        sessionStorage.getItem("domivio_exit_seen") !== "1"
-      ) {
-        sessionStorage.setItem("domivio_exit_seen", "1");
-        openExitModal();
-      }
-    });
   });
 })();

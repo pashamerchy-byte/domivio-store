@@ -1623,22 +1623,72 @@ button {
     font-size: 13px;
   }
 
-  /* Hero mobile — Product image FIRST, then title & price underneath */
+  /* Hero mobile — Product image FIRST, then price & CTA directly underneath */
   .hero {
-    padding: 16px 0 24px;
+    padding: 14px 0 24px;
   }
   .hero__grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 14px;
   }
   .hero__card {
-    order: -1;
+    order: -1 !important;
+    width: 100%;
     padding: 12px;
     box-shadow: 5px 5px 0 #111111;
   }
+  .hero__grid > div:first-child {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  .hero__price-box {
+    order: 1;
+    width: 100%;
+    justify-content: space-between;
+    padding: 10px 12px;
+    margin-bottom: 12px;
+    gap: 8px;
+    flex-wrap: nowrap;
+  }
+  .hero__ctas {
+    order: 2;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .hero__badge {
+    order: 3;
+    font-size: 10.5px;
+    padding: 5px 10px;
+    margin-bottom: 8px;
+    align-self: flex-start;
+  }
+  .hero__title {
+    order: 4;
+    font-size: 21px;
+    line-height: 1.18;
+    margin-bottom: 8px;
+  }
+  .hero__subtitle {
+    order: 5;
+    font-size: 13px;
+    line-height: 1.42;
+    margin-bottom: 12px;
+  }
+  .hero__urgency {
+    order: 6;
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
+  .hero__trust-row {
+    order: 7;
+    gap: 6px;
+  }
   .hero__img-wrap {
     aspect-ratio: auto;
-    height: 215px;
+    height: 220px;
     padding: 10px;
     margin-bottom: 0;
     display: flex;
@@ -1650,35 +1700,12 @@ button {
     width: auto;
     height: auto;
     max-width: 82%;
-    max-height: 190px;
+    max-height: 195px;
     object-fit: contain;
     mix-blend-mode: multiply;
   }
   .hero__card-bullets {
     display: none;
-  }
-  .hero__badge {
-    font-size: 10.5px;
-    padding: 5px 10px;
-    margin-bottom: 8px;
-  }
-  .hero__title {
-    font-size: 22px;
-    line-height: 1.15;
-    margin-bottom: 8px;
-  }
-  .hero__subtitle {
-    font-size: 13px;
-    line-height: 1.4;
-    margin-bottom: 12px;
-  }
-  .hero__price-box {
-    width: 100%;
-    justify-content: space-between;
-    padding: 10px 12px;
-    margin-bottom: 14px;
-    gap: 8px;
-    flex-wrap: nowrap;
   }
   .hero__price-now {
     font-size: 23px;
@@ -1693,11 +1720,6 @@ button {
     padding: 4px 8px;
     white-space: nowrap;
   }
-  .hero__ctas {
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 14px;
-  }
   .btn-primary,
   .btn-yellow {
     width: 100%;
@@ -1706,41 +1728,9 @@ button {
     padding: 13px 16px;
     font-size: 13px;
   }
-  .hero__urgency {
-    font-size: 12px;
-    margin-bottom: 12px;
-  }
-  .hero__trust-row {
-    gap: 6px;
-  }
   .hero__trust-item {
     font-size: 11px;
     padding: 5px 9px;
-  }
-  .hero__card {
-    padding: 14px;
-    box-shadow: 5px 5px 0 #111111;
-  }
-  .hero__img-wrap {
-    aspect-ratio: auto;
-    height: 220px;
-    padding: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #FFFDF7;
-  }
-  .hero__img-wrap img {
-    width: auto;
-    height: auto;
-    max-width: 82%;
-    max-height: 195px;
-    object-fit: contain;
-    mix-blend-mode: multiply;
-  }
-  .hero__card-bullets li {
-    font-size: 12px;
-    padding: 5px 0;
   }
 
   /* Benefits strip mobile (2x2 compact grid) */
