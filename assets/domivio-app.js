@@ -202,7 +202,7 @@
                   🛒 ${t("btn_add_to_cart")}
                 </button>
                 <button type="button" class="p-card__info-btn" onclick="openProductModal('${p.handle}')">
-                  🔍
+                  📦 -15%
                 </button>
               </div>
             </div>
@@ -212,7 +212,7 @@
       .join("");
   }
 
-  // ── Product Detail Modal ────────────────────────────────────────────────
+  // ── Product Detail Modal & Quantity Bundles (1 / 2 -10% / 3 -15%) ──────
   window.openProductModal = function (handle, packQty) {
     const prod = PRODUCTS.find((p) => p.handle === handle);
     if (!prod) return;
@@ -228,9 +228,9 @@
 
     const p1 = unitPrice;
     const p2Orig = unitPrice * 2;
-    const p2Disc = p2Orig;
+    const p2Disc = p2Orig * 0.9;
     const p3Orig = unitPrice * 3;
-    const p3Disc = p3Orig;
+    const p3Disc = p3Orig * 0.85;
 
     const activeTotal =
       activePdpPackQty === 3 ? p3Disc : activePdpPackQty === 2 ? p2Disc : p1;
@@ -264,12 +264,14 @@
               <span class="qty-pack__ribbon">${t("qty_2_ribbon")}</span>
               <span class="qty-pack__title">${t("qty_2_title")}</span>
               <span class="qty-pack__price">${formatValue(p2Disc)}</span>
+              <span class="qty-pack__old">${formatValue(p2Orig)}</span>
               <span class="qty-pack__note">${t("qty_2_note")}</span>
             </button>
             <button type="button" class="qty-pack ${activePdpPackQty === 3 ? "is-selected" : ""}" onclick="openProductModal('${prod.handle}', 3)">
               <span class="qty-pack__ribbon">${t("qty_3_ribbon")}</span>
               <span class="qty-pack__title">${t("qty_3_title")}</span>
               <span class="qty-pack__price">${formatValue(p3Disc)}</span>
+              <span class="qty-pack__old">${formatValue(p3Orig)}</span>
               <span class="qty-pack__note">${t("qty_3_note")}</span>
             </button>
           </div>
@@ -381,7 +383,9 @@
       const prod = PRODUCTS.find((p) => p.variantId === item.variantId);
       if (!prod) return;
       const unit = getProductPrice(prod);
-      const lineTotal = unit * item.qty;
+      let lineTotal = unit * item.qty;
+      if (item.qty === 2) lineTotal = lineTotal * 0.9;
+      else if (item.qty >= 3) lineTotal = lineTotal * 0.85;
       subtotal += lineTotal;
       totalCount += item.qty;
     });
@@ -493,14 +497,22 @@
         const prod = PRODUCTS.find((p) => p.variantId === item.variantId);
         if (!prod) return "";
         const unit = getProductPrice(prod);
-        const lineTotal = unit * item.qty;
+        let lineTotal = unit * item.qty;
+        let packBadge = "";
+        if (item.qty === 2) {
+          lineTotal *= 0.9;
+          packBadge = `<span style="background:#FFD600;padding:1px 5px;border-radius:4px;font-size:10px;font-weight:900;margin-left:6px;">-10% PAKIET</span>`;
+        } else if (item.qty >= 3) {
+          lineTotal *= 0.85;
+          packBadge = `<span style="background:#FFD600;padding:1px 5px;border-radius:4px;font-size:10px;font-weight:900;margin-left:6px;">-15% PAKIET</span>`;
+        }
 
         return `
           <div class="cart-item">
             <img class="cart-item__img" src="${prod.images[0]}" alt="${prod.title[currentLang]}">
             <div>
               <div class="cart-item__title">${prod.title[currentLang]}</div>
-              <div class="cart-item__price">${formatValue(lineTotal)}</div>
+              <div class="cart-item__price">${formatValue(lineTotal)} ${packBadge}</div>
               <div class="cart-item__qty-ctrl">
                 <button type="button" class="cart-item__qty-btn" onclick="updateCartQty(${prod.variantId}, -1)">−</button>
                 <span class="cart-item__qty-val">${item.qty}</span>
