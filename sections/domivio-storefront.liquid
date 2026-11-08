@@ -1,242 +1,330 @@
 <div id="domivio-root-marker"></div>
-<style>
-  :root {
-    --bg-cream: {{ section.settings.bg_color }};
-    --yellow: {{ section.settings.accent_color }};
-    --black: {{ section.settings.text_color }};
-  }
-  @media (max-width: 860px) {
-    .hero__grid { display: flex !important; flex-direction: column !important; gap: 14px !important; }
-    .hero__card { order: -1 !important; width: 100% !important; }
-    .hero__grid > div:first-child { display: flex !important; flex-direction: column !important; width: 100% !important; }
-    .hero__price-box { order: 1 !important; width: 100% !important; justify-content: space-between !important; flex-wrap: nowrap !important; }
-    .hero__ctas { order: 2 !important; }
-    .hero__badge { order: 3 !important; align-self: flex-start !important; }
-    .hero__title { order: 4 !important; }
-    .hero__subtitle { order: 5 !important; }
-    .hero__urgency { order: 6 !important; }
-    .hero__trust-row { order: 7 !important; }
-    .hero__card-bullets { display: none !important; }
-  }
-</style>
 
 
-
-  <!-- Top Announcement Bar -->
-  <div class="topbar">
-    <div class="topbar__inner">
-      <div class="topbar__Left">
-        <span class="topbar__pill">SLEEP ATELIER</span>
-        <span data-i18n="announcement_1">DOMIVIO™ ATELIER SNU · AKCESORIA DO GŁĘBOKIEJ REGENERACJI NOCNEJ</span>
+  <!-- 1. Top Lavender Announcement Bar (1:1 Darwin) -->
+  <div class="dw-topbar">
+    <div class="dw-topbar__inner">
+      <div class="dw-topbar__city">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/></svg>
+        <span data-i18n="top_city">POLSKA</span>
       </div>
-      <div class="topbar__center">
-        <span data-i18n="announcement_2">DARMOWA DOSTAWA PACZKOMATEM (INPOST / DPD) OD 99 ZŁ · KURIER DPD 19,90 ZŁ</span>
+      <div class="dw-topbar__promo">
+        <span class="dw-topbar__arrow">‹</span>
+        <img src="{{ 'darwin_gift_icon.png' | asset_url }}" alt="" class="dw-topbar__gift" />
+        <span data-i18n="top_promo">Podaruj zdrowy sen bliskim! Darmowa dostawa Paczkomatem od 99 zł</span>
+        <span class="dw-topbar__arrow">›</span>
       </div>
+      <a href="mailto:domivio.official@gmail.com" class="dw-topbar__phone">domivio.official@gmail.com</a>
     </div>
   </div>
 
-  <!-- Sticky Header -->
-  <header class="header">
-    <div class="header__inner">
-      <a href="#" class="brand">
-        <span class="brand__box">📦</span>
-        <span>DOMIVIO<span style="color:#8C7355;">.</span></span>
-        <span class="brand__tag">SLEEP ATELIER</span>
-      </a>
+  <!-- 2. Main White Sticky Header (1:1 Darwin) -->
+  <header class="dw-header">
+    <div class="dw-header__inner">
+      <a href="#" class="dw-logo">domivio</a>
 
-      <nav class="nav">
-        <a href="#catalog" class="nav__link nav__link--highlight" onclick="filterCatalog('home')" data-i18n="nav_mystery">Kolekcja Snu</a>
-        <a href="#catalog" class="nav__link" onclick="filterCatalog('all')" data-i18n="nav_all">Wszystkie Produkty (0)</a>
-        <a href="#catalog" class="nav__link" onclick="filterCatalog('home')" data-i18n="nav_home">Głęboki Sen</a>
-        <a href="#catalog" class="nav__link" onclick="filterCatalog('pets')" data-i18n="nav_pets">Rytuał Wieczorny</a>
-        <a href="#why-us" class="nav__link" data-i18n="nav_reviews">Filozofia Snu</a>
-        <a href="#faq" class="nav__link" data-i18n="nav_faq">FAQ & Dostawa</a>
+      <nav class="dw-nav">
+        <a href="#catalog" class="dw-nav__link" onclick="filterCatalog('materace')" data-i18n="nav_mattresses">MATERACE</a>
+        <a href="#catalog" class="dw-nav__link" onclick="filterCatalog('poduszki')" data-i18n="nav_pillows">PODUSZKI</a>
+        <a href="#catalog" class="dw-nav__link" onclick="filterCatalog('dla-dzieci')" data-i18n="nav_kids">DLA DZIECI</a>
+        <a href="#catalog" class="dw-nav__link" onclick="filterCatalog('lozka')" data-i18n="nav_beds">ŁÓŻKA</a>
+        <a href="#catalog" class="dw-nav__link" onclick="filterCatalog('sofy')" data-i18n="nav_sofas">SOFY</a>
+        <a href="#catalog" class="dw-nav__link" onclick="filterCatalog('all')" data-i18n="nav_furniture">MEBLE</a>
+        <a href="#catalog" class="dw-nav__link" onclick="filterCatalog('akcesoria')" data-i18n="nav_accessories">AKCESORIA</a>
+        <a href="#catalog" class="dw-nav__link" onclick="filterCatalog('na-prezent')" data-i18n="nav_gifts">NA PREZENT</a>
+        <a href="#faq" class="dw-nav__link" data-i18n="nav_customers">DLA KLIENTÓW</a>
       </nav>
 
-      <div class="header__actions">
-        <!-- Bilingual Switcher PL / EN -->
-        <div class="lang-switch" role="group" aria-label="Language switcher">
-          <button type="button" class="lang-switch__btn is-active" data-lang-btn="pl" onclick="setDomivioLang('pl')">🇵🇱 PL (ZŁ)</button>
-          <button type="button" class="lang-switch__btn" data-lang-btn="en" onclick="setDomivioLang('en')">🌍 EN (€)</button>
+      <div class="dw-header__icons">
+        <div class="dw-lang">
+          <button type="button" class="dw-lang__btn is-active" data-lang-btn="pl" onclick="setDomivioLang('pl')">PL</button>
+          <button type="button" class="dw-lang__btn" data-lang-btn="en" onclick="setDomivioLang('en')">EN</button>
         </div>
-
-        <button type="button" class="cart-trigger" onclick="openCartDrawer()">
-          <span>🛒</span>
-          <span class="cart-trigger__badge" id="headerCartCount">0</span>
+        <a href="#catalog" class="dw-icon-btn" aria-label="Szukaj">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        </a>
+        <a href="#faq" class="dw-icon-btn" aria-label="Konto">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="4"/><path d="M4 20c1.5-4 14.5-4 16 0"/></svg>
+        </a>
+        <a href="#catalog" class="dw-icon-btn" aria-label="Porównaj">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 20V10M12 20V4M18 20v-8"/></svg>
+        </a>
+        <a href="#catalog" class="dw-icon-btn" aria-label="Ulubione">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 21s-7-4.5-9-8.5C1.5 9 3.5 5 7.5 5c2.2 0 3.5 1.2 4.5 2.5C13 6.2 14.3 5 16.5 5 20.5 5 22.5 9 21 12.5c-2 4-9 8.5-9 8.5z"/></svg>
+        </a>
+        <button type="button" class="dw-icon-btn dw-bag-btn" onclick="openCartDrawer()" aria-label="Koszyk">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 7h12l1 13H5L6 7z"/><path d="M9 7V5a3 3 0 0 1 6 0v2"/></svg>
+          <span class="dw-bag-badge" id="headerCartCount">0</span>
         </button>
       </div>
     </div>
   </header>
 
-  <!-- Hero Section -->
-  <section class="hero">
-    <div class="container">
-      <div class="hero__grid">
-        <div>
-          <div class="hero__badge" data-i18n="hero_badge">ATELIER SNU & REGENERACJI · KOLEKCJA PREMIUM</div>
-          <h1 class="hero__title" data-i18n="hero_title">architektura głębokiego, spokojnego snu.</h1>
-          <p class="hero__subtitle" data-i18n="hero_subtitle">
-            Minimalistyczne rozwiązania zaprojektowane z myślą o wyciszeniu układu nerwowego, higienie snu i pełnej regeneracji nocnej. Nowa kolekcja Domivio Sleep już wkrótce.
-          </p>
-
-          <div class="hero__price-box" style="display:none;">
-            <span class="hero__price-now" id="heroPriceNow"></span>
-            <span class="hero__price-old" id="heroPriceOld"></span>
+  <!-- 3. Full-Width Hero Banner Slider (1:1 Darwin) -->
+  <section class="dw-hero">
+    <div class="dw-hero__slide is-active" id="dwHeroSlide1" style="background-image: url('{{ 'darwin_hero_1.jpg' | asset_url }}');">
+      <div class="dw-hero__overlay">
+        <div class="dw-hero__collab" data-i18n="slide1_collab">DOMIVIO SLEEP TECHNOLOGY</div>
+        <div class="dw-hero__bottom">
+          <div class="dw-hero__content">
+            <h1 class="dw-hero__title" data-i18n="slide1_title">PORANEK BEZ ŚLADÓW WCZORAJSZEGO ZMĘCZENIA ✨</h1>
+            <p class="dw-hero__sub" data-i18n="slide1_sub">Siła głębokiego snu i opatentowanej siatki elastomerowej CELL® — podparcie szyi i mikroklimat przez całą noc.</p>
+            <a href="#catalog" class="dw-hero__btn" data-i18n="slide1_btn">ZOBACZ KOLEKCJĘ</a>
           </div>
-
-          <div class="hero__ctas">
-            <a href="#catalog" class="btn-primary" data-i18n="hero_cta_primary">
-              ZOBACZ KOLEKCJĘ SNU →
-            </a>
-            <a href="#why-us" class="btn-yellow" data-i18n="hero_cta_secondary">
-              POZNAJ FILOZOFIĘ DOMIVIO
-            </a>
-          </div>
-
-          <div class="hero__urgency">
-            <span class="hero__urgency-dot" style="background:#8C7355;"></span>
-            <span data-i18n="hero_stock_left">Limitowane serie tworzone z myślą o najwyższej jakości snu</span>
-          </div>
-
-          <div class="hero__trust-row">
-            <div class="hero__trust-item">✦ <span data-i18n="hero_trust_1">Darmowy Paczkomat od 99 zł</span></div>
-            <div class="hero__trust-item">✦ <span data-i18n="hero_trust_2">InPost & DPD Paczkomaty · Kurier DPD</span></div>
-            <div class="hero__trust-item">✦ <span data-i18n="hero_trust_3">14 dni na zwrot</span></div>
+          <div class="dw-hero__pager">
+            <button type="button" class="dw-hero__page is-active" onclick="switchDarwinSlide(1)">1</button>
+            <button type="button" class="dw-hero__page" onclick="switchDarwinSlide(2)">2</button>
+            <button type="button" class="dw-hero__page" onclick="switchDarwinSlide(1)">3</button>
           </div>
         </div>
-
-        <div class="hero__card">
-          <div class="hero__card-ribbon">DOMIVIO SLEEP™ · ATELIER</div>
-          <div class="hero__img-wrap" style="background:linear-gradient(135deg,#121316 0%,#23252C 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 28px;text-align:center;min-height:260px;">
-            <div style="font-size:11px;letter-spacing:0.24em;color:#C5B49A;text-transform:uppercase;margin-bottom:14px;">SANCTUARY OF REST</div>
-            <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:32px;font-weight:400;color:#F7F5F0;line-height:1.18;letter-spacing:0.01em;margin-bottom:10px;">Głęboki Sen.<br><span style="font-style:italic;color:#C5B49A;">Czysta Regeneracja.</span></div>
-            <div style="width:40px;height:1px;background:#8C7355;margin-top:8px;"></div>
+      </div>
+    </div>
+    <div class="dw-hero__slide" id="dwHeroSlide2" style="background-image: url('{{ 'darwin_hero_2.jpg' | asset_url }}'); display: none;">
+      <div class="dw-hero__overlay">
+        <div class="dw-hero__collab" data-i18n="slide2_collab">TESTUJ PRZEZ 14 DNI W DOMU</div>
+        <div class="dw-hero__bottom">
+          <div class="dw-hero__content">
+            <h2 class="dw-hero__title" data-i18n="slide2_title">PODUSZKI I MATERACE NOWEJ GENERACJI CELL®</h2>
+            <p class="dw-hero__sub" data-i18n="slide2_sub">Elastyczna kratownica TPE redukuje nacisk, zapobiega zagnieceniom na twarzy i odprowadza ciepło 360°.</p>
+            <a href="#catalog" class="dw-hero__btn" data-i18n="slide2_btn">WYBIERZ SWÓJ MODEL</a>
           </div>
-          <ul class="hero__card-bullets" id="heroCardBullets"></ul>
+          <div class="dw-hero__pager">
+            <button type="button" class="dw-hero__page" onclick="switchDarwinSlide(1)">1</button>
+            <button type="button" class="dw-hero__page is-active" onclick="switchDarwinSlide(2)">2</button>
+            <button type="button" class="dw-hero__page" onclick="switchDarwinSlide(1)">3</button>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Trust & Benefits Strip -->
-  <section class="benefits-strip">
-    <div class="container">
-      <div class="benefits-strip__grid">
-        <div class="benefits-strip__item">
-          <div class="benefits-strip__icon">🚚</div>
-          <span data-i18n="trust_fast_ship">Darmowa dostawa Paczkomatem InPost / DPD od 99 zł (wysyłka 24h)</span>
-        </div>
-        <div class="benefits-strip__item">
-          <div class="benefits-strip__icon">📍</div>
-          <span data-i18n="trust_locker">InPost Paczkomaty i DPD Paczkomaty (14,90 zł / 0 zł od 99 zł) · Kurier DPD (19,90 zł)</span>
-        </div>
-        <div class="benefits-strip__item">
-          <div class="benefits-strip__icon">💳</div>
-          <span data-i18n="trust_payments">Bezpieczne płatności: BLIK, Przelewy24, Apple Pay, Google Pay, Karta</span>
-        </div>
-        <div class="benefits-strip__item">
-          <div class="benefits-strip__icon">⭐</div>
-          <span data-i18n="trust_guarantee">14 dni na zwrot bez podawania przyczyny</span>
-        </div>
+  <!-- 4. Electric Violet Feature Strip (#7B42F6 — 1:1 Darwin) -->
+  <section class="dw-violet-bar">
+    <div class="dw-violet-bar__grid">
+      <div class="dw-violet-bar__item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+        <span data-i18n="feat_1">OPATENTOWANE TECHNOLOGIE CELL®</span>
+      </div>
+      <div class="dw-violet-bar__item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/></svg>
+        <span data-i18n="feat_2">TERMOREGULACJA I MIKROKLIMAT 360°</span>
+      </div>
+      <div class="dw-violet-bar__item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        <span data-i18n="feat_3">14 DNI NA TEST I ZWROT</span>
+      </div>
+      <div class="dw-violet-bar__item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        <span data-i18n="feat_4">TRWAŁOŚĆ DO 25 LAT BEZ ODKSZTAŁCEŃ</span>
+      </div>
+      <div class="dw-violet-bar__item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        <span data-i18n="feat_5">DARMOWY PACZKOMAT OD 99 ZŁ</span>
+      </div>
+      <div class="dw-violet-bar__item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 20V10M10 20V4M14 20v-8M18 20v-4"/></svg>
+        <span data-i18n="feat_6">PŁATNOŚCI BLIK / RATY 0% / KARTA</span>
       </div>
     </div>
   </section>
 
-  <!-- Main Product Catalog -->
-  <section class="catalog" id="catalog">
-    <div class="container">
-      <div class="section-head">
-        <h2 class="section-head__title" data-i18n="cat_title">KOLEKCJA DOMIVIO SLEEP</h2>
-        <p class="section-head__sub" data-i18n="cat_subtitle">
-          Katalog jest obecnie przygotowywany pod nową linię produktów do snu. Darmowa dostawa Paczkomatem InPost i DPD od 99 zł (standardowo 14,90 zł) oraz Kurier DPD (19,90 zł).
-        </p>
+  <!-- 5. HITY SPRZEDAŻY — 4-Column Product Grid with Prepared Product Slots (1:1 Darwin) -->
+  <section class="dw-hits" id="catalog">
+    <div class="dw-container">
+      <h2 class="dw-section-title" data-i18n="hits_title">HITY SPRZEDAŻY</h2>
+
+      <div class="dw-filter-pills">
+        <button type="button" class="dw-filter-pill is-active" data-filter-cat="all" onclick="filterCatalog('all')">WSZYSTKIE (8)</button>
+        <button type="button" class="dw-filter-pill" data-filter-cat="poduszki" onclick="filterCatalog('poduszki')">PODUSZKI CELL® (4)</button>
+        <button type="button" class="dw-filter-pill" data-filter-cat="materace" onclick="filterCatalog('materace')">MATERACE & TOPPERY (3)</button>
+        <button type="button" class="dw-filter-pill" data-filter-cat="dla-dzieci" onclick="filterCatalog('dla-dzieci')">DLA DZIECI (2)</button>
+        <button type="button" class="dw-filter-pill" data-filter-cat="akcesoria" onclick="filterCatalog('akcesoria')">AKCESORIA (1)</button>
       </div>
 
-      <div class="filters">
-        <button type="button" class="filter-btn is-active" data-filter-cat="all" onclick="filterCatalog('all')" data-i18n="filter_all">Wszystkie produkty (0)</button>
-        <button type="button" class="filter-btn" data-filter-cat="home" onclick="filterCatalog('home')" data-i18n="filter_home">Głęboki Sen</button>
-        <button type="button" class="filter-btn" data-filter-cat="pets" onclick="filterCatalog('pets')" data-i18n="filter_pets">Rytuał Nocny</button>
-      </div>
+      <div class="dw-product-grid" id="productGrid"></div>
 
-      <div class="product-grid" id="productGrid"></div>
-    </div>
-  </section>
-
-  <!-- Why Us / Social Proof Section -->
-  <section class="why-section" id="why-us">
-    <div class="container">
-      <div class="section-head">
-        <div style="font-size:11px;letter-spacing:0.2em;color:#8C7355;font-weight:600;margin-bottom:8px;text-transform:uppercase;">DOMIVIO SLEEP™ SANCTUARY</div>
-        <h2 class="section-head__title" data-i18n="why_title">STANDARDY DOMIVIO SLEEP™</h2>
-      </div>
-
-      <div class="why-grid">
-        <div class="why-card">
-          <div class="why-card__icon" style="font-size:20px;color:#8C7355;">✦</div>
-          <h3 class="why-card__title" data-i18n="why_1_t">Minimalizm i Fizjologia Snu</h3>
-          <p data-i18n="why_1_d">Każdy produkt w naszej kolekcji powstaje z myślą o redukcji bodźców, głębokiej fazie REM i naturalnym rytmie dobowym.</p>
-        </div>
-        <div class="why-card">
-          <div class="why-card__icon" style="font-size:20px;color:#8C7355;">✦</div>
-          <h3 class="why-card__title" data-i18n="why_2_t">Wysyłka 24h & Darmowy Paczkomat od 99 zł</h3>
-          <p data-i18n="why_2_d">Dostawa przez InPost Paczkomaty oraz DPD Paczkomaty (14,90 zł lub 0,00 zł przy zamówieniu od 99 zł) oraz Kurierem DPD (19,90 zł).</p>
-        </div>
-        <div class="why-card">
-          <div class="why-card__icon" style="font-size:20px;color:#8C7355;">✦</div>
-          <h3 class="why-card__title" data-i18n="why_3_t">Bezpieczne Zakupy & 14 Dni na Zwrot</h3>
-          <p data-i18n="why_3_d">Szybkie płatności BLIK, Apple Pay, Google Pay i Przelewy24 oraz 14 dni na spokojne przetestowanie i zwrot zamówienia.</p>
-        </div>
+      <div class="dw-progress-line">
+        <div class="dw-progress-line__fill"></div>
       </div>
     </div>
   </section>
 
-  <!-- FAQ Section -->
-  <section class="faq-section" id="faq">
-    <div class="container">
-      <div class="section-head">
-        <h2 class="section-head__title" data-i18n="faq_title">INFORMACJE & DOSTAWA (FAQ)</h2>
-      </div>
-
-      <div class="faq-list">
-        <details class="faq-item" open>
-          <summary data-i18n="faq_q1">Jakie są dostępne metody i ceny dostawy?</summary>
-          <p data-i18n="faq_a1"></p>
-        </details>
-        <details class="faq-item">
-          <summary data-i18n="faq_q2">Jak szybko realizowane są zamówienia?</summary>
-          <p data-i18n="faq_a2"></p>
-        </details>
-        <details class="faq-item">
-          <summary data-i18n="faq_q3">Jak wybrać Paczkomat InPost lub DPD Paczkomat?</summary>
-          <p data-i18n="faq_a3"></p>
-        </details>
-        <details class="faq-item">
-          <summary data-i18n="faq_q4">Jaka jest polityka zwrotów i jak się skontaktować?</summary>
-          <p data-i18n="faq_a4"></p>
-        </details>
-      </div>
-
-      <div style="max-width:780px;margin:28px auto 0;background:#FFFFFF;border:1px solid #E2DDD3;border-radius:14px;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
-        <div>
-          <div style="font-size:14px;font-weight:600;color:#121316;">Concierge & Obsługa Klienta Domivio Sleep</div>
-          <div style="font-size:13px;color:#5A5852;">Odpowiadamy na wiadomości w ciągu kilku godzin:</div>
-        </div>
-        <a href="mailto:domivio.official@gmail.com" style="background:#121316;color:#FFFFFF;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:500;letter-spacing:0.03em;text-decoration:none;">
-          domivio.official@gmail.com
+  <!-- 6. Full-Width Interactive KATALOG Section (1:1 Darwin) -->
+  <section class="dw-catalog-banner" style="background-image: url('{{ 'darwin_cat_mattress.jpg' | asset_url }}');">
+    <div class="dw-catalog-banner__overlay">
+      <h2 class="dw-catalog-banner__title" data-i18n="cat_banner_title">KATALOG</h2>
+      <div class="dw-catalog-tiles">
+        <a href="#catalog" class="dw-catalog-tile is-active" onclick="filterCatalog('materace')">
+          <span data-i18n="nav_mattresses">MATERACE</span>
+        </a>
+        <a href="#catalog" class="dw-catalog-tile" onclick="filterCatalog('poduszki')">
+          <span data-i18n="nav_pillows">PODUSZKI</span>
+        </a>
+        <a href="#catalog" class="dw-catalog-tile" onclick="filterCatalog('dla-dzieci')">
+          <span data-i18n="nav_kids">DLA DZIECI</span>
+        </a>
+        <a href="#catalog" class="dw-catalog-tile" onclick="filterCatalog('lozka')">
+          <span data-i18n="nav_beds">ŁÓŻKA</span>
+        </a>
+        <a href="#catalog" class="dw-catalog-tile" onclick="filterCatalog('sofy')">
+          <span data-i18n="nav_sofas">SOFY</span>
+        </a>
+        <a href="#catalog" class="dw-catalog-tile" onclick="filterCatalog('all')">
+          <span data-i18n="nav_furniture">MEBLE</span>
+        </a>
+        <a href="#catalog" class="dw-catalog-tile" onclick="filterCatalog('akcesoria')">
+          <span data-i18n="nav_accessories">AKCESORIA</span>
         </a>
       </div>
     </div>
   </section>
 
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-      <div style="font-size:18px;font-weight:600;letter-spacing:0.12em;color:#F7F5F0;margin-bottom:8px;">DOMIVIO<span style="color:#8C7355;">.</span> SLEEP ATELIER</div>
-      <p style="margin-bottom:10px;font-size:13px;color:#A39E93;">Minimalist Sleep & Night Recovery · InPost Paczkomaty, DPD Paczkomaty & Kurier DPD</p>
-      <p style="margin-bottom:12px;font-size:13px;color:#E8E3DA;">
-        Kontakt: <a href="mailto:domivio.official@gmail.com" style="color:#C5B49A;text-decoration:underline;">domivio.official@gmail.com</a>
+  <!-- 7. Split 50/50 OPINIE Section (1:1 Darwin) -->
+  <section class="dw-reviews" id="why-us">
+    <div class="dw-reviews__head">
+      <h2 class="dw-section-title" data-i18n="reviews_title">OPINIE</h2>
+      <p class="dw-reviews__sub" data-i18n="reviews_sub">Nasz. rating 4.9 / 5.0</p>
+    </div>
+
+    <div class="dw-reviews__split">
+      <!-- Left 50%: Electric Violet Customer Review -->
+      <div class="dw-reviews__left">
+        <div class="dw-reviews__stars">★★★★★</div>
+        <div class="dw-reviews__author" data-i18n="review_left_author">artur i.</div>
+        <p class="dw-reviews__quote" data-i18n="review_left_text">
+          Sen nie ma ceny)) To prawdziwe dzieło sztuki inżynieryjnej... jedyny minus to walka w domu o to, kto śpi na niej pierwszy. Takiej wygody nie dawała żadna inna poduszka z pianki memory, a przetestowałem niemal wszystkie topowe marki. Zero zapachu po rozpakowaniu, od razu gotowa do snu, ciężka i stabilna na łóżku.
+        </p>
+        <div class="dw-reviews__prod-tag" onclick="openProductModal('poduszka-ortopedyczna-adult-cell')">
+          <img src="{{ 'darwin_rev_pill.png' | asset_url }}" alt="Poduszka Cell" />
+          <div>
+            <span data-i18n="review_left_on">OPINIA O MODELU</span>
+            <strong>ADULT® / COMPOSITE L®</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right 50%: White Story Avatars & Expert Quote -->
+      <div class="dw-reviews__right">
+        <div class="dw-reviews__avatars">
+          <div class="dw-avatar"><img src="{{ 'darwin_story_1.jpg' | asset_url }}" alt="" /></div>
+          <div class="dw-avatar is-active"><img src="{{ 'darwin_story_2.jpg' | asset_url }}" alt="" /></div>
+          <div class="dw-avatar"><img src="{{ 'darwin_story_3.jpg' | asset_url }}" alt="" /></div>
+          <div class="dw-avatar"><img src="{{ 'darwin_grid_hand.jpg' | asset_url }}" alt="" /></div>
+          <div class="dw-avatar"><img src="{{ 'darwin_showroom.jpg' | asset_url }}" alt="" /></div>
+        </div>
+        <p class="dw-reviews__story-text" data-i18n="review_right_text">
+          Najważniejszy w sypialni jest materac i poduszka, bo przesypiamy jedną trzecią życia. Siatka elastomerowa Domivio Cell pozwala mięśniom karku całkowicie się rozluźnić już w pierwsze 10 minut i utrzymuje przyjemny chłód przez całą noc.
+        </p>
+        <div class="dw-reviews__story-author" data-i18n="review_right_author">Kamil Karapetyan</div>
+        <div class="dw-reviews__story-role" data-i18n="review_right_role">Projektant wnętrz & specjalista ergonomii snu</div>
+        <div class="dw-reviews__nums">
+          <span class="is-active">1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. Full-Width Welcome to Quality Sleep Banner (1:1 Darwin) -->
+  <section class="dw-welcome-banner" style="background-image: url('{{ 'darwin_welcome_sleep.jpg' | asset_url }}');">
+    <div class="dw-welcome-banner__overlay">
+      <h2 class="dw-welcome-banner__title" data-i18n="welcome_banner_title">WITAJ W ŚWIECIE<br>JAKOŚCIOWEGO SNU</h2>
+      <a href="#catalog" class="dw-welcome-banner__btn" data-i18n="welcome_banner_btn">WIĘCEJ O TECHNOLOGII CELL®</a>
+    </div>
+  </section>
+
+  <!-- 9. Split 50/50 KONTAKTY & MAGAZYN / DOSTAWA Section (1:1 Darwin) -->
+  <section class="dw-contacts-split" id="faq">
+    <div class="dw-contacts-split__col">
+      <div class="dw-contacts-split__label" data-i18n="contacts_label">KONTAKTY</div>
+      <a href="mailto:domivio.official@gmail.com" class="dw-contacts-split__big">DOMIVIO.OFFICIAL@GMAIL.COM</a>
+      <div class="dw-contacts-split__big">DARMOWY PACZKOMAT OD 99 ZŁ</div>
+      <div class="dw-contacts-split__handle">@DOMIVIO.PL</div>
+
+      <div class="dw-social-circles">
+        <a href="mailto:domivio.official@gmail.com" class="dw-social-circle" aria-label="Email">✉</a>
+        <a href="#catalog" class="dw-social-circle" aria-label="TikTok">♪</a>
+        <a href="#catalog" class="dw-social-circle" aria-label="Instagram">◎</a>
+        <a href="#catalog" class="dw-social-circle" aria-label="YouTube">▶</a>
+      </div>
+
+      <div class="dw-contacts-split__img">
+        <img src="{{ 'darwin_grid_hand.jpg' | asset_url }}" alt="Technologia siatki TPE Cell Domivio" />
+      </div>
+    </div>
+
+    <div class="dw-contacts-split__col">
+      <div class="dw-contacts-split__label" data-i18n="showroom_label">MAGAZYN & DOSTAWA W POLSCE</div>
+      <div class="dw-contacts-split__big" data-i18n="showroom_title">WYSYŁKA 24H Z POLSKI<br>INPOST PACZKOMATY · DPD PACZKOMATY · KURIER DPD</div>
+      <p class="dw-contacts-split__hours" data-i18n="showroom_hours">
+        OBSŁUGA KLIENTA: 09:00 DO 20:00, PON–SOB<br>
+        DARMOWA DOSTAWA PACZKOMATEM OD 99 ZŁ (STANDARDOWO 14,90 ZŁ)<br>
+        KURIER DPD POD DRZWI: 19,90 ZŁ · 14 DNI NA ZWROT
       </p>
-      <p style="font-size:11.5px;opacity:0.6;">© 2026 Domivio Sleep Atelier · domivio-official.com</p>
+
+      <button type="button" class="dw-outline-btn" onclick="openCartDrawer()" data-i18n="showroom_btn">
+        WYBIERZ PACZKOMAT W KOSZYKU
+      </button>
+
+      <div class="dw-contacts-split__img">
+        <img src="{{ 'darwin_showroom.jpg' | asset_url }}" alt="Domivio Sleep Showroom" />
+      </div>
+    </div>
+  </section>
+
+  <!-- 10. Giant Watermark Logo + Violet CTA + 4-Column Footer (1:1 Darwin) -->
+  <section class="dw-watermark-sec">
+    <div class="dw-watermark-logo" aria-hidden="true">domivio</div>
+    <div class="dw-questions-box">
+      <div class="dw-questions-box__label" data-i18n="questions_label">MASZ PYTANIA?</div>
+      <a href="mailto:domivio.official@gmail.com" class="dw-questions-box__btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+        <span data-i18n="questions_btn">NAPISZ DO NAS NA E-MAIL</span>
+      </a>
+    </div>
+  </section>
+
+  <footer class="dw-footer">
+    <div class="dw-container dw-footer__grid">
+      <div class="dw-footer__sub">
+        <div class="dw-footer__heading" data-i18n="sub_title">ZAPISZ SIĘ NA NOWOŚCI I AKCJE</div>
+        <form class="dw-sub-form" onsubmit="event.preventDefault(); alert('Dziękujemy za zapisanie się!');">
+          <input type="email" placeholder="Twój adres e-mail" data-i18n-placeholder="sub_placeholder" required />
+          <button type="submit" data-i18n="sub_btn">ZAPISZ SIĘ</button>
+        </form>
+        <label class="dw-sub-consent">
+          <input type="checkbox" checked />
+          <span data-i18n="sub_consent">Klikając „Zapisz się”, wyrażam zgodę na otrzymywanie informacji o nowościach i promocjach Domivio.</span>
+        </label>
+        <div class="dw-footer__contact-mail">
+          <a href="mailto:domivio.official@gmail.com">DOMIVIO.OFFICIAL@GMAIL.COM</a>
+        </div>
+      </div>
+
+      <div class="dw-footer__col">
+        <div class="dw-footer__heading" data-i18n="foot_col1">DLA KLIENTÓW</div>
+        <a href="#faq">Dostawa i płatność (InPost / DPD)</a>
+        <a href="#faq">14 dni na test i zwrot</a>
+        <a href="#catalog">O technologii CELL®</a>
+        <a href="#why-us">Opinie klientów</a>
+        <a href="mailto:domivio.official@gmail.com">Kontakt: domivio.official@gmail.com</a>
+      </div>
+
+      <div class="dw-footer__col">
+        <div class="dw-footer__heading" data-i18n="foot_col2">WSPÓŁPRACA</div>
+        <a href="mailto:domivio.official@gmail.com">O marce Domivio</a>
+        <a href="mailto:domivio.official@gmail.com">Dla architektów i hoteli</a>
+        <a href="mailto:domivio.official@gmail.com">Zamówienia hurtowe</a>
+        <a href="mailto:domivio.official@gmail.com">Napisz do nas</a>
+      </div>
+
+      <div class="dw-footer__col">
+        <div class="dw-footer__heading" data-i18n="foot_col3">KATALOG</div>
+        <a href="#catalog" onclick="filterCatalog('materace')" data-i18n="nav_mattresses">Materace</a>
+        <a href="#catalog" onclick="filterCatalog('poduszki')" data-i18n="nav_pillows">Poduszki</a>
+        <a href="#catalog" onclick="filterCatalog('dla-dzieci')" data-i18n="nav_kids">Dla dzieci</a>
+        <a href="#catalog" onclick="filterCatalog('lozka')" data-i18n="nav_beds">Łóżka</a>
+        <a href="#catalog" onclick="filterCatalog('akcesoria')" data-i18n="nav_accessories">Akcesoria</a>
+      </div>
     </div>
   </footer>
 
@@ -267,192 +355,70 @@
       </div>
 
       <div class="cart-drawer__body">
-        <div id="cartItemsContainer" style="display:flex;flex-direction:column;gap:10px;"></div>
-        <div id="cartUpsellsContainer" style="display:flex;flex-direction:column;gap:12px;"></div>
+        <div id="cartItemsContainer"></div>
+        <div id="cartUpsellsContainer"></div>
       </div>
 
       <div class="cart-drawer__footer" id="cartDrawerFooter">
-        <div class="cart-summary-lines">
-          <div class="cart-summary-line">
-            <span data-i18n="cart_subtotal">Wartość produktów:</span>
-            <span id="summarySubtotal">0,00 zł</span>
-          </div>
-          <div class="cart-summary-line">
-            <span data-i18n="cart_shipping_row">Dostawa:</span>
-            <span id="summaryShipping"></span>
-          </div>
-          <div class="cart-summary-line cart-summary-line--total">
-            <span data-i18n="cart_total">DO ZAPŁATY:</span>
-            <span id="summaryTotal">0,00 zł</span>
-          </div>
+        <div class="cart-summary-row">
+          <span data-i18n="cart_subtotal">Wartość produktów:</span>
+          <span id="cartSubtotalVal">0,00 zł</span>
+        </div>
+        <div class="cart-summary-row" id="cartShippingRow">
+          <span data-i18n="cart_shipping_row">Dostawa:</span>
+          <span id="cartShippingVal">0,00 zł</span>
+        </div>
+        <div class="cart-summary-total">
+          <span data-i18n="cart_total">DO ZAPŁATY:</span>
+          <span id="cartTotalVal">0,00 zł</span>
         </div>
 
         <button type="button" class="checkout-btn" onclick="proceedToShopifyCheckout()" data-i18n="cart_checkout_btn">
           PRZEJDŹ DO BEZPIECZNEJ PŁATNOŚCI (BLIK / KARTA) →
         </button>
-        <p style="font-size:11px;color:#64748B;text-align:center;margin-top:8px;" data-i18n="cart_checkout_note"></p>
-      </div>
-    </div>
-  </div>
-
-  <!-- Sticky Bottom Add-to-Cart Bar -->
-  <div class="sticky-bar">
-    <div class="sticky-bar__inner">
-      <div class="sticky-bar__prod" style="min-width:0;flex:1;overflow:hidden;">
-        <img src="https://cdn.shopify.com/s/files/1/1032/7910/0230/files/img_1_80611bbd-a3f6-43ee-aa20-4ac914bef65b.jpg?v=1794089631" alt="Lampka RGB 3D" />
-        <div style="min-width:0;overflow:hidden;">
-          <div style="font-size:12.5px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" id="stickyBarTitle">Kryształowa Lampka Nocna Projektor RGB 3D (16 Kolorów)</div>
-          <div style="font-size:15px;font-weight:900;color:#111111;" id="stickyBarPrice">129,00 zł</div>
-        </div>
-      </div>
-      <div style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
-        <button type="button" class="btn-yellow" style="padding:10px 16px;font-size:12.5px;width:auto;white-space:nowrap;" onclick="addToCart(57828996284742, 1, true)">
-          🛒 <span data-i18n="btn_add_to_cart">DODAJ DO KOSZYKA</span>
-        </button>
+        <p class="checkout-btn__note" data-i18n="cart_checkout_note">
+          Szyfrowana płatność obsługiwana przez Shopify.
+        </p>
       </div>
     </div>
   </div>
 
   <!-- Toast Notification -->
   <div class="toast" id="cartToast">
-    <div id="cartToastMsg" style="font-size:13px;"></div>
+    <span>✅</span>
+    <span id="cartToastMsg">Dodano do koszyka!</span>
   </div>
 
+  
 <script src="{{ 'domivio-products.js' | asset_url }}"></script>
 <script>
-  window.DOMIVIO_CONFIG.freeShippingPLN = 99.0;
-
-  // Rewrite local montessori asset paths to Shopify CDN asset_url
-  window.DOMIVIO_PRODUCTS.forEach(function(p) {
-    if (p.handle === 'drewniana-tablica-sensoryczna-montessori-19-led') {
-      p.images = [
-        "{{ 'montessori_img_1.jpg' | asset_url }}",
-        "{{ 'montessori_studio_1.jpg' | asset_url }}",
-        "{{ 'montessori_studio_2.jpg' | asset_url }}",
-        "{{ 'montessori_studio_3.jpg' | asset_url }}",
-        "{{ 'montessori_img_2.jpg' | asset_url }}"
-      ];
-    }
+  window.DOMIVIO_ASSET_MAP = {
+    "darwin_adult_1.png": "{{ 'darwin_adult_1.png' | asset_url }}",
+    "darwin_adult_2.png": "{{ 'darwin_adult_2.png' | asset_url }}",
+    "darwin_wave_1.png": "{{ 'darwin_wave_1.png' | asset_url }}",
+    "darwin_wave_2.png": "{{ 'darwin_wave_2.png' | asset_url }}",
+    "darwin_cell_premium.png": "{{ 'darwin_cell_premium.png' | asset_url }}",
+    "darwin_evofoam.png": "{{ 'darwin_evofoam.png' | asset_url }}",
+    "darwin_dream.png": "{{ 'darwin_dream.png' | asset_url }}",
+    "darwin_flat.png": "{{ 'darwin_flat.png' | asset_url }}",
+    "darwin_topper.png": "{{ 'darwin_topper.png' | asset_url }}",
+    "darwin_pillowcase.png": "{{ 'darwin_pillowcase.png' | asset_url }}"
+  };
+  (window.DOMIVIO_PRODUCTS || []).forEach(function(p) {
+    p.images = (p.images || []).map(function(img) {
+      return window.DOMIVIO_ASSET_MAP[img] || img;
+    });
   });
-
-  {% if section.settings.domivio_collection != blank %}
-    window.DOMIVIO_SHOPIFY_COLLECTION = [
-      {% for product in collections[section.settings.domivio_collection].products %}
-        {
-          id: {{ product.id }},
-          variantId: {{ product.selected_or_first_available_variant.id }},
-          shopifyVariantId: {{ product.selected_or_first_available_variant.id }},
-          handle: {{ product.handle | json }},
-          category: ["home", "pets"],
-          isMysteryBox: false,
-          pricePLN: {{ product.selected_or_first_available_variant.price | divided_by: 100.0 }},
-          comparePLN: {{ product.selected_or_first_available_variant.compare_at_price | default: product.selected_or_first_available_variant.price | divided_by: 100.0 }},
-          priceEUR: {{ product.selected_or_first_available_variant.price | divided_by: 425.0 | round: 2 }},
-          compareEUR: {{ product.selected_or_first_available_variant.compare_at_price | default: product.selected_or_first_available_variant.price | divided_by: 425.0 | round: 2 }},
-          rating: "4.9",
-          reviewsCount: 185,
-          badgePL: "BESTSELLER DOMIVIO 🔥",
-          badgeEN: "DOMIVIO BESTSELLER 🔥",
-          images: [
-            {% for img in product.images limit: 5 %}
-              {{ img | image_url: width: 1200 | json }}{% unless forloop.last %},{% endunless %}
-            {% endfor %}
-          ],
-          title: { pl: {{ product.title | json }}, en: {{ product.title | json }} },
-          shortDesc: { pl: {{ product.description | strip_html | truncate: 150 | json }}, en: {{ product.description | strip_html | truncate: 150 | json }} },
-          bullets: {
-            pl: ["🚚 Natychmiastowa wysyłka 24h (InPost Paczkomat & DPD)"],
-            en: ["🚚 Fast 24h dispatch (InPost & DPD)"]
-          }
-        }{% unless forloop.last %},{% endunless %}
-      {% endfor %}
-    ];
-    if (window.DOMIVIO_SHOPIFY_COLLECTION && window.DOMIVIO_SHOPIFY_COLLECTION.length > 0) {
-      window.DOMIVIO_PRODUCTS = window.DOMIVIO_SHOPIFY_COLLECTION;
-    }
-  {% endif %}
 </script>
 <script src="{{ 'domivio-app.js' | asset_url }}"></script>
 
 {% schema %}
 {
-  "name": "DOMIVIO Storefront",
-  "settings": [
-    {
-      "type": "header",
-      "content": "Kolory i styl"
-    },
-    {
-      "type": "color",
-      "id": "bg_color",
-      "label": "Kolor tla",
-      "default": "#FFFDF7"
-    },
-    {
-      "type": "color",
-      "id": "accent_color",
-      "label": "Kolor akcentu",
-      "default": "#FFD600"
-    },
-    {
-      "type": "color",
-      "id": "text_color",
-      "label": "Kolor tekstu",
-      "default": "#111111"
-    },
-    {
-      "type": "header",
-      "content": "Katalog i dostawa"
-    },
-    {
-      "type": "collection",
-      "id": "domivio_collection",
-      "label": "Kolekcja DOMIVIO"
-    },
-    {
-      "type": "number",
-      "id": "free_shipping_pln",
-      "label": "Darmowa dostawa PLN",
-      "default": 99
-    },
-    {
-      "type": "text",
-      "id": "discount_code",
-      "label": "Kod rabatowy",
-      "default": "DOMIVIO10"
-    },
-    {
-      "type": "header",
-      "content": "Ekran glowny (Hero)"
-    },
-    {
-      "type": "text",
-      "id": "hero_badge",
-      "label": "Naglowek Hero Badge",
-      "default": "\u2728 HIT TIKTOK & INSTAGRAM \u00b7 DARMOWA DOSTAWA OD 99 Z\u0141"
-    },
-    {
-      "type": "textarea",
-      "id": "hero_title",
-      "label": "Tytul glowny Hero",
-      "default": "KRYSZTA\u0141OWA LAMPKA NOCNA PROJEKTOR RGB 3D \u2014 16 KOLOR\u00d3W Z PILOTEM!"
-    },
-    {
-      "type": "textarea",
-      "id": "hero_subtitle",
-      "label": "Podtytul Hero",
-      "default": "Zamie\u0144 sypialni\u0119, salon lub pok\u00f3j dziecka w magiczn\u0105 oaz\u0119! Designerska kryszta\u0142owa kostka 3D za jedyne 129,00 z\u0142 + DARMOWA DOSTAWA (od 99 z\u0142)!"
-    },
-    {
-      "type": "text",
-      "id": "cat_title",
-      "label": "Tytul katalogu",
-      "default": "NASZE FLAGOWE BESTSELLERY DOMIVIO\u2122"
-    }
-  ],
+  "name": "Domivio Darwin Storefront",
+  "settings": [],
   "presets": [
     {
-      "name": "DOMIVIO Storefront"
+      "name": "Domivio Darwin Storefront"
     }
   ]
 }

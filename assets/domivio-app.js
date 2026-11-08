@@ -160,7 +160,20 @@
     if (stickyTitleEl) stickyTitleEl.textContent = mb.title[currentLang];
   }
 
-  // ── Catalog Rendering & Filtering ─────────────────────────────────────
+  // ── Hero Slider & Catalog Rendering (1:1 Darwin Sleep) ────────────────
+  window.switchDarwinSlide = function (num) {
+    const s1 = document.getElementById("dwHeroSlide1");
+    const s2 = document.getElementById("dwHeroSlide2");
+    if (!s1 || !s2) return;
+    if (num === 2) {
+      s1.style.display = "none";
+      s2.style.display = "flex";
+    } else {
+      s1.style.display = "flex";
+      s2.style.display = "none";
+    }
+  };
+
   window.filterCatalog = function (cat) {
     currentCategory = cat || "all";
     document.querySelectorAll("[data-filter-cat]").forEach((btn) => {
@@ -178,74 +191,55 @@
       return p.category && p.category.includes(currentCategory);
     });
 
-    if (list.length === 0) {
-      grid.innerHTML = `
-        <div style="grid-column:1/-1;text-align:center;padding:64px 24px;background:#FFFFFF;border:1px solid #E5E0D8;border-radius:16px;max-width:680px;margin:0 auto;width:100%;">
-          <div style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#8C7355;font-weight:600;margin-bottom:12px;">
-            ${currentLang === "en" ? "DOMIVIO SLEEP ATELIER" : "DOMIVIO ATELIER SNU"}
-          </div>
-          <h3 style="font-family:'Cormorant Garamond', Georgia, serif;font-size:28px;font-weight:500;color:#121316;margin-bottom:10px;letter-spacing:-0.01em;">
-            ${currentLang === "en" ? "New Sleep Collection in Preparation" : "Nowa Kolekcja Snu w Przygotowaniu"}
-          </h3>
-          <p style="font-size:14px;color:#5A5852;line-height:1.65;max-width:460px;margin:0 auto;">
-            ${
-              currentLang === "en"
-                ? "All previous catalog items have been removed. We are preparing our minimalist collection dedicated to deep sleep and nighttime recovery."
-                : "Wszystkie dotychczasowe produkty zostały usunięte. Przygotowujemy nową, minimalistyczną kolekcję stworzoną dla głębokiego snu i wieczornej regeneracji."
-            }
-          </p>
-        </div>
-      `;
-      return;
-    }
-
     grid.innerHTML = list
       .map((p) => {
         const price = getProductPrice(p);
         const comp = getProductCompare(p);
         const savePct = comp ? Math.round(((comp - price) / comp) * 100) : 0;
-        const badgeText = currentLang === "en" ? p.badgeEN : p.badgePL;
+        const splitInstallment = Math.ceil(price / 4);
+        const splitStr = currentLang === "en" ? "€" + splitInstallment : splitInstallment + " zł";
+        const catLabel = currentLang === "en" ? (p.catLabelEN || "SLEEP") : (p.catLabelPL || "PODUSZKI");
+        const specTop = currentLang === "en" ? (p.specTopEN || "") : (p.specTopPL || "");
+        const badgesHtml = (p.badges || [])
+          .map((b) => `<span class="dw-badge dw-badge--${b.type}">${b.text}</span>`)
+          .join("");
+        const sizesHtml =
+          p.sizes && p.sizes.length > 0
+            ? `
+              <div class="dw-card__size-row">
+                <span>${t("size_label")}</span>
+                <select class="dw-card__size-select" aria-label="Rozmiar">
+                  ${p.sizes.map((sz) => `<option value="${sz}">${sz}</option>`).join("")}
+                </select>
+              </div>
+            `
+            : "";
 
         return `
-          <article class="p-card ${p.isMysteryBox ? "p-card--featured" : ""}">
-            <div class="p-card__badges">
-              <span class="p-card__badge">${badgeText}</span>
-              ${savePct > 0 ? `<span class="p-card__save">-${savePct}%</span>` : ""}
+          <article class="dw-card">
+            <div class="dw-card__box" onclick="openProductModal('${p.handle}')">
+              <div class="dw-card__badges">
+                ${badgesHtml}
+                ${specTop ? `<div class="dw-card__spec">${specTop}</div>` : ""}
+              </div>
+              <img class="dw-card__img" src="${p.images[0]}" alt="${p.title[currentLang]}" loading="lazy" />
+              <button type="button" class="dw-card__atc-overlay" onclick="event.stopPropagation(); addToCart(${p.variantId}, 1, true)">
+                ${t("btn_add_to_cart")}
+              </button>
             </div>
-            <div class="p-card__img-wrap" onclick="openProductModal('${p.handle}')">
-              <img src="${p.images[0]}" alt="${p.title[currentLang]}" loading="lazy">
-            </div>
-            <div class="p-card__body">
-              <div class="p-card__rating">★★★★★ ${p.rating} <span>(${p.reviewsCount})</span></div>
-              <h3 class="p-card__title" onclick="openProductModal('${p.handle}')">${p.title[currentLang]}</h3>
-              <p class="p-card__desc">${p.shortDesc[currentLang]}</p>
-              <div class="p-card__price-row">
-                <span class="p-card__price">${formatValue(price)}</span>
-                ${comp ? `<span class="p-card__old">${formatValue(comp)}</span>` : ""}
+            <div class="dw-card__info">
+              <div class="dw-card__cat">${catLabel}</div>
+              <h3 class="dw-card__title" onclick="openProductModal('${p.handle}')">${p.title[currentLang]}</h3>
+              <div class="dw-card__price-row">
+                <span class="dw-card__price">${formatValue(price)}</span>
+                ${comp ? `<span class="dw-card__old">${formatValue(comp)}</span>` : ""}
+                ${savePct > 0 ? `<span class="dw-card__disc">-${savePct}%</span>` : ""}
               </div>
-              <div style="margin:6px 0 10px;font-size:11.5px;font-weight:800;color:${p.isDigital || p.pricePLN >= 99 ? "#15803D" : "#475569"};background:${p.isDigital || p.pricePLN >= 99 ? "#DCFCE7" : "#F1F5F9"};border:1.5px solid ${p.isDigital || p.pricePLN >= 99 ? "#16A34A" : "#CBD5E1"};border-radius:6px;padding:4px 8px;display:inline-flex;align-items:center;gap:5px;width:fit-content;">
-                ${p.isDigital ? "⚡" : "🚚"} ${
-                  currentLang === "pl"
-                    ? p.isDigital
-                      ? "WYSYŁKA PDF NA E-MAIL (0 ZŁ) ✓"
-                      : p.pricePLN >= 99
-                      ? "DARMOWY PACZKOMAT (OD 99 ZŁ) ✓"
-                      : "Darmowy Paczkomat od 99 zł"
-                    : p.isDigital
-                    ? "INSTANT PDF E-MAIL DELIVERY (0 PLN) ✓"
-                    : p.pricePLN >= 99
-                    ? "FREE LOCKER SHIPPING (FROM 99 PLN) ✓"
-                    : "Free Locker shipping from 99 PLN"
-                }
+              <div class="dw-card__split">
+                <span class="dw-card__split-pill">🌙 ${splitStr}</span>
+                <span>${t("split_label")}</span>
               </div>
-              <div class="p-card__actions">
-                <button type="button" class="p-card__atc" onclick="addToCart(${p.variantId}, 1, true)">
-                  🛒 ${t("btn_add_to_cart")}
-                </button>
-                <button type="button" class="p-card__info-btn" onclick="openProductModal('${p.handle}')">
-                  ${p.isDigital ? "📖 PDF" : "📦 -15%"}
-                </button>
-              </div>
+              ${sizesHtml}
             </div>
           </article>
         `;
