@@ -676,15 +676,6 @@
               </button>
             </div>
 
-            <div class="dw-pdp__gift-box">
-              ${
-                currentLang === "en"
-                  ? "Partner gift included with your pillow order until November 15."
-                  : "Prezent od partnera przy zamówieniu poduszki do 15 listopada."
-              }
-              <strong onclick="togglePdpAccordion('detale')">${currentLang === "en" ? "Details" : "Szczegóły"}</strong>
-            </div>
-
             <p class="dw-pdp__desc">${prod.shortDesc[currentLang]}</p>
 
             ${sizeAndPackHtml}
