@@ -31,7 +31,9 @@
   function loadCart() {
     try {
       const raw = JSON.parse(localStorage.getItem("domivio_cart") || "[]");
-      if (Array.isArray(raw) && raw.length > 0) return raw;
+      if (Array.isArray(raw) && raw.length > 0) {
+        return raw.filter((item) => PRODUCTS.some((p) => p.variantId === item.variantId));
+      }
     } catch (e) {}
     return [];
   }
@@ -276,6 +278,18 @@
       if (currentCategory === "all") return true;
       return p.category && p.category.includes(currentCategory);
     });
+
+    if (list.length === 0) {
+      grid.innerHTML = `
+        <div style="grid-column: 1 / -1; background: #F5F5F7; padding: 64px 24px; text-align: center;">
+          <div style="font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #7B42F6; margin-bottom: 10px;">DOMIVIO CATALOG</div>
+          <div style="font-size: 20px; font-weight: 500; color: #242C34; text-transform: uppercase;">${
+            currentLang === "en" ? "New collection is being prepared" : "Nowy katalog produktów w przygotowaniu"
+          }</div>
+        </div>
+      `;
+      return;
+    }
 
     grid.innerHTML = list
       .map((p) => {
