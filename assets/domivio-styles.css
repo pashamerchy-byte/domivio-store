@@ -810,9 +810,7 @@ button {
   text-transform: uppercase;
 }
 .dw-contacts-split__handle {
-  font-size: 24px;
-  color: #CBD5E1;
-  margin-top: 4px;
+  display: none !important;
 }
 .dw-social-circles {
   display: flex;
