@@ -138,7 +138,11 @@ window.DOMIVIO_I18N = {
     cart_shipping_row: "Dostawa:",
     cart_total: "DO ZAPŁATY:",
     cart_checkout_btn: "PRZEJDŹ DO BEZPIECZNEJ PŁATNOŚCI (BLIK / KARTA) →",
-    cart_checkout_note: "Szyfrowana płatność obsługiwana przez Shopify."
+    cart_checkout_note: "Szyfrowana płatność obsługiwana przez Shopify.",
+    legal_nav_terms: "Regulamin sklepu",
+    legal_nav_privacy: "Polityka prywatności i RODO",
+    legal_nav_returns: "Zwroty i reklamacje (14 dni)",
+    legal_nav_shipping: "Dostawa i płatności"
   },
   en: {
     top_city: "POLAND / EU",
@@ -235,7 +239,11 @@ window.DOMIVIO_I18N = {
     cart_shipping_row: "Shipping:",
     cart_total: "TOTAL:",
     cart_checkout_btn: "PROCEED TO SECURE CHECKOUT →",
-    cart_checkout_note: "Encrypted checkout powered by Shopify."
+    cart_checkout_note: "Encrypted checkout powered by Shopify.",
+    legal_nav_terms: "Terms & Conditions",
+    legal_nav_privacy: "Privacy & Cookie Policy (GDPR)",
+    legal_nav_returns: "Returns & Claims (14 Days)",
+    legal_nav_shipping: "Shipping & Payments"
   }
 };
 

@@ -223,7 +223,23 @@
         <span data-i18n="questions_btn">NAPISZ DO NAS NA E-MAIL</span>
       </a>
     </div>
+    <nav class="dw-legal-bar" aria-label="Dokumenty prawne i regulaminy">
+      <span class="dw-legal-bar__copy">© 2026 DOMIVIO POLSKA</span>
+      <button type="button" class="dw-legal-bar__link" onclick="openLegalModal('regulamin')" data-i18n="legal_nav_terms">Regulamin sklepu</button>
+      <button type="button" class="dw-legal-bar__link" onclick="openLegalModal('prywatnosc')" data-i18n="legal_nav_privacy">Polityka prywatności i RODO</button>
+      <button type="button" class="dw-legal-bar__link" onclick="openLegalModal('zwroty')" data-i18n="legal_nav_returns">Zwroty i reklamacje (14 dni)</button>
+      <button type="button" class="dw-legal-bar__link" onclick="openLegalModal('dostawa')" data-i18n="legal_nav_shipping">Dostawa i płatności</button>
+    </nav>
   </section>
+
+  <!-- Legal Policies Modal (Polish E-Commerce Compliance: Regulamin, RODO, Zwroty 14 dni, Dostawa) -->
+  <div class="pdp-modal legal-modal" id="legalModal" role="dialog" aria-modal="true">
+    <div class="pdp-modal__backdrop" onclick="closeLegalModal()"></div>
+    <div class="pdp-modal__dialog legal-modal__dialog">
+      <button type="button" class="pdp-modal__close" onclick="closeLegalModal()">✕</button>
+      <div id="legalModalContent"></div>
+    </div>
+  </div>
 
   <!-- Product Detail & Bundle Modal -->
   <div class="pdp-modal" id="pdpModal" role="dialog" aria-modal="true">
