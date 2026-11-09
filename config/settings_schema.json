@@ -45,7 +45,7 @@
         "type": "number",
         "id": "free_shipping_pln",
         "label": "Darmowa dostawa PLN",
-        "default": 99
+        "default": 590
       },
       {
         "type": "text",

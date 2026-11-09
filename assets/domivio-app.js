@@ -148,8 +148,8 @@
       if (bulletsEl) {
         bulletsEl.innerHTML =
           currentLang === "en"
-            ? `<li>✦ Engineered for deep REM & slow-wave sleep recovery</li><li>✦ Minimalist, zero-distraction bedroom aesthetics</li><li>✦ Complimentary shipping from 890 PLN</li>`
-            : `<li>✦ Zaprojektowane dla głębokiej fazy REM i regeneracji nocnej</li><li>✦ Minimalistyczna, wyciszająca estetyka sypialni</li><li>✦ Darmowa dostawa od 890 zł</li>`;
+            ? `<li>✦ Engineered for deep REM & slow-wave sleep recovery</li><li>✦ Minimalist, zero-distraction bedroom aesthetics</li><li>✦ Complimentary shipping from 590 PLN</li>`
+            : `<li>✦ Zaprojektowane dla głębokiej fazy REM i regeneracji nocnej</li><li>✦ Minimalistyczna, wyciszająca estetyka sypialni</li><li>✦ Darmowa dostawa od 590 zł</li>`;
       }
       return;
     }
@@ -834,7 +834,7 @@
 
     const discountAmount = 0;
     const totalAfterDiscount = subtotal;
-    const threshold = currentLang === "en" ? (CFG.freeShippingEUR || 210.0) : (CFG.freeShippingPLN || 890.0);
+    const threshold = currentLang === "en" ? (CFG.freeShippingEUR || 139.0) : (CFG.freeShippingPLN || 590.0);
     const remainingForFreeShip = Math.max(0, threshold - totalAfterDiscount);
     const progressPct = Math.min(100, (totalAfterDiscount / threshold) * 100);
     const isDigitalOnly =
@@ -1119,7 +1119,7 @@
 
     params.set(
       "attributes[Sposób dostawy]",
-      `${totals.shippingMethodLabel} (${totals.shippingCost === 0 ? "0,00 zł GRATIS od 890 zł" : formatValue(totals.shippingCost)})`
+      `${totals.shippingMethodLabel} (${totals.shippingCost === 0 ? "0,00 zł GRATIS od 590 zł" : formatValue(totals.shippingCost)})`
     );
 
     if (selectedLocker && selectedLocker.code) {
@@ -1839,12 +1839,12 @@
             pl: [
               "💜 Opatentowana technologia TPE CELL®",
               "❄️ Termoregulacja 360° przez całą noc",
-              "🚚 Darmowa dostawa od 890 zł"
+              "🚚 Darmowa dostawa od 590 zł"
             ],
             en: [
               "💜 Patented TPE CELL® technology",
               "❄️ 360° airflow all night",
-              "🚚 Free shipping from 890 PLN"
+              "🚚 Free shipping from 590 PLN"
             ]
           }
         });

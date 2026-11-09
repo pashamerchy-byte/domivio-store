@@ -11,7 +11,7 @@
       <div class="dw-topbar__promo">
         <span class="dw-topbar__arrow">‹</span>
         <img src="{{ 'darwin_gift_icon.png' | asset_url }}" alt="" class="dw-topbar__gift" />
-        <span data-i18n="top_promo">Podaruj zdrowy sen bliskim! Darmowa dostawa od 890 zł</span>
+        <span data-i18n="top_promo">Podaruj zdrowy sen bliskim! Darmowa dostawa od 590 zł</span>
         <span class="dw-topbar__arrow">›</span>
       </div>
       <a href="mailto:domivio.official@gmail.com" class="dw-topbar__phone">domivio.official@gmail.com</a>
@@ -110,7 +110,7 @@
       </div>
       <div class="dw-violet-bar__item">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-        <span data-i18n="feat_5">DARMOWA DOSTAWA OD 890 ZŁ</span>
+        <span data-i18n="feat_5">DARMOWA DOSTAWA OD 590 ZŁ</span>
       </div>
       <div class="dw-violet-bar__item">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 20V10M10 20V4M14 20v-8M18 20v-4"/></svg>
@@ -146,7 +146,7 @@
       <div class="dw-contacts-split__label" data-i18n="contacts_label">KONTAKTY</div>
       <a href="tel:+48790532905" class="dw-contacts-split__big">+48 790 532 905</a>
       <a href="mailto:domivio.official@gmail.com" class="dw-contacts-split__big">DOMIVIO.OFFICIAL@GMAIL.COM</a>
-      <div class="dw-contacts-split__big">DARMOWA DOSTAWA OD 890 ZŁ</div>
+      <div class="dw-contacts-split__big">DARMOWA DOSTAWA OD 590 ZŁ</div>
 
       <div class="dw-social-circles">
         <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" class="dw-social-circle" aria-label="Instagram">
@@ -166,7 +166,7 @@
       <div class="dw-contacts-split__big" data-i18n="showroom_title">WYSYŁKA 24H Z POLSKI<br>INPOST PACZKOMATY · DPD PACZKOMATY · KURIER DPD</div>
       <p class="dw-contacts-split__hours" data-i18n="showroom_hours">
         OBSŁUGA KLIENTA: 09:00 DO 20:00, PON–SOB · TEL.: +48 790 532 905<br>
-        DARMOWA DOSTAWA OD 890 ZŁ
+        DARMOWA DOSTAWA OD 590 ZŁ
       </p>
 
       <button type="button" class="dw-outline-btn" onclick="openCartDrawer()" data-i18n="showroom_btn">
@@ -308,12 +308,12 @@
   (function() {
     var cfg = window.DOMIVIO_CONFIG || {};
     var i18nPL = (window.DOMIVIO_I18N && window.DOMIVIO_I18N.pl) || {};
-    var customFreeShip = {{ section.settings.free_shipping_pln | default: 890 | json }};
+    var customFreeShip = {{ section.settings.free_shipping_pln | default: 590 | json }};
     if (customFreeShip && Number(customFreeShip) > 0) {
-      cfg.freeShippingPLN = Number(customFreeShip);
+      cfg.freeShippingPLN = Number(customFreeShip) === 890 ? 590 : Number(customFreeShip);
     }
     var topPromo = {{ section.settings.top_promo | json }};
-    if (topPromo) i18nPL.top_promo = topPromo;
+    if (topPromo) i18nPL.top_promo = String(topPromo).replace(/890/g, "590");
     var s1Title = {{ section.settings.slide1_title | json }};
     if (s1Title) i18nPL.slide1_title = s1Title;
     var s1Sub = {{ section.settings.slide1_sub | json }};
@@ -409,12 +409,12 @@
             pl: [
               "💜 Opatentowana kratownica elastomerowa TPE CELL®",
               "❄️ Termoregulacja 360° przez całą noc",
-              "🚚 Wysyłka 24h Paczkomatem InPost / DPD (Darmowa dostawa od " + (cfg.freeShippingPLN || 890) + " zł)"
+              "🚚 Wysyłka 24h Paczkomatem InPost / DPD (Darmowa dostawa od " + (cfg.freeShippingPLN || 590) + " zł)"
             ],
             en: [
               "💜 Patented TPE CELL® honeycomb grid",
               "❄️ 360° airflow all night",
-              "🚚 Free shipping from " + (cfg.freeShippingPLN || 890) + " PLN"
+              "🚚 Free shipping from " + (cfg.freeShippingPLN || 590) + " PLN"
             ]
           }
         };
@@ -442,7 +442,7 @@
       "type": "text",
       "id": "top_promo",
       "label": "Tekst promocji na górnym pasku",
-      "default": "Podaruj zdrowy sen bliskim! Darmowa dostawa od 890 zł"
+      "default": "Podaruj zdrowy sen bliskim! Darmowa dostawa od 590 zł"
     },
     {
       "type": "text",
@@ -454,7 +454,7 @@
       "type": "number",
       "id": "free_shipping_pln",
       "label": "Próg darmowej dostawy (w zł)",
-      "default": 890
+      "default": 590
     },
     {
       "type": "header",
