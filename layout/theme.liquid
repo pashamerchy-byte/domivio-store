@@ -78,15 +78,16 @@
       </div>
     </div>
     <nav class="dw-mobile-nav" aria-label="Kategorie mobilne">
-      <a href="#catalog" onclick="filterCatalog('all')">WSZYSTKIE</a>
-      <a href="#catalog" onclick="filterCatalog('poduszki')" data-i18n="nav_pillows">PODUSZKI</a>
-      <a href="#catalog" onclick="filterCatalog('dla-dzieci')" data-i18n="nav_kids">DLA DZIECI</a>
-      <a href="#catalog" onclick="filterCatalog('akcesoria')" data-i18n="nav_accessories">AKCESORIA</a>
-      <a href="#catalog" onclick="filterCatalog('zestawy')" data-i18n="nav_gifts">ZESTAWY</a>
-      <a href="#faq" data-i18n="contacts_label">KONTAKTY</a>
+      <a href="#catalog" onclick="if(window.closeProductModal) closeProductModal(); filterCatalog('all')">WSZYSTKIE</a>
+      <a href="#catalog" onclick="if(window.closeProductModal) closeProductModal(); filterCatalog('poduszki')" data-i18n="nav_pillows">PODUSZKI</a>
+      <a href="#catalog" onclick="if(window.closeProductModal) closeProductModal(); filterCatalog('dla-dzieci')" data-i18n="nav_kids">DLA DZIECI</a>
+      <a href="#catalog" onclick="if(window.closeProductModal) closeProductModal(); filterCatalog('akcesoria')" data-i18n="nav_accessories">AKCESORIA</a>
+      <a href="#catalog" onclick="if(window.closeProductModal) closeProductModal(); filterCatalog('zestawy')" data-i18n="nav_gifts">ZESTAWY</a>
+      <a href="#faq" onclick="if(window.closeProductModal) closeProductModal();" data-i18n="contacts_label">KONTAKTY</a>
     </nav>
   </header>
 
+  <main id="homeMainView">
   <!-- 3. Full-Width Hero Banner Slider (1:1 Darwin) -->
   <section class="dw-hero">
     <div class="dw-hero__slide is-active" id="dwHeroSlide1" style="background-image: url('{{ 'darwin_hero_1.jpg' | asset_url }}');">
@@ -208,6 +209,9 @@
       </button>
     </div>
   </section>
+  </main>
+
+  <main id="pdpPageView" class="dw-pdp" style="display: none;"></main>
 
   <!-- 10. Giant Watermark Logo + Violet CTA (1:1 Darwin) -->
   <section class="dw-watermark-sec">
