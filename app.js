@@ -383,6 +383,8 @@
   let pdpCoverSelected = false;
   let activePdpFeatureIdx = 0;
   let activePdpAccordionTab = null;
+  let savedHomeScrollY = 0;
+  let isHandlingPopState = false;
 
   function resolveAsset(filename) {
     return (window.DOMIVIO_ASSET_MAP && window.DOMIVIO_ASSET_MAP[filename]) || filename;
@@ -474,6 +476,26 @@
     if (modal) modal.classList.remove("is-open");
 
     if (!pdpView) return;
+
+    const wasOnHome = homeView && homeView.style.display !== "none";
+    if (wasOnHome) {
+      savedHomeScrollY = window.scrollY || document.documentElement.scrollTop || 0;
+    }
+    if (!preserveScroll && !isHandlingPopState) {
+      try {
+        if (wasOnHome) {
+          history.replaceState(
+            { domivioView: "home", category: currentCategory, scrollY: savedHomeScrollY },
+            ""
+          );
+        }
+        history.pushState(
+          { domivioView: "pdp", handle: prod.handle, category: currentCategory, scrollY: savedHomeScrollY },
+          "",
+          "#produkt-" + prod.handle
+        );
+      } catch (e) {}
+    }
 
     const unitPrice = getProductPrice(prod);
     const unitComp = getProductCompare(prod);
@@ -627,9 +649,9 @@
         <nav class="dw-pdp__breadcrumbs" aria-label="Breadcrumb">
           <a href="#" onclick="event.preventDefault(); closeProductModal();">${currentLang === "en" ? "Home" : "Główna"}</a>
           <span>/</span>
-          <a href="#catalog" onclick="closeProductModal();">${currentLang === "en" ? "Catalog" : "Katalog"}</a>
+          <a href="#catalog" onclick="event.preventDefault(); closeProductModal();">${currentLang === "en" ? "Catalog" : "Katalog"}</a>
           <span>/</span>
-          <a href="#catalog" onclick="closeProductModal();">${catBreadcrumb}</a>
+          <a href="#catalog" onclick="event.preventDefault(); closeProductModal();">${catBreadcrumb}</a>
           <span>/</span>
           <span class="is-current">${prod.title[currentLang]}</span>
         </nav>
@@ -694,15 +716,59 @@
     if (thumbEl) thumbEl.classList.add("is-active");
   };
 
-  window.closeProductModal = function () {
+  window.closeProductModal = function (fromPopState) {
     const modal = document.getElementById("pdpModal");
     if (modal) modal.classList.remove("is-open");
     const pdpView = document.getElementById("pdpPageView");
     const homeView = document.getElementById("homeMainView");
+    const wasPdpOpen = Boolean(activePdpProduct) || (pdpView && pdpView.style.display !== "none");
     if (pdpView) pdpView.style.display = "none";
     if (homeView) homeView.style.display = "block";
     activePdpProduct = null;
+    if (wasPdpOpen) {
+      window.scrollTo({ top: savedHomeScrollY, behavior: "instant" });
+      document.documentElement.scrollTop = savedHomeScrollY;
+      document.body.scrollTop = savedHomeScrollY;
+    }
+    if (!fromPopState && window.location.hash.startsWith("#produkt-")) {
+      try {
+        history.replaceState(
+          { domivioView: "home", category: currentCategory, scrollY: savedHomeScrollY },
+          "",
+          window.location.pathname + window.location.search
+        );
+      } catch (e) {}
+    }
   };
+
+  window.addEventListener("popstate", (event) => {
+    const state = event.state || {};
+    const hash = window.location.hash || "";
+    if (state.domivioView === "pdp" && state.handle) {
+      isHandlingPopState = true;
+      window.openProductModal(state.handle, 1, false);
+      isHandlingPopState = false;
+    } else if (hash.startsWith("#produkt-")) {
+      const h = decodeURIComponent(hash.replace("#produkt-", ""));
+      isHandlingPopState = true;
+      window.openProductModal(h, 1, false);
+      isHandlingPopState = false;
+    } else {
+      const pdpView = document.getElementById("pdpPageView");
+      if (activePdpProduct || (pdpView && pdpView.style.display !== "none")) {
+        isHandlingPopState = true;
+        if (state.category) {
+          currentCategory = state.category;
+          renderCatalog();
+        }
+        if (typeof state.scrollY === "number") {
+          savedHomeScrollY = state.scrollY;
+        }
+        window.closeProductModal(true);
+        isHandlingPopState = false;
+      }
+    }
+  });
 
   // ── Cart Operations ───────────────────────────────────────────────────
   window.addToCart = function (variantId, qty, openDrawer) {
