@@ -1162,6 +1162,331 @@
   };
 
   // ══════════════════════════════════════════════════════════════════════════
+  // 3.5 POLISH E-COMMERCE LEGAL POLICIES MODAL (Regulamin, RODO, Zwroty, Dostawa)
+  // ══════════════════════════════════════════════════════════════════════════
+  const LEGAL_DOCS = {
+    pl: {
+      tabs: [
+        { key: "regulamin", label: "Regulamin sklepu" },
+        { key: "prywatnosc", label: "Polityka prywatności i RODO" },
+        { key: "zwroty", label: "Zwroty i reklamacje (14 dni)" },
+        { key: "dostawa", label: "Dostawa i płatności" },
+      ],
+      regulamin: `
+        <div class="legal-doc">
+          <span class="legal-doc__badge">Obowiązuje od: 01.11.2026 r. · Zgodny z Ustawą o prawach konsumenta i Dyrektywą Omnibus</span>
+          <h2>Regulamin Sklepu Internetowego Domivio</h2>
+          <p class="legal-doc__meta">Sklep internetowy działający pod adresem <strong>https://domivio-official.com</strong></p>
+
+          <h3>§ 1. Postanowienia ogólne i dane kontaktowe</h3>
+          <p>1. Niniejszy Regulamin określa zasady korzystania ze sklepu internetowego <strong>Domivio</strong> dostępnego pod adresem <strong>https://domivio-official.com</strong>, składania zamówień na produkty, dostarczania zamówionych produktów Klientowi, uiszczania ceny sprzedaży, uprawnień Klienta do odstąpienia od umowy oraz zasad składania i rozpatrywania reklamacji.</p>
+          <p>2. Stały kontakt ze Sprzedawcą oraz Biurem Obsługi Klienta jest możliwy za pośrednictwem:</p>
+          <ul>
+            <li>Adresu poczty elektronicznej (e-mail): <strong>domivio.official@gmail.com</strong></li>
+            <li>Numeru telefonu: <strong>+48 790 532 905</strong> (czynny w dni robocze w godz. 09:00–18:00)</li>
+          </ul>
+          <p>3. Przepisy niniejszego Regulaminu nie wyłączają ani nie ograniczają jakichkolwiek praw Konsumenta (oraz Przedsiębiorcy na prawach konsumenta zgodnie z art. 38a ustawy o prawach konsumenta) przysługujących mu na mocy bezwzględnie obowiązujących przepisów prawa polskiego, w szczególności Ustawy z dnia 30 maja 2014 r. o prawach konsumenta oraz Kodeksu cywilnego.</p>
+
+          <h3>§ 2. Definicje</h3>
+          <ul>
+            <li><strong>Konsument</strong> – osoba fizyczna dokonująca ze Sprzedawcą czynności prawnej (zakupu) niezwiązanej bezpośrednio z jej działalnością gospodarczą lub zawodową, a także osoba fizyczna zawierająca umowę bezpośrednio związaną z jej działalnością gospodarczą, gdy z treści tej umowy wynika, że nie posiada ona dla tej osoby charakteru zawodowego (Przedsiębiorca na prawach konsumenta).</li>
+            <li><strong>Sklep</strong> – serwis internetowy prowadzony pod adresem <strong>https://domivio-official.com</strong>.</li>
+            <li><strong>Towar / Produkt</strong> – rzecz ruchoma dostępna w Sklepie (w szczególności ortopedyczne poduszki nowej generacji w technologii CELL®, poduszki dla dzieci oraz akcesoria ergonomiczne), będąca przedmiotem Umowy Sprzedaży.</li>
+            <li><strong>Umowa Sprzedaży</strong> – umowa sprzedaży Produktu zawierana na odległość pomiędzy Klientem a Sprzedawcą za pośrednictwem Sklepu.</li>
+          </ul>
+
+          <h3>§ 3. Informacje o produktach, cenach i promocjach (Dyrektywa Omnibus)</h3>
+          <p>1. Wszystkie Produkty oferowane w Sklepie są fabrycznie nowe, wolne od wad fizycznych i prawnych oraz wykonane z certyfikowanych materiałów bezpiecznych dla zdrowia (w tym 100% hipoalergicznego elastomeru TPE w technologii CELL® oraz poszewek z certyfikatem OEKO-TEX® Standard 100).</p>
+          <p>2. Wszystkie ceny podane na stronach Sklepu wyrażone są w <strong>polskich złotych (PLN)</strong> lub wybranej przez Klienta walucie i są cenami <strong>brutto</strong> (zawierają wszelkie obowiązujące podatki).</p>
+          <p>3. Zgodnie z wymogami <strong>Dyrektywy Omnibus</strong> (art. 4 ust. 2 ustawy o informowaniu o cenach towarów i usług), w każdym przypadku informowania o obniżeniu ceny Produktu obok ceny promocyjnej uwidaczniana jest informacja o najniższej cenie tego Produktu, która obowiązywała w okresie 30 dni przed wprowadzeniem obniżki.</p>
+          <p>4. W Sklepie obowiązują automatyczne rabaty zestawowe naliczane w karcie produktu oraz koszyku: przy zakupie <strong>2 sztuk – rabat 5%</strong>, przy zakupie <strong>3 sztuk – rabat 10%</strong>.</p>
+
+          <h3>§ 4. Składanie zamówień i zawarcie Umowy Sprzedaży</h3>
+          <p>1. Zamówienia w Sklepie można składać 24 godziny na dobę, 7 dni w tygodniu przez cały rok, bez konieczności zakładania konta użytkownika.</p>
+          <p>2. W celu złożenia zamówienia Klient wybiera Produkt (oraz wariant/liczbę sztuk), dodaje go do koszyka przy użyciu przycisku <em>„DODAJ DO KOSZYKA”</em>, wybiera preferowaną formę dostawy (w tym punkt odbioru InPost Paczkomat® 24/7 lub DPD Pickup z interaktywnej mapy albo dostawę kurierską), a następnie przechodzi do bezpiecznego formularza zamówienia i dokonuje płatności.</p>
+          <p>3. Po złożeniu zamówienia Klient otrzymuje na podany adres e-mail automatyczne potwierdzenie przyjęcia zamówienia do realizacji oraz zawarcia Umowy Sprzedaży.</p>
+
+          <h3>§ 5. Płatności i dostawa</h3>
+          <p>1. Zamówienia wysyłane są w ciągu <strong>24 godzin roboczych</strong> z magazynu w Polsce.</p>
+          <p>2. Przy zamówieniach o wartości od <strong>590,00 zł brutto</strong> dostawa na terenie Polski jest <strong>całkowicie darmowa (0,00 zł)</strong>.</p>
+          <p>3. Szczegółowy cennik dostaw oraz lista obsługiwanych metod płatności (BLIK, karty płatnicze Visa/Mastercard, Apple Pay, Google Pay, szybkie przelewy Przelewy24) znajdują się w zakładce <strong>„Dostawa i płatności”</strong>.</p>
+
+          <h3>§ 6. Prawo odstąpienia od umowy (14 dni na zwrot bez podawania przyczyny)</h3>
+          <p>1. Zgodnie z art. 27 Ustawy z dnia 30 maja 2014 r. o prawach konsumenta, Konsumentowi przysługuje prawo do odstąpienia od umowy zawartej na odległość w terminie <strong>14 dni kalendarzowych</strong> od dnia objęcia Produktu w posiadanie przez Konsumenta lub wskazaną przez niego osobę trzecią, bez podawania jakiejkolwiek przyczyny.</p>
+          <p>2. Aby skorzystać z prawa odstąpienia od umowy, wystarczy wysłać jednoznaczne oświadczenie na adres e-mail: <strong>domivio.official@gmail.com</strong> przed upływem 14-dniowego terminu.</p>
+          <p>3. Sprzedawca zwraca Konsumentowi wszystkie otrzymane płatności niezwłocznie, nie później niż w terminie 14 dni od dnia otrzymania oświadczenia o odstąpieniu od umowy, przy użyciu takiego samego sposobu płatności, jakiego użył Konsument.</p>
+
+          <h3>§ 7. Odpowiedzialność za zgodność Towaru z umową i reklamacje</h3>
+          <p>1. Sprzedawca ponosi odpowiedzialność za brak zgodności Towaru z umową istniejący w chwili jego dostarczenia i ujawniony w ciągu <strong>2 lat</strong> od tej chwili, zgodnie z przepisami Rozdziału 5a Ustawy o prawach konsumenta.</p>
+          <p>2. Reklamacje można składać drogą elektroniczną na adres: <strong>domivio.official@gmail.com</strong>. Sprzedawca ustosunkuje się do reklamacji Konsumenta w terminie <strong>14 dni kalendarzowych</strong> od dnia jej otrzymania. Brak odpowiedzi w tym terminie oznacza uznanie reklamacji za uzasadnioną.</p>
+
+          <h3>§ 8. Pozasądowe sposoby rozpatrywania reklamacji i dochodzenia roszczeń</h3>
+          <p>1. Konsument posiada możliwość skorzystania z pozasądowych sposobów rozpatrywania reklamacji i dochodzenia roszczeń, w tym zwrócenia się do stałego polubownego sądu konsumenckiego, wojewódzkiego inspektora Inspekcji Handlowej lub miejskiego (powiatowego) rzecznika konsumentów. Szczegółowe informacje dostępne są na stronie Urzędu Ochrony Konkurencji i Konsumentów: <strong>https://polubowne.uokik.gov.pl</strong>.</p>
+        </div>
+      `,
+      prywatnosc: `
+        <div class="legal-doc">
+          <span class="legal-doc__badge">Zgodna z RODO (Rozporządzenie UE 2016/679) oraz Prawem komunikacji elektronicznej</span>
+          <h2>Polityka Prywatności i Plików Cookies (RODO)</h2>
+          <p class="legal-doc__meta">Informacja o przetwarzaniu danych osobowych Klientów sklepu <strong>https://domivio-official.com</strong></p>
+
+          <h3>1. Administrator Danych Osobowych</h3>
+          <p>Administratorem Twoich danych osobowych przekazywanych podczas korzystania ze sklepu internetowego <strong>Domivio (https://domivio-official.com)</strong> jest właściciel marki Domivio. W sprawach związanych z ochroną danych osobowych oraz realizacją praw RODO możesz skontaktować się bezpośrednio pod adresem e-mail: <strong>domivio.official@gmail.com</strong> lub telefonicznie pod numerem <strong>+48 790 532 905</strong>.</p>
+
+          <h3>2. Cele i podstawy prawne przetwarzania danych (art. 6 RODO)</h3>
+          <p>Twoje dane osobowe (imię, nazwisko, adres dostawy lub kod wybranego Paczkomatu®, adres e-mail, numer telefonu oraz dane dotyczące płatności) przetwarzamy wyłącznie w następujących celach:</p>
+          <ul>
+            <li><strong>Realizacja zamówienia i wykonanie Umowy Sprzedaży</strong> (art. 6 ust. 1 lit. b RODO) – skompletowanie paczki, wygenerowanie etykiety przewozowej InPost/DPD oraz doręczenie zamówienia.</li>
+            <li><strong>Wypełnienie obowiązków prawnych ciążących na Administratorze</strong> (art. 6 ust. 1 lit. c RODO) – prowadzenie dokumentacji księgowej i podatkowej oraz obsługa zwrotów i reklamacji konsumenckich.</li>
+            <li><strong>Prawnie uzasadniony interes Administratora</strong> (art. 6 ust. 1 lit. f RODO) – obsługa zapytań kierowanych do Biura Obsługi Klienta, zapobieganie oszustwom płatniczym oraz dochodzenie lub obrona przed ewentualnymi roszczeniami.</li>
+          </ul>
+
+          <h3>3. Odbiorcy danych osobowych</h3>
+          <p>W celu sprawnej realizacji zamówienia i dostawy Twoje dane przekazywane są wyłącznie zaufanym podmiotom współpracującym ze Sklepem:</p>
+          <ul>
+            <li><strong>Infrastruktura e-commerce:</strong> Shopify International Ltd. (bezpieczny system koszyka i realizacji zamówień szyfrowany protokołem SSL/TLS).</li>
+            <li><strong>Przewoźnicy i operatorzy logistyczni:</strong> InPost Sp. z o.o. (dostawa do Paczkomatów® 24/7) oraz DPD Polska Sp. z o.o. (dostawa do punktów DPD Pickup oraz kurierem pod wskazany adres).</li>
+            <li><strong>Operatorzy płatności elektronicznych:</strong> licencjonowani operatorzy obsługujący szybkie płatności BLIK, karty płatnicze Visa/Mastercard, Apple Pay oraz Google Pay.</li>
+          </ul>
+
+          <h3>4. Okres przechowywania danych</h3>
+          <p>Dane osobowe związane z realizacją zamówienia przechowywane są przez czas niezbędny do wykonania umowy, upływu 2-letniego okresu odpowiedzialności za zgodność towaru z umową oraz przez okres wymagany przepisami prawa podatkowego i rachunkowego (5 lat licząc od końca roku kalendarzowego).</p>
+
+          <h3>5. Twoje prawa wynikające z RODO (art. 15–21 RODO)</h3>
+          <p>Każdej osobie, której dane dotyczą, przysługuje w każdej chwili prawo do:</p>
+          <ul>
+            <li>Dostępu do swoich danych osobowych oraz otrzymania ich kopii (art. 15 RODO),</li>
+            <li>Sprostowania (poprawiania) swoich danych (art. 16 RODO),</li>
+            <li>Usunięcia danych („prawo do bycia zapomnianym”) w przypadkach przewidzianych prawem (art. 17 RODO),</li>
+            <li>Ograniczenia przetwarzania danych (art. 18 RODO) oraz przenoszenia danych (art. 20 RODO),</li>
+            <li>Wniesienia sprzeciwu wobec przetwarzania danych (art. 21 RODO),</li>
+            <li>Wniesienia skargi do organu nadzorczego – <strong>Prezesa Urzędu Ochrony Danych Osobowych (PUODO)</strong>, ul. Stawki 2, 00-193 Warszawa.</li>
+          </ul>
+
+          <h3>6. Pliki Cookies i pamięć lokalna przeglądarki (LocalStorage)</h3>
+          <p>Sklep wykorzystuje niezbędne pliki cookies oraz pamięć lokalną przeglądarki (<code>localStorage</code>) w celu prawidłowego działania koszyka zakupowego, zapamiętania wybranego na mapie punktu odbioru Paczkomat® InPost / DPD oraz wybranego języka strony (PL/EN). Użytkownik może w każdej chwili zmienić ustawienia dotyczące plików cookies w swojej przeglądarce internetowej.</p>
+        </div>
+      `,
+      zwroty: `
+        <div class="legal-doc">
+          <span class="legal-doc__badge">14 dni na test w domu · Szybki zwrot środków · Gwarancja 2 lata</span>
+          <h2>Zwroty i Reklamacje (14 dni na odstąpienie od umowy)</h2>
+          <p class="legal-doc__meta">Przejrzyste zasady zwrotów konsumenckich i reklamacji w sklepie <strong>Domivio</strong></p>
+
+          <h3>1. Prawo do odstąpienia od umowy w ciągu 14 dni (bez podawania przyczyny)</h3>
+          <p>Zgodnie z polskim prawem konsumenckim (Ustawa z dnia 30 maja 2014 r. o prawach konsumenta), masz pełne prawo zwrócić zakupiony produkt w terminie <strong>14 dni kalendarzowych</strong> od dnia odebrania przesyłki z Paczkomatu® lub od kuriera – bez podawania jakiejkolwiek przyczyny.</p>
+
+          <h3>2. Jak dokonać zwrotu krok po kroku?</h3>
+          <ul>
+            <li><strong>Krok 1:</strong> Wyślij krótką wiadomość e-mail z informacją o odstąpieniu od umowy i numerem zamówienia na adres: <strong>domivio.official@gmail.com</strong>.</li>
+            <li><strong>Krok 2:</strong> W odpowiedzi zwrotnej otrzymasz od naszego Biura Obsługi Klienta instrukcję nadania przesyłki zwrotnej na adres naszego magazynu w Polsce.</li>
+            <li><strong>Krok 3:</strong> Zapakuj bezpiecznie zwracany produkt i nadaj paczkę w ciągu 14 dni od dnia zgłoszenia odstąpienia od umowy.</li>
+            <li><strong>Krok 4:</strong> Zwrot 100% wartości zwracanego zamówienia otrzymasz niezwłocznie (maksymalnie w ciągu 14 dni) bezpośrednio na rachunek bankowy, kartę lub konto BLIK, z którego opłacono zamówienie.</li>
+          </ul>
+
+          <h3>3. Reklamacje i 2-letnia odpowiedzialność za zgodność towaru z umową</h3>
+          <p>Wszystkie produkty Domivio objęte są <strong>2-letnią odpowiedzialnością Sprzedawcy za zgodność towaru z umową</strong>. Dodatkowo struktura komórkowa materiału TPE w technologii CELL® objęta jest 5-letnią gwarancją producenta na zachowanie kształtu i sprężystości.</p>
+          <p>W przypadku stwierdzenia jakiejkolwiek wady produktu lub uszkodzenia przesyłki w transporcie:</p>
+          <ul>
+            <li>Napisz do nas na adres: <strong>domivio.official@gmail.com</strong> (podaj numer zamówienia, krótki opis zgłoszenia oraz – jeśli to możliwe – dołącz zdjęcie).</li>
+            <li>Każdą reklamację rozpatrujemy priorytetowo, maksymalnie w terminie <strong>14 dni kalendarzowych</strong>.</li>
+            <li>W przypadku uznania reklamacji wymienimy produkt na nowy egzemplarz wolny od wad na nasz koszt lub zwrócimy pełną kwotę zakupu.</li>
+          </ul>
+
+          <h3>4. Wzór formularza odstąpienia od umowy (do skopiowania w wiadomości e-mail)</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Pole formularza</th>
+                <th>Dane do uzupełnienia w wiadomości na adres domivio.official@gmail.com</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Adresat</strong></td>
+                <td>Biuro Obsługi Klienta Domivio – domivio.official@gmail.com, tel. +48 790 532 905</td>
+              </tr>
+              <tr>
+                <td><strong>Oświadczenie</strong></td>
+                <td>Niniejszym informuję o moim odstąpieniu od umowy sprzedaży następujących produktów: [nazwa produktu]</td>
+              </tr>
+              <tr>
+                <td><strong>Numer zamówienia i data</strong></td>
+                <td>Zamówienie nr [#...] odebrane w dniu [data odbioru]</td>
+              </tr>
+              <tr>
+                <td><strong>Dane Konsumenta</strong></td>
+                <td>Imię i nazwisko, adres e-mail, telefon (oraz opcjonalnie numer konta bankowego do zwrotu, jeśli płatność wymaga przelewu tradycyjnego)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      `,
+      dostawa: `
+        <div class="legal-doc">
+          <span class="legal-doc__badge">Wysyłka w 24h z magazynu w Polsce · Darmowa dostawa od 590 zł</span>
+          <h2>Dostawa i Płatności</h2>
+          <p class="legal-doc__meta">Informacje o czasie realizacji, kosztach wysyłki i bezpiecznych płatnościach w sklepie <strong>Domivio</strong></p>
+
+          <h3>1. Czas wysyłki i dostawy</h3>
+          <p>Wszystkie zamówienia kompletujemy i wysyłamy bezpośrednio z naszego <strong>magazynu w Polsce w ciągu 24 godzin roboczych</strong> od momentu złożenia zamówienia. Czas doręczenia przesyłki przez przewoźników InPost oraz DPD wynosi zazwyczaj <strong>1–2 dni robocze</strong> od momentu nadania.</p>
+
+          <h3>2. Koszty i metody dostawy na terenie Polski</h3>
+          <p>Przy zamówieniach o łącznej wartości <strong>od 590,00 zł brutto dostawa jest całkowicie DARMOWA (0,00 zł)</strong> niezależnie od wybranego przewoźnika.</p>
+          <table>
+            <thead>
+              <tr>
+                <th>Metoda dostawy</th>
+                <th>Czas doręczenia</th>
+                <th>Zamówienia poniżej 590 zł</th>
+                <th>Zamówienia od 590 zł</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>InPost Paczkomat® 24/7</strong> (wybór z interaktywnej mapy w koszyku)</td>
+                <td>1–2 dni robocze</td>
+                <td>14,90 zł</td>
+                <td><strong>0,00 zł (GRATIS)</strong></td>
+              </tr>
+              <tr>
+                <td><strong>DPD Pickup / Automat Paczkowy</strong> (wybór z mapy w koszyku)</td>
+                <td>1–2 dni robocze</td>
+                <td>14,90 zł</td>
+                <td><strong>0,00 zł (GRATIS)</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Kurier DPD pod drzwi</strong> (dostawa na wskazany adres)</td>
+                <td>1–2 dni robocze</td>
+                <td>19,90 zł</td>
+                <td><strong>0,00 zł (GRATIS)</strong></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>3. Dostępne i bezpieczne metody płatności</h3>
+          <p>Wszystkie transakcje w sklepie <strong>domivio-official.com</strong> są szyfrowane certyfikatem bezpieczeństwa SSL/TLS. Obsługujemy najwygodniejsze metody płatności w Polsce:</p>
+          <ul>
+            <li><strong>BLIK</strong> – błyskawiczna płatność 6-cyfrowym kodem z aplikacji Twojego banku.</li>
+            <li><strong>Szybkie przelewy internetowe (Przelewy24 / polskie banki)</strong> – natychmiastowe księgowanie wpłaty.</li>
+            <li><strong>Karty płatnicze</strong> – Visa, Mastercard, Maestro.</li>
+            <li><strong>Portfele cyfrowe</strong> – Apple Pay oraz Google Pay (płatność jednym kliknięciem na telefonie lub komputerze).</li>
+          </ul>
+        </div>
+      `,
+    },
+    en: {
+      tabs: [
+        { key: "regulamin", label: "Terms & Conditions" },
+        { key: "prywatnosc", label: "Privacy & GDPR Policy" },
+        { key: "zwroty", label: "Returns & Claims (14 days)" },
+        { key: "dostawa", label: "Shipping & Payment" },
+      ],
+      regulamin: `
+        <div class="legal-doc">
+          <span class="legal-doc__badge">Effective: 01.11.2026 · Compliant with Polish & EU Consumer Rights Directive & Omnibus Directive</span>
+          <h2>Terms & Conditions of Domivio Online Store</h2>
+          <p class="legal-doc__meta">Online store operating at <strong>https://domivio-official.com</strong></p>
+
+          <h3>§ 1. General Provisions & Contact Details</h3>
+          <p>1. These Terms & Conditions govern the use of the <strong>Domivio</strong> online store available at <strong>https://domivio-official.com</strong>, placing orders, delivery, payment methods, the statutory 14-day right of withdrawal, and warranty/complaint procedures under Polish and EU consumer law.</p>
+          <p>2. Customer Support Contact:</p>
+          <ul>
+            <li>E-mail: <strong>domivio.official@gmail.com</strong></li>
+            <li>Phone: <strong>+48 790 532 905</strong> (Mon–Fri, 09:00–18:00 CET)</li>
+          </ul>
+
+          <h3>§ 2. Prices, Omnibus Directive & Bundle Discounts</h3>
+          <p>1. All prices displayed in the Store include applicable VAT (gross prices). In compliance with the EU <strong>Omnibus Directive</strong>, whenever a price reduction is announced, the lowest price applied during the 30 days prior to the reduction is displayed alongside the discounted price.</p>
+          <p>2. Automatic bundle discounts apply in the product card and shopping cart: <strong>2 pcs – 5% OFF</strong>, <strong>3 pcs – 10% OFF</strong>.</p>
+
+          <h3>§ 3. Right of Withdrawal (14-Day Home Trial & Return) & 2-Year Statutory Warranty</h3>
+          <p>1. Pursuant to the Polish Consumer Rights Act of 30 May 2014, Consumers have the right to withdraw from a distance contract within <strong>14 calendar days</strong> of receiving the product without giving any reason.</p>
+          <p>2. All products are covered by a <strong>2-year statutory conformity warranty</strong> under Polish/EU law, plus a 5-year CELL® elastomer shape retention guarantee.</p>
+        </div>
+      `,
+      prywatnosc: `
+        <div class="legal-doc">
+          <span class="legal-doc__badge">Compliant with EU GDPR (Regulation 2016/679)</span>
+          <h2>Privacy & Cookies Policy (GDPR / RODO)</h2>
+          <p class="legal-doc__meta">Personal data protection notice for customers of <strong>https://domivio-official.com</strong></p>
+          <h3>1. Data Controller</h3>
+          <p>Your personal data is processed by Domivio (<strong>https://domivio-official.com</strong>). Contact for GDPR requests: <strong>domivio.official@gmail.com</strong>, tel. <strong>+48 790 532 905</strong>.</p>
+          <h3>2. Purpose & Legal Basis (Art. 6 GDPR)</h3>
+          <p>We process your data strictly to fulfill your order and deliver your parcel via InPost Paczkomat® or DPD (Art. 6(1)(b) GDPR), comply with tax/accounting laws (Art. 6(1)(c) GDPR), and provide customer support (Art. 6(1)(f) GDPR).</p>
+          <h3>3. Your Rights</h3>
+          <p>Under Articles 15–21 GDPR, you have the right to access, rectify, erase, restrict processing, port your data, object to processing, and lodge a complaint with the Polish Data Protection Authority (PUODO).</p>
+        </div>
+      `,
+      zwroty: `
+        <div class="legal-doc">
+          <span class="legal-doc__badge">14-Day Return Right · Fast Refund · 2-Year Warranty</span>
+          <h2>Returns & Complaints (14-Day Withdrawal)</h2>
+          <p>You may return any purchased product within <strong>14 calendar days</strong> of delivery without stating a reason. Simply email <strong>domivio.official@gmail.com</strong> with your order number, and we will provide return instructions and issue a full refund within 14 days.</p>
+        </div>
+      `,
+      dostawa: `
+        <div class="legal-doc">
+          <span class="legal-doc__badge">24h Dispatch from Poland · Free Shipping from 590 PLN</span>
+          <h2>Shipping & Payment Methods</h2>
+          <p>All orders are dispatched within <strong>24 business hours</strong> from our warehouse in Poland. <strong>Free shipping applies to all orders from 590.00 PLN</strong>.</p>
+          <ul>
+            <li><strong>InPost Paczkomat® 24/7 Locker:</strong> 14.90 PLN (0.00 PLN from 590 PLN)</li>
+            <li><strong>DPD Pickup Locker / Point:</strong> 14.90 PLN (0.00 PLN from 590 PLN)</li>
+            <li><strong>DPD Home Courier:</strong> 19.90 PLN (0.00 PLN from 590 PLN)</li>
+            <li><strong>Payment Methods:</strong> BLIK, Visa, Mastercard, Apple Pay, Google Pay, Przelewy24.</li>
+          </ul>
+        </div>
+      `,
+    },
+  };
+
+  let currentLegalTab = "regulamin";
+
+  window.openLegalModal = function (policyKey) {
+    currentLegalTab = policyKey || "regulamin";
+    const modal = document.getElementById("legalModal");
+    const contentEl = document.getElementById("legalModalContent");
+    if (!modal || !contentEl) return;
+
+    const langPack = LEGAL_DOCS[currentLang] || LEGAL_DOCS.pl;
+    const tabsHtml = langPack.tabs
+      .map(
+        (t) =>
+          `<button type="button" class="legal-modal__tab ${
+            t.key === currentLegalTab ? "is-active" : ""
+          }" onclick="openLegalModal('${t.key}')">${t.label}</button>`
+      )
+      .join("");
+
+    const docHtml = langPack[currentLegalTab] || langPack.regulamin;
+    contentEl.innerHTML = `<div class="legal-modal__tabs">${tabsHtml}</div>${docHtml}`;
+    modal.classList.add("is-open");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+  };
+
+  window.closeLegalModal = function () {
+    const modal = document.getElementById("legalModal");
+    if (!modal) return;
+    modal.classList.remove("is-open");
+    modal.setAttribute("aria-hidden", "true");
+    const pdpModal = document.getElementById("pdpModal");
+    if (!pdpModal || !pdpModal.classList.contains("is-open")) {
+      document.body.style.overflow = "";
+    }
+  };
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      const legalModal = document.getElementById("legalModal");
+      if (legalModal && legalModal.classList.contains("is-open")) {
+        window.closeLegalModal();
+      }
+    }
+  });
+
+  // ══════════════════════════════════════════════════════════════════════════
   // 4. INTERACTIVE INPOST & DPD MAP PICKER (Apaczka Map + Dual-Engine ArcGIS & Locker Autocomplete)
   // Exact port from Aeterna theme with yellow/black Domivio styling
   // ══════════════════════════════════════════════════════════════════════════
