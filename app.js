@@ -267,17 +267,53 @@
     document.querySelectorAll(".dw-reviews__nums span").forEach((el, k) => el.classList.toggle("is-active", k === i));
   };
 
+  const CATEGORY_TITLE_KEYS = {
+    "all": "hits_title",
+    "poduszki": "nav_pillows",
+    "dla-dzieci": "nav_kids",
+    "akcesoria": "nav_accessories",
+    "zestawy": "nav_gifts"
+  };
+
+  window.resetToHome = function (ev) {
+    if (ev && typeof ev.preventDefault === "function") ev.preventDefault();
+    if (window.closeProductModal) window.closeProductModal();
+    window.filterCatalog("all");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   window.filterCatalog = function (cat) {
     currentCategory = cat || "all";
-    document.querySelectorAll("[data-filter-cat]").forEach((btn) => {
-      btn.classList.toggle("is-active", btn.getAttribute("data-filter-cat") === currentCategory);
-    });
     renderCatalog();
   };
 
   let collectionOrderMap = {};
 
   function renderCatalog() {
+    const titleKey = CATEGORY_TITLE_KEYS[currentCategory] || "hits_title";
+    const sectionTitleEl = document.querySelector("#catalog .dw-section-title");
+    if (sectionTitleEl) {
+      sectionTitleEl.textContent = t(titleKey);
+    }
+
+    document.querySelectorAll("[data-filter-cat]").forEach((btn) => {
+      btn.classList.toggle("is-active", btn.getAttribute("data-filter-cat") === currentCategory);
+    });
+
+    document.querySelectorAll(".dw-nav__link, .dw-mobile-nav a").forEach((link) => {
+      const oc = link.getAttribute("onclick") || "";
+      const m = oc.match(/filterCatalog\(['"]([^'"]+)['"]\)/);
+      if (m) {
+        const linkCat = m[1];
+        link.classList.toggle(
+          "is-active",
+          currentCategory === "all" ? linkCat === "all" : linkCat === currentCategory
+        );
+      } else {
+        link.classList.remove("is-active");
+      }
+    });
+
     const grid = document.getElementById("productGrid");
     if (!grid) return;
 
@@ -1783,6 +1819,16 @@
   function initDomivioStorefront() {
     window.setDomivioLang(currentLang);
     syncWithShopifyBackend();
+
+    document.querySelectorAll(".dw-logo").forEach((logoEl) => {
+      logoEl.onclick = (e) => window.resetToHome(e);
+    });
+
+    document.querySelectorAll(".dw-hero__btn").forEach((btnEl) => {
+      btnEl.addEventListener("click", () => {
+        window.filterCatalog("all");
+      });
+    });
 
     document.querySelectorAll(".dw-avatar").forEach((el, idx) => {
       el.style.cursor = "pointer";

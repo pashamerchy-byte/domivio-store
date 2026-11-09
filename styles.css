@@ -127,7 +127,8 @@ button {
   color: #242C34;
   transition: color 0.15s;
 }
-.dw-nav__link:hover {
+.dw-nav__link:hover,
+.dw-nav__link.is-active {
   color: #7B42F6;
 }
 .dw-header__icons {
@@ -205,6 +206,10 @@ button {
   text-transform: uppercase;
   color: #242C34;
   flex-shrink: 0;
+  transition: color 0.15s;
+}
+.dw-mobile-nav a.is-active {
+  color: #7B42F6;
 }
 
 /* ── 3. Hero Banner Slider ──────────────────────────────────────────────── */
