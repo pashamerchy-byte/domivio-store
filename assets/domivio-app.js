@@ -27,6 +27,36 @@
   let selectedShippingMethod = localStorage.getItem("domivio_shipping_method") || "inpost_paczkomat";
   let activePdpProduct = null;
   let activePdpPackQty = 1;
+  let selectedVariantByHandle = {};
+
+  function findProductByVariantId(vid) {
+    const numVid = Number(vid);
+    return PRODUCTS.find(
+      (p) =>
+        p.variantId === numVid ||
+        (Array.isArray(p.variants) && p.variants.some((v) => Number(v.id) === numVid))
+    );
+  }
+
+  function getVariantForProduct(prod, vid) {
+    if (!prod) return null;
+    if (Array.isArray(prod.variants) && prod.variants.length > 0) {
+      if (vid) {
+        const found = prod.variants.find((v) => Number(v.id) === Number(vid));
+        if (found) return found;
+      }
+      return prod.variants[0];
+    }
+    return {
+      id: prod.variantId,
+      title: "",
+      pricePLN: prod.pricePLN,
+      comparePLN: prod.comparePLN || 0,
+      priceEUR: prod.priceEUR,
+      compareEUR: prod.compareEUR || 0,
+      featuredImage: null
+    };
+  }
 
   function loadCart() {
     try {
@@ -37,7 +67,7 @@
             item.variantId = 57832934801734;
           }
         });
-        return raw.filter((item) => PRODUCTS.some((p) => p.variantId === item.variantId));
+        return raw.filter((item) => Boolean(findProductByVariantId(item.variantId)) || Boolean(item.handle));
       }
     } catch (e) {}
     return [];
@@ -468,6 +498,21 @@
     }
   };
 
+  window.selectPdpVariant = function (handle, variantId) {
+    if (!handle || !variantId) return;
+    selectedVariantByHandle[handle] = Number(variantId);
+    const prod = PRODUCTS.find((p) => p.handle === handle);
+    if (prod) {
+      const vObj = getVariantForProduct(prod, variantId);
+      if (vObj && vObj.title) {
+        selectedSizes[handle] = vObj.title;
+      }
+    }
+    if (activePdpProduct && activePdpProduct.handle === handle) {
+      openProductModal(handle, activePdpPackQty, true);
+    }
+  };
+
   window.openProductModal = function (handle, packQty, preserveScroll) {
     const prod = PRODUCTS.find((p) => p.handle === handle);
     if (!prod) return;
@@ -478,6 +523,12 @@
       pdpCoverSelected = false;
       activePdpFeatureIdx = 0;
       activePdpAccordionTab = null;
+    }
+
+    const activeVar = getVariantForProduct(prod, selectedVariantByHandle[prod.handle]);
+    const activeVariantId = (activeVar && activeVar.id) || prod.variantId;
+    if (activeVar && activeVar.title) {
+      selectedSizes[prod.handle] = activeVar.title;
     }
 
     const homeView = document.getElementById("homeMainView");
@@ -507,8 +558,16 @@
       } catch (e) {}
     }
 
-    const unitPrice = getProductPrice(prod);
-    const unitComp = getProductCompare(prod);
+    const unitPrice = activeVar
+      ? currentLang === "en"
+        ? activeVar.priceEUR
+        : activeVar.pricePLN
+      : getProductPrice(prod);
+    const unitComp = activeVar
+      ? currentLang === "en"
+        ? activeVar.compareEUR
+        : activeVar.comparePLN
+      : getProductCompare(prod);
 
     const p1 = unitPrice;
     const p2Orig = unitPrice * 2;
@@ -537,14 +596,22 @@
     const split6Str = currentLang === "en" ? "€" + split6Val : split6Val + " zł";
     const split4Str = currentLang === "en" ? "€" + split4Val : split4Val + " zł";
 
-    const currentSz = selectedSizes[prod.handle] || (prod.sizes && prod.sizes[0]) || "";
+    const currentSz =
+      (activeVar && activeVar.title) ||
+      selectedSizes[prod.handle] ||
+      (prod.sizes && prod.sizes[0]) ||
+      "";
     const catBreadcrumb =
       currentLang === "en"
         ? prod.catLabelEN || "Pillows"
-        : prod.catLabelPL === "MATERACE"
-        ? "Materace"
+        : prod.catLabelPL === "KOŁDRA"
+        ? "Kołdra"
+        : prod.catLabelPL === "DLA DZIECI"
+        ? "Dla dzieci"
         : prod.catLabelPL === "AKCESORIA"
         ? "Akcesoria"
+        : prod.catLabelPL === "ZESTAWY"
+        ? "Zestawy"
         : "Poduszki";
 
     const specHeight =
@@ -556,7 +623,12 @@
         ? prod.specFirmEN || "Firmness — medium"
         : prod.specFirmPL || "Twardość — średnia";
 
-    const galleryHtml = (prod.images || [])
+    const rawGalleryImgs = (prod.images || []).slice();
+    if (activeVar && activeVar.featuredImage && !rawGalleryImgs.includes(activeVar.featuredImage)) {
+      rawGalleryImgs.unshift(activeVar.featuredImage);
+    }
+
+    const galleryHtml = rawGalleryImgs
       .map((imgSrc, idx) => {
         const resolved = resolveAsset(imgSrc);
         if (idx === 0) {
@@ -574,8 +646,42 @@
       })
       .join("");
 
+    const hasMultipleVariants = Array.isArray(prod.variants) && prod.variants.length > 1;
+    const optionLabelText =
+      prod.optionName || (currentLang === "en" ? "SELECT SIZE / VARIANT" : "WYBIERZ ROZMIAR / WARIANT");
+
+    const variantSelectorHtml = hasMultipleVariants
+      ? `
+        <div class="dw-pdp__variant-selector">
+          <div class="dw-pdp__variant-label">
+            <span>${optionLabelText.toUpperCase()}:</span>
+            <strong>${activeVar ? activeVar.title : ""}</strong>
+          </div>
+          <div class="dw-pdp__variant-pills">
+            ${prod.variants
+              .map((v) => {
+                const vPrice = currentLang === "en" ? v.priceEUR : v.pricePLN;
+                const isAct = Number(v.id) === Number(activeVariantId);
+                return `
+                  <button
+                    type="button"
+                    class="dw-pdp__variant-pill ${isAct ? "is-active" : ""}"
+                    onclick="selectPdpVariant('${prod.handle}', ${v.id})"
+                  >
+                    <span class="dw-pdp__variant-pill-title">${v.title || "Standard"}</span>
+                    <span class="dw-pdp__variant-pill-price">${formatValue(vPrice)}</span>
+                  </button>
+                `;
+              })
+              .join("")}
+          </div>
+        </div>
+      `
+      : "";
+
     const sizeAndPackHtml = `
       <div class="dw-pdp__options">
+        ${variantSelectorHtml}
         <div class="dw-pdp__pack-pills">
           <button type="button" class="dw-pdp__pack-pill ${activePdpPackQty === 1 ? "is-active" : ""}" onclick="openProductModal('${prod.handle}', 1, true)">
             1 ${currentLang === "en" ? "pc." : "szt."} — ${formatValue(p1)}
@@ -695,7 +801,7 @@
             ${sizeAndPackHtml}
             ${addonHtml}
 
-            <button type="button" class="dw-pdp__atc-btn" onclick="addPdpSelectionToCart(${prod.variantId}, ${activePdpPackQty})">
+            <button type="button" class="dw-pdp__atc-btn" onclick="addPdpSelectionToCart(${activeVariantId}, ${activePdpPackQty})">
               ${t("btn_add_to_cart")}
             </button>
 
@@ -791,18 +897,25 @@
 
   // ── Cart Operations ───────────────────────────────────────────────────
   window.addToCart = function (variantId, qty, openDrawer) {
-    const prod = PRODUCTS.find((p) => p.variantId === Number(variantId));
+    const numVid = Number(variantId);
+    const prod = findProductByVariantId(numVid);
     if (!prod) return;
+    const varObj = getVariantForProduct(prod, numVid);
+    const actualVid = (varObj && varObj.id) || prod.variantId;
     const addQty = Math.max(1, parseInt(qty, 10) || 1);
-    const chosenSize = selectedSizes[prod.handle] || (prod.sizes && prod.sizes[0]) || "";
+    const chosenSize =
+      (varObj && varObj.title) ||
+      selectedSizes[prod.handle] ||
+      (prod.sizes && prod.sizes[0]) ||
+      "";
 
-    const existing = cart.find((item) => item.variantId === prod.variantId);
+    const existing = cart.find((item) => Number(item.variantId) === Number(actualVid));
     if (existing) {
       existing.qty += addQty;
       if (chosenSize) existing.size = chosenSize;
     } else {
       cart.push({
-        variantId: prod.variantId,
+        variantId: actualVid,
         handle: prod.handle,
         qty: addQty,
         size: chosenSize
@@ -817,7 +930,7 @@
   };
 
   window.updateCartQty = function (variantId, delta) {
-    const idx = cart.findIndex((i) => i.variantId === Number(variantId));
+    const idx = cart.findIndex((i) => Number(i.variantId) === Number(variantId));
     if (idx === -1) return;
     cart[idx].qty += delta;
     if (cart[idx].qty <= 0) {
@@ -841,9 +954,16 @@
     let subtotal = 0;
     let totalCount = 0;
     cart.forEach((item) => {
-      const prod = PRODUCTS.find((p) => p.variantId === item.variantId);
+      const prod =
+        findProductByVariantId(item.variantId) ||
+        PRODUCTS.find((p) => p.handle === item.handle);
       if (!prod) return;
-      const unit = getProductPrice(prod);
+      const varObj = getVariantForProduct(prod, item.variantId);
+      const unit = varObj
+        ? currentLang === "en"
+          ? varObj.priceEUR
+          : varObj.pricePLN
+        : getProductPrice(prod);
       let lineTotal = unit * item.qty;
       if (item.qty === 2) lineTotal = lineTotal * 0.95;
       else if (item.qty >= 3) lineTotal = lineTotal * 0.9;
@@ -859,7 +979,7 @@
     const isDigitalOnly =
       cart.length > 0 &&
       cart.every((item) => {
-        const p = PRODUCTS.find((x) => x.variantId === item.variantId);
+        const p = findProductByVariantId(item.variantId);
         return p && p.isDigital;
       });
     const isFreeLocker = isDigitalOnly || (totalAfterDiscount >= threshold && totalCount > 0);
@@ -951,9 +1071,16 @@
     // Render cart items
     itemsWrap.innerHTML = cart
       .map((item) => {
-        const prod = PRODUCTS.find((p) => p.variantId === item.variantId);
+        const prod =
+          findProductByVariantId(item.variantId) ||
+          PRODUCTS.find((p) => p.handle === item.handle);
         if (!prod) return "";
-        const unit = getProductPrice(prod);
+        const varObj = getVariantForProduct(prod, item.variantId);
+        const unit = varObj
+          ? currentLang === "en"
+            ? varObj.priceEUR
+            : varObj.pricePLN
+          : getProductPrice(prod);
         let lineTotal = unit * item.qty;
         let packBadge = "";
         if (item.qty === 2) {
@@ -963,22 +1090,28 @@
           lineTotal *= 0.9;
           packBadge = `<span style="background:#7B42F6;color:#FFF;padding:2px 6px;font-size:10px;font-weight:600;margin-left:6px;">-10% PAKIET</span>`;
         }
-        const itemSz = item.size || selectedSizes[prod.handle] || (prod.sizes && prod.sizes[0]) || "";
+        const itemSz =
+          (varObj && varObj.title) ||
+          item.size ||
+          selectedSizes[prod.handle] ||
+          (prod.sizes && prod.sizes[0]) ||
+          "";
+        const itemImg = (varObj && varObj.featuredImage) || prod.images[0];
 
         return `
           <div class="cart-item">
-            <img class="cart-item__img" src="${prod.images[0]}" alt="${prod.title[currentLang]}" loading="lazy" decoding="async">
+            <img class="cart-item__img" src="${itemImg}" alt="${prod.title[currentLang]}" loading="lazy" decoding="async">
             <div>
               <div class="cart-item__title">${prod.title[currentLang]}</div>
-              ${itemSz ? `<div style="font-size:11.5px;color:#64748B;margin-bottom:3px;">${t("size_label")} <strong>${itemSz}</strong></div>` : ""}
+              ${itemSz ? `<div style="font-size:11.5px;color:#64748B;margin-bottom:3px;">${prod.optionName || t("size_label")} <strong>${itemSz}</strong></div>` : ""}
               <div class="cart-item__price">${formatValue(lineTotal)} ${packBadge}</div>
               <div class="cart-item__qty-ctrl">
-                <button type="button" class="cart-item__qty-btn" onclick="updateCartQty(${prod.variantId}, -1)">−</button>
+                <button type="button" class="cart-item__qty-btn" onclick="updateCartQty(${item.variantId}, -1)">−</button>
                 <span class="cart-item__qty-val">${item.qty}</span>
-                <button type="button" class="cart-item__qty-btn" onclick="updateCartQty(${prod.variantId}, 1)">+</button>
+                <button type="button" class="cart-item__qty-btn" onclick="updateCartQty(${item.variantId}, 1)">+</button>
               </div>
             </div>
-            <button type="button" style="background:transparent;border:none;font-size:16px;font-weight:700;color:#94A3B8;" onclick="updateCartQty(${prod.variantId}, -999)">✕</button>
+            <button type="button" style="background:transparent;border:none;font-size:16px;font-weight:700;color:#94A3B8;" onclick="updateCartQty(${item.variantId}, -999)">✕</button>
           </div>
         `;
       })
@@ -1116,8 +1249,9 @@
     if (cart.length === 0) return;
     const pairs = cart
       .map((i) => {
-        const prod = PRODUCTS.find((p) => p.variantId === i.variantId);
-        const realVid = (prod && prod.shopifyVariantId) || i.variantId;
+        const prod = findProductByVariantId(i.variantId);
+        const varObj = getVariantForProduct(prod, i.variantId);
+        const realVid = (varObj && varObj.id) || (prod && prod.shopifyVariantId) || i.variantId;
         return `${realVid}:${i.qty}`;
       })
       .join(",");
@@ -1126,8 +1260,14 @@
 
     const sizeSummary = cart
       .map((i) => {
-        const prod = PRODUCTS.find((p) => p.variantId === i.variantId);
-        const sz = i.size || (prod && selectedSizes[prod.handle]) || (prod && prod.sizes && prod.sizes[0]) || "";
+        const prod = findProductByVariantId(i.variantId);
+        const varObj = getVariantForProduct(prod, i.variantId);
+        const sz =
+          (varObj && varObj.title) ||
+          i.size ||
+          (prod && selectedSizes[prod.handle]) ||
+          (prod && prod.sizes && prod.sizes[0]) ||
+          "";
         return prod ? `${prod.title.pl} [${sz || "Standard"}] ×${i.qty}` : "";
       })
       .filter(Boolean)
@@ -2276,10 +2416,34 @@
 
         const primaryCat = cats[0] || "poduszki";
 
+        const variantsList = (rp.variants || []).map((v) => {
+          const vPrice = parseFloat(v.price) || livePrice;
+          const vComp = parseFloat(v.compare_at_price) || 0;
+          return {
+            id: v.id,
+            title: v.title === "Default Title" ? "" : v.title || "",
+            pricePLN: vPrice,
+            comparePLN: vComp > vPrice ? vComp : 0,
+            priceEUR: Number((vPrice / 4.25).toFixed(2)),
+            compareEUR: vComp > vPrice ? Number((vComp / 4.25).toFixed(2)) : 0,
+            featuredImage: v.featured_image && v.featured_image.src ? v.featured_image.src : null
+          };
+        });
+
+        const optName =
+          rp.options &&
+          rp.options[0] &&
+          rp.options[0].name &&
+          rp.options[0].name !== "Title"
+            ? rp.options[0].name
+            : "Rozmiar / Wariant";
+
         syncedList.push({
           id: rp.id,
           variantId: rv.id,
           shopifyVariantId: rv.id,
+          variants: variantsList,
+          optionName: optName,
           handle: rp.handle,
           category: cats,
           sortTagOrder: sortTagOrder,
