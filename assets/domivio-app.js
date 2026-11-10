@@ -2235,32 +2235,27 @@
           .toLowerCase();
         const titleLower = String(rp.title || "").toLowerCase();
 
-        const isKoldra =
-          tagStr.includes("kołdr") ||
-          tagStr.includes("koldr") ||
-          tagStr.includes("duvet") ||
-          titleLower.includes("kołdr") ||
-          titleLower.includes("koldr");
+        if (tagStr.includes("kołdr") || tagStr.includes("koldr") || tagStr.includes("duvet")) addCat("koldra");
+        if (tagStr.includes("poduszk") || tagStr.includes("pillow")) addCat("poduszki");
+        if (tagStr.includes("dziec") || tagStr.includes("kid")) addCat("dla-dzieci");
+        if (tagStr.includes("akcesor") || tagStr.includes("poszewk") || tagStr.includes("access")) addCat("akcesoria");
+        if (tagStr.includes("zestaw") || tagStr.includes("prezent") || tagStr.includes("set") || tagStr.includes("bundle")) addCat("zestawy");
 
-        if (isKoldra) {
-          const akcIdx = cats.indexOf("akcesoria");
-          if (akcIdx !== -1 && !tagStr.includes("akcesor")) {
-            cats.splice(akcIdx, 1);
-          }
+        // If a product belongs to both "koldra" and "dla-dzieci", keep "koldra" as its primary card label unless product_type says "dla dzieci"
+        if (cats.includes("koldra") && cats[0] === "dla-dzieci" && !String(rp.product_type || "").toLowerCase().includes("dziec")) {
           const kIdx = cats.indexOf("koldra");
           if (kIdx !== -1) cats.splice(kIdx, 1);
           cats.unshift("koldra");
         }
-        if (tagStr.includes("poduszk") || tagStr.includes("pillow")) addCat("poduszki");
-        if (tagStr.includes("dziec") || tagStr.includes("kid") || titleLower.includes("dzieci") || titleLower.includes("niemowl")) addCat("dla-dzieci");
-        if (!isKoldra && (tagStr.includes("akcesor") || tagStr.includes("poszewk") || tagStr.includes("access"))) addCat("akcesoria");
-        if (tagStr.includes("zestaw") || tagStr.includes("prezent") || tagStr.includes("set") || tagStr.includes("bundle")) addCat("zestawy");
 
-        // 3. Fallback if no category was assigned yet in Shopify Admin
+        // 3. Fallback if no category was assigned yet in Shopify Admin ("Kolekcje" / "Typ" / "Tagi")
         if (cats.length === 0) {
-          if (existing && Array.isArray(existing.category) && existing.category.length > 0) {
+          if (titleLower.includes("kołdr") || titleLower.includes("koldr") || titleLower.includes("duvet")) addCat("koldra");
+          if (titleLower.includes("dzieci") || titleLower.includes("niemowl")) addCat("dla-dzieci");
+          if (cats.length === 0 && existing && Array.isArray(existing.category) && existing.category.length > 0) {
             existing.category.forEach(addCat);
-          } else {
+          }
+          if (cats.length === 0) {
             addCat("poduszki");
           }
         }
