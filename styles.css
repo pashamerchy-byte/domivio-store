@@ -2468,6 +2468,33 @@ button {
   .dw-contacts-split__big {
     font-size: 18px;
   }
+  .dw-pdp__img-box--hero {
+    max-height: 290px;
+  }
+  .dw-pdp__img-box--hero .dw-pdp__img {
+    max-height: 290px;
+    object-fit: contain;
+  }
+  .dw-pdp__jm-inline {
+    flex-wrap: wrap;
+    gap: 4px 6px;
+    font-size: 12px;
+    margin: 2px 0 8px;
+  }
+  .dw-pdp__jm-inline strong {
+    white-space: nowrap;
+  }
+  .dw-pdp__pack-pills {
+    gap: 6px;
+  }
+  .dw-pdp__pack-pill {
+    padding: 9px 6px;
+    font-size: 11px;
+  }
+  .dw-pdp__atc-btn {
+    padding: 15px 18px;
+    font-size: 12px;
+  }
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
