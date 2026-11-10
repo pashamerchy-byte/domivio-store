@@ -384,17 +384,18 @@
     }
 
     grid.innerHTML = list
-      .map((p) => {
+      .map((p, idx) => {
         const price = getProductPrice(p);
         const comp = getProductCompare(p);
         const savePct = comp && comp > price ? Math.round(((comp - price) / comp) * 100) : 0;
         const catLabel = currentLang === "en" ? (p.catLabelEN || "SLEEP") : (p.catLabelPL || "PODUSZKI");
-        const heroImg = resolveAsset((p.images && p.images[0]) || "domivio_wave_1.jpg");
+        const heroImg = optimizeShopifyImg(resolveAsset((p.images && p.images[0]) || "domivio_wave_1.jpg"), 680);
+        const loadAttr = idx < 6 ? "eager" : "lazy";
 
         return `
           <article class="dw-card">
             <div class="dw-card__box" onclick="openProductModal('${p.handle}')">
-              <img class="dw-card__img" src="${heroImg}" alt="${p.title[currentLang]}" width="320" height="320" loading="lazy" decoding="async" />
+              <img class="dw-card__img" src="${heroImg}" alt="${p.title[currentLang]}" width="320" height="320" loading="${loadAttr}" decoding="async" />
             </div>
             <div class="dw-card__info">
               <div class="dw-card__cat">${catLabel}</div>
@@ -428,6 +429,14 @@
 
   function resolveAsset(filename) {
     return (window.DOMIVIO_ASSET_MAP && window.DOMIVIO_ASSET_MAP[filename]) || filename;
+  }
+
+  function optimizeShopifyImg(url, width) {
+    if (!url || typeof url !== "string") return url;
+    if (url.includes("cdn.shopify.com") && !url.includes("width=")) {
+      return url + (url.includes("?") ? "&" : "?") + "width=" + (width || 800);
+    }
+    return url;
   }
 
   const PDP_VIOLET_FEATURES = [
@@ -628,22 +637,23 @@
       rawGalleryImgs.unshift(activeVar.featuredImage);
     }
 
-    const heroResolved = resolveAsset(rawGalleryImgs[0] || "domivio_wave_1.jpg");
+    const heroResolved = optimizeShopifyImg(resolveAsset(rawGalleryImgs[0] || "domivio_wave_1.jpg"), 1080);
     const thumbsHtml =
       rawGalleryImgs.length > 1
         ? `
           <div class="dw-pdp__thumbs-row">
             ${rawGalleryImgs
               .map((imgSrc, idx) => {
-                const resolved = resolveAsset(imgSrc);
+                const resolvedFull = optimizeShopifyImg(resolveAsset(imgSrc), 1080);
+                const resolvedThumb = optimizeShopifyImg(resolveAsset(imgSrc), 240);
                 return `
                   <button
                     type="button"
                     class="dw-pdp__thumb-btn ${idx === 0 ? "is-active" : ""}"
-                    onclick="switchPdpHeroPhoto('${resolved}', this)"
+                    onclick="switchPdpHeroPhoto('${resolvedFull}', this)"
                     aria-label="Zdjęcie ${idx + 1}"
                   >
-                    <img src="${resolved}" alt="${prod.title[currentLang]} - ${idx + 1}" loading="lazy" />
+                    <img src="${resolvedThumb}" alt="${prod.title[currentLang]} - ${idx + 1}" loading="eager" />
                   </button>
                 `;
               })
