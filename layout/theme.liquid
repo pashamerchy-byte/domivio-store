@@ -90,7 +90,7 @@
     </nav>
   </header>
 
-  <main id="homeMainView">
+  <main id="homeMainView" {% if product %}style="display:none;"{% endif %}>
   <!-- 3. Full-Width Hero Banner Slider (1:1 Darwin) -->
   <section class="dw-hero">
     <div class="dw-hero__slide is-active" id="dwHeroSlide1" style="background-image: url('{{ 'darwin_hero_1.jpg' | asset_url }}');">
@@ -315,6 +315,7 @@
     
 <script src="{{ 'domivio-products.js' | asset_url }}"></script>
 <script>
+  window.DOMIVIO_INITIAL_PRODUCT_HANDLE = {% if product %}{{ product.handle | json }}{% else %}null{% endif %};
   window.DOMIVIO_ASSET_MAP = {
     "darwin_adult_1.png": "{{ 'darwin_adult_1.png' | asset_url }}",
     "darwin_adult_2.png": "{{ 'darwin_adult_2.png' | asset_url }}",

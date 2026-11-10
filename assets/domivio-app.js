@@ -98,6 +98,9 @@
     return "";
   }
 
+  let pendingInitialProductHandle =
+    window.DOMIVIO_INITIAL_PRODUCT_HANDLE || extractProductHandleFromLocation();
+
   function getVariantForProduct(prod, vid) {
     if (!prod) return null;
     if (Array.isArray(prod.variants) && prod.variants.length > 0) {
@@ -614,6 +617,7 @@
     if (!preserveScroll && !isHandlingPopState) {
       try {
         const curState = history.state || {};
+        const targetProductUrl = "/products/" + encodeURIComponent(prod.handle);
         if (wasOnHome || curState.domivioView !== "pdp") {
           history.replaceState(
             { domivioView: "home", category: currentCategory, scrollY: savedHomeScrollY },
@@ -623,13 +627,13 @@
           history.pushState(
             { domivioView: "pdp", handle: prod.handle, category: currentCategory, scrollY: savedHomeScrollY },
             "",
-            "/#produkt-" + prod.handle
+            targetProductUrl
           );
-        } else if (curState.handle !== prod.handle) {
+        } else if (curState.handle !== prod.handle || window.location.pathname !== targetProductUrl) {
           history.pushState(
             { domivioView: "pdp", handle: prod.handle, category: currentCategory, scrollY: savedHomeScrollY },
             "",
-            "/#produkt-" + prod.handle
+            targetProductUrl
           );
         }
       } catch (e) {}
@@ -977,11 +981,12 @@
   };
 
   function resolveUrlToProductOrCategory(isPostSync) {
-    const rawHandle = extractProductHandleFromLocation();
+    const rawHandle = extractProductHandleFromLocation() || pendingInitialProductHandle;
     const homeView = document.getElementById("homeMainView");
     if (rawHandle) {
       const matched = findProductByHandle(rawHandle);
       if (matched) {
+        pendingInitialProductHandle = "";
         const alreadySame = activePdpProduct && activePdpProduct.handle === matched.handle;
         window.openProductModal(matched.handle, alreadySame ? activePdpPackQty : 1, alreadySame);
         return true;
@@ -989,6 +994,7 @@
         if (homeView) homeView.style.display = "none";
         return false;
       } else {
+        pendingInitialProductHandle = "";
         if (homeView && !activePdpProduct) homeView.style.display = "block";
       }
     }
@@ -1011,15 +1017,14 @@
 
   window.addEventListener("popstate", (event) => {
     const state = event.state || {};
-    const hash = window.location.hash || "";
+    const liveHandle = extractProductHandleFromLocation();
     if (state.domivioView === "pdp" && state.handle) {
       isHandlingPopState = true;
       window.openProductModal(state.handle, 1, false);
       isHandlingPopState = false;
-    } else if (hash.startsWith("#produkt-")) {
-      const h = decodeURIComponent(hash.replace("#produkt-", ""));
+    } else if (liveHandle) {
       isHandlingPopState = true;
-      window.openProductModal(h, 1, false);
+      window.openProductModal(liveHandle, 1, false);
       isHandlingPopState = false;
     } else {
       const pdpView = document.getElementById("pdpPageView");
@@ -2361,9 +2366,15 @@
         )
       ]);
 
-      if (prodResp.status !== "fulfilled" || !prodResp.value) return;
+      if (prodResp.status !== "fulfilled" || !prodResp.value) {
+        resolveUrlToProductOrCategory(true);
+        return;
+      }
       const remoteProducts = prodResp.value.products || [];
-      if (!remoteProducts.length) return;
+      if (!remoteProducts.length) {
+        resolveUrlToProductOrCategory(true);
+        return;
+      }
 
       // Map product ID -> array of collection handles from Shopify Admin "Kolekcje"
       // Also record exact product order inside each collection for drag-and-drop sorting
@@ -3112,7 +3123,11 @@
   function initDomivioStorefront() {
     window.setDomivioLang(currentLang);
     renderHomepageJudgeMeReviews();
-    resolveUrlToProductOrCategory(false);
+    const initialHandle = pendingInitialProductHandle || extractProductHandleFromLocation();
+    if (initialHandle) {
+      const homeView = document.getElementById("homeMainView");
+      if (homeView) homeView.style.display = "none";
+    }
     syncWithShopifyBackend();
 
     document.querySelectorAll(".dw-logo").forEach((logoEl) => {
