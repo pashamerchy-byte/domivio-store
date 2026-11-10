@@ -38,6 +38,52 @@
     );
   }
 
+  function findProductByHandle(rawHandle) {
+    if (!rawHandle) return null;
+    let clean = String(rawHandle).trim();
+    try {
+      clean = decodeURIComponent(clean);
+    } catch (e) {}
+    clean = clean
+      .replace(/^#produkt-/i, "")
+      .replace(/^\/?products\//i, "")
+      .replace(/\/+$/, "")
+      .split("?")[0]
+      .trim();
+    if (!clean) return null;
+    let found = PRODUCTS.find((p) => p.handle === clean);
+    if (found) return found;
+    const lower = clean.toLowerCase();
+    found = PRODUCTS.find((p) => String(p.handle || "").toLowerCase() === lower);
+    if (found) return found;
+    const norm = (s) =>
+      String(s || "")
+        .toLowerCase()
+        .replace(/®/g, "")
+        .replace(/[^a-z0-9-]+/g, "-")
+        .replace(/-+/g, "-")
+        .replace(/^-|-$/g, "");
+    const normTarget = norm(clean);
+    return PRODUCTS.find((p) => norm(p.handle) === normTarget) || null;
+  }
+
+  function extractProductHandleFromLocation() {
+    const hash = window.location.hash || "";
+    if (hash.toLowerCase().startsWith("#produkt-")) {
+      return hash.slice("#produkt-".length);
+    }
+    const pathMatch = (window.location.pathname || "").match(/\/products\/([^/?#]+)/i);
+    if (pathMatch && pathMatch[1]) {
+      return pathMatch[1];
+    }
+    try {
+      const sp = new URLSearchParams(window.location.search || "");
+      const qp = sp.get("produkt") || sp.get("product");
+      if (qp) return qp;
+    } catch (e) {}
+    return "";
+  }
+
   function getVariantForProduct(prod, vid) {
     if (!prod) return null;
     if (Array.isArray(prod.variants) && prod.variants.length > 0) {
@@ -523,7 +569,7 @@
   };
 
   window.openProductModal = function (handle, packQty, preserveScroll) {
-    const prod = PRODUCTS.find((p) => p.handle === handle);
+    const prod = findProductByHandle(handle);
     if (!prod) return;
     const isNewProduct = !activePdpProduct || activePdpProduct.handle !== prod.handle;
     activePdpProduct = prod;
@@ -553,17 +599,25 @@
     }
     if (!preserveScroll && !isHandlingPopState) {
       try {
-        if (wasOnHome) {
+        const curState = history.state || {};
+        if (wasOnHome || curState.domivioView !== "pdp") {
           history.replaceState(
             { domivioView: "home", category: currentCategory, scrollY: savedHomeScrollY },
-            ""
+            "",
+            "/"
+          );
+          history.pushState(
+            { domivioView: "pdp", handle: prod.handle, category: currentCategory, scrollY: savedHomeScrollY },
+            "",
+            "/#produkt-" + prod.handle
+          );
+        } else if (curState.handle !== prod.handle) {
+          history.pushState(
+            { domivioView: "pdp", handle: prod.handle, category: currentCategory, scrollY: savedHomeScrollY },
+            "",
+            "/#produkt-" + prod.handle
           );
         }
-        history.pushState(
-          { domivioView: "pdp", handle: prod.handle, category: currentCategory, scrollY: savedHomeScrollY },
-          "",
-          "#produkt-" + prod.handle
-        );
       } catch (e) {}
     }
 
@@ -897,16 +951,49 @@
       document.documentElement.scrollTop = savedHomeScrollY;
       document.body.scrollTop = savedHomeScrollY;
     }
-    if (!fromPopState && window.location.hash.startsWith("#produkt-")) {
+    if (!fromPopState && (window.location.hash.startsWith("#produkt-") || /\/products\//i.test(window.location.pathname))) {
       try {
         history.replaceState(
           { domivioView: "home", category: currentCategory, scrollY: savedHomeScrollY },
           "",
-          window.location.pathname + window.location.search
+          "/"
         );
       } catch (e) {}
     }
   };
+
+  function resolveUrlToProductOrCategory(isPostSync) {
+    const rawHandle = extractProductHandleFromLocation();
+    const homeView = document.getElementById("homeMainView");
+    if (rawHandle) {
+      const matched = findProductByHandle(rawHandle);
+      if (matched) {
+        const alreadySame = activePdpProduct && activePdpProduct.handle === matched.handle;
+        window.openProductModal(matched.handle, alreadySame ? activePdpPackQty : 1, alreadySame);
+        return true;
+      } else if (!isPostSync) {
+        if (homeView) homeView.style.display = "none";
+        return false;
+      } else {
+        if (homeView && !activePdpProduct) homeView.style.display = "block";
+      }
+    }
+    const colMatch = (window.location.pathname || "").match(/\/collections\/([^/?#]+)/i);
+    if (colMatch && colMatch[1] && !activePdpProduct) {
+      const ch = colMatch[1].toLowerCase();
+      if (CATEGORY_TITLE_KEYS[ch]) {
+        window.filterCatalog(ch);
+      }
+    }
+    return false;
+  }
+
+  window.addEventListener("hashchange", () => {
+    const h = window.location.hash || "";
+    if (h.toLowerCase().startsWith("#produkt-")) {
+      resolveUrlToProductOrCategory(true);
+    }
+  });
 
   window.addEventListener("popstate", (event) => {
     const state = event.state || {};
@@ -2569,9 +2656,11 @@
         renderCatalog();
         renderHomepageJudgeMeReviews();
         renderCartUI();
+        resolveUrlToProductOrCategory(true);
       }
     } catch (e) {
       // Fallback to bundled catalog if offline
+      resolveUrlToProductOrCategory(true);
     }
   }
 
@@ -3009,6 +3098,7 @@
   function initDomivioStorefront() {
     window.setDomivioLang(currentLang);
     renderHomepageJudgeMeReviews();
+    resolveUrlToProductOrCategory(false);
     syncWithShopifyBackend();
 
     document.querySelectorAll(".dw-logo").forEach((logoEl) => {
