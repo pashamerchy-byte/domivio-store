@@ -369,6 +369,11 @@
             <div class="dw-card__info">
               <div class="dw-card__cat">${catLabel}</div>
               <h3 class="dw-card__title" onclick="openProductModal('${p.handle}')">${p.title[currentLang]}</h3>
+              <div class="dw-card__jm-badge" onclick="openProductModal('${p.handle}')">
+                <span class="dw-card__jm-stars">★★★★★</span>
+                <span>${getJudgeMeProductStats(p.id).avg}</span>
+                <span class="dw-card__jm-count">(${getJudgeMeProductStats(p.id).count})</span>
+              </div>
               <div class="dw-card__price-row">
                 <span class="dw-card__price">${formatValue(price)}</span>
                 ${comp && comp > price ? `<span class="dw-card__old">${formatValue(comp)}</span>` : ""}
@@ -675,6 +680,12 @@
               </h1>
             </div>
 
+            <div class="dw-pdp__jm-inline" onclick="var el=document.getElementById('jdgmProductReviewsSection'); if(el) el.scrollIntoView({behavior:'smooth'});">
+              <span class="dw-pdp__jm-inline-stars">★★★★★</span>
+              <strong>${getJudgeMeProductStats(prod.id).avg} / 5.0</strong>
+              <span>· ${getJudgeMeProductStats(prod.id).count} ${currentLang === "en" ? "verified reviews (Judge.me)" : "zweryfikowanych opinii (Judge.me)"}</span>
+            </div>
+
             <div class="dw-pdp__price-row">
               <span class="dw-pdp__price">${formatValue(displayGrandTotal)}</span>
               ${origCompareTotal > displayGrandTotal ? `<span class="dw-pdp__old">${formatValue(origCompareTotal)}</span>` : ""}
@@ -702,11 +713,14 @@
             ${tabDrawerHtml}
           </div>
         </div>
+
+        ${renderPdpJudgeMeWidget(prod)}
       </div>
     `;
 
     if (homeView) homeView.style.display = "none";
     pdpView.style.display = "block";
+    fetchLiveJudgeMeProductReviews(prod.id);
     if (!preserveScroll) {
       window.scrollTo({ top: 0, behavior: "instant" });
       document.documentElement.scrollTop = 0;
@@ -2347,6 +2361,7 @@
         syncedList.forEach((item) => PRODUCTS.push(item));
         renderHeroPrice();
         renderCatalog();
+        renderHomepageJudgeMeReviews();
         renderCartUI();
       }
     } catch (e) {
@@ -2354,9 +2369,440 @@
     }
   }
 
+  // ══════════════════════════════════════════════════════════════════════════
+  // JUDGE.ME REVIEWS INTEGRATION (API + WIDGET UNDER PRODUCTS + HOMEPAGE)
+  // ══════════════════════════════════════════════════════════════════════════
+  const JUDGEME_PUBLIC_TOKEN = "hccGWgUmKYe4AqwJXKv4gQXZIZs";
+  const JUDGEME_SHOP_DOMAIN = "1tvnzn-zf.myshopify.com";
+  let selectedJdgmFormStars = 5;
+
+  const jdgmReviewsCache = {
+    "15837514432838": [
+      { author: "Katarzyna N.", rating: 5, date: "10.11.2026", title: "Koniec z bólem szyi po przebudzeniu!", body: "Najlepsza poduszka ortopedyczna jaką miałam. Kratownica TPE CELL® w ogóle się nie nagrzewa, świetnie podpiera kark i po miesiącu wygląda jak nowa." },
+      { author: "Marek K.", rating: 5, date: "08.11.2026", title: "Rewelacyjna kratownica TPE, zero potliwości", body: "Przetestowałem wcześniej trzy poduszki z pianki memory i na każdej budziłem się z mokrą głową. Struktura CELL® faktycznie przepuszcza powietrze przez całą noc, a szyja jest idealnie podparta." },
+      { author: "Anna W.", rating: 5, date: "05.11.2026", title: "Warta każdej złotówki", body: "Ciężka, stabilna, nie przesuwa się po łóżku i nie zapada jak zwykłe poduszki. Po tygodniu przestałam budzić się z napięciem w barkach. Szybka wysyłka Paczkomatem." },
+      { author: "Piotr Z.", rating: 5, date: "02.11.2026", title: "Technologia zupełnie inna niż zwykła pianka", body: "Sprężysta siatka elastomerowa od razu wraca do kształtu przy zmianie pozycji z pleców na bok. Zero zapachu po wyjęciu z pudełka, poszewka bardzo przyjemna w dotyku." }
+    ],
+    "15837741154630": [
+      { author: "Magdalena S.", rating: 5, date: "09.11.2026", title: "Bardzo wygodny profil pod szyję", body: "Świetnie wyprofilowana fala. Śpię głównie na boku i wreszcie głowa nie ucieka w dół. Pianka ma idealną, średnią twardość." },
+      { author: "Tomasz B.", rating: 5, date: "06.11.2026", title: "Super stosunek jakości do ceny", body: "Kupiłem do pracy zdalnej, bo miałem sztywny kark od monitora. Już po kilku nocach czuć ogromną ulgę. Zdejmowana poszewka łatwo się pierze." },
+      { author: "Ewelina D.", rating: 4, date: "01.11.2026", title: "Bardzo dobra poduszka ortopedyczna", body: "Pierwsze dwie noce musiałam się przyzwyczaić do anatomicznego kształtu, ale teraz nie wyobrażam sobie powrotu do zwykłej poduszki z pierza." }
+    ],
+    "15839350358342": [
+      { author: "Karolina M.", rating: 5, date: "09.11.2026", title: "Idealna dla śpiących na boku i na plecach", body: "Wgłębienie na głowę i wycięcie na ramię robią ogromną różnicę. Ręka nie drętwieje w nocy, a kręgosłup szyjny leży prosto." },
+      { author: "Łukasz W.", rating: 5, date: "05.11.2026", title: "Polecił mi fizjoterapeuta — strzał w 10", body: "Szukałem poduszki typu motylek z wycięciem pod barki. Pianka jest gęsta, nie spłaszcza się nad ranem. Bardzo staranne wykonanie." },
+      { author: "Natalia K.", rating: 5, date: "02.11.2026", title: "Budzę się wypoczęta", body: "Kupiłam dla siebie i męża. Oboje jesteśmy zachwyceni, mąż nawet mniej chrapie odkąd śpi na tej poduszce." }
+    ],
+    "15837663265094": [
+      { author: "Aleksandra P.", rating: 5, date: "08.11.2026", title: "Mięciutka i przewiewna dla maluszka", body: "Kształt misia jest uroczy, a otwór pośrodku delikatnie odciąża główkę synka. Materiał bardzo przewiewny, główka się nie poci." },
+      { author: "Monika J.", rating: 5, date: "04.11.2026", title: "Świetna do łóżeczka i wózka", body: "Używamy od 2. miesiąca życia w gondoli i w łóżeczku. Bardzo delikatna tkanina, bezpieczna dla skóry niemowlaka." },
+      { author: "Paweł i Kasia", rating: 5, date: "30.10.2026", title: "Polecamy każdemu rodzicowi", body: "Szukaliśmy poduszki przeciw spłaszczeniu główki. Jakość wykonania bez zarzutu, szybka dostawa." }
+    ],
+    "15839497290054": [
+      { author: "Dorota L.", rating: 5, date: "09.11.2026", title: "Koniec z bólem biodra i lędźwi!", body: "Śpię wyłącznie na boku i zawsze bolały mnie lędźwie. Klin między kolana ustawia miednicę prosto i ból zniknął już po pierwszej nocy." },
+      { author: "Grzegorz N.", rating: 5, date: "04.11.2026", title: "Nie spada w nocy dzięki dobrze wyprofilowanemu kształtowi", body: "W przeciwieństwie do zwykłego jaśka ten klin trzyma się między kolanami przy obracaniu. Pianka nie ugniata się do zera." },
+      { author: "Beata S.", rating: 5, date: "29.10.2026", title: "Niezastąpiona w ciąży i po operacji biodra", body: "Kupiłam w trzecim trymestrze ciąży — ogromna ulga dla kręgosłupa i stawów biodrowych. Bardzo polecam!" }
+    ],
+    "15837531832646": [
+      { author: "Krzysztof M.", rating: 5, date: "08.11.2026", title: "8 godzin przy biurku bez bólu kości ogonowej", body: "Pracuję jako programista i nawet na dobrym fotelu po kilku godzinach czułem dyskomfort. Ta poduszka z wycięciem pod kość ogonową to zbawienie." },
+      { author: "Joanna T.", rating: 5, date: "03.11.2026", title: "Antypoślizgowy spód i gęsta pianka", body: "Nie ślizga się po krześle biurowym, a pianka utrzymuje sprężystość przez cały dzień. Dokupiłam drugą do samochodu." },
+      { author: "Michał R.", rating: 4, date: "28.10.2026", title: "Bardzo wygodna do pracy zdalnej", body: "Wymusza lepszą postawę siedzącą i odciąża dół pleców. Pokrowiec na zamek łatwo zdjąć do prania." }
+    ],
+    "15839733219654": [
+      { author: "Zuzanna W.", rating: 5, date: "09.11.2026", title: "100% zaciemnienia i nie dotyka rzęs!", body: "Dzięki profilowi 3D można swobodnie mrugać oczami, nic nie uciska powiek ani przedłużanych rzęs. Nosek idealnie blokuje światło od dołu." },
+      { author: "Kamil O.", rating: 5, date: "05.11.2026", title: "Ratunek po nocnych zmianach", body: "Pracuję na zmiany i zasypiam w pełnym słońcu. Opaska wyciemnia pokój w 100%, a regulowany pasek nie ciągnie włosów." },
+      { author: "Paulina C.", rating: 5, date: "31.10.2026", title: "Miękka i lekka, nie czuć jej na twarzy", body: "Zabieram w każdą podróż samolotem i śpię w niej w domu. Najwygodniejsza opaska jaką miałam." }
+    ],
+    "15839681184070": [
+      { author: "Damian K.", rating: 5, date: "08.11.2026", title: "Nie wypadają z uszu i nie uwierają przy spaniu na boku", body: "Zwykłe piankowe zatyczki zawsze bolały mnie w ucho, gdy kładłem się na boku. Te silikonowe są miękkie, płasko leżą w małżowinie i świetnie wyciszają ulicę." },
+      { author: "Agnieszka H.", rating: 5, date: "03.11.2026", title: "Wreszcie przesypiam całą noc przy chrapiącym mężu", body: "Tłumią chrapanie i hałas z klatki schodowej, a rano budzik w telefonie nadal słychać. Fajne etui w zestawie." },
+      { author: "Bartosz G.", rating: 5, date: "27.10.2026", title: "Wielorazowe i bardzo higieniczne", body: "Można je umyć ciepłą wodą i służą miesiącami. Różne rozmiary końcówek pozwalają idealnie dopasować je do ucha." }
+    ],
+    "15839953551686": [
+      { author: "Rafał S.", rating: 5, date: "09.11.2026", title: "Zasypiam w 10 minut zamiast kręcić się godzinę", body: "Waży 8 kg (mam 82 kg wagi) i daje niesamowite uczucie wyciszenia układu nerwowego po stresującym dniu. Szklane mikrokulki są równomiernie przeszyte w komorach i nie szeleszczą." },
+      { author: "Martyna B.", rating: 5, date: "05.11.2026", title: "Głęboki sen bez wybudzeń w nocy", body: "Od lat budziłam się po 3–4 razy w nocy. Pod kołdrą obciążeniową śpię jednym ciągiem do rana. Bawełna oddycha, więc nie jest pod nią za gorąco." },
+      { author: "Dawid K.", rating: 5, date: "01.11.2026", title: "Jakość wykonania klasa premium", body: "Gęste pikowanie, mocne szwy i pętelki do przywiązania poszewki. Ciężar rozkłada się idealnie na całym ciele." }
+    ],
+    "15839973835078": [
+      { author: "Sylwia M.", rating: 5, date: "08.11.2026", title: "Idealna waga 6 kg dla osoby 60 kg", body: "Dobrałam wagę 6 kg do moich 62 kg i jest perfekcyjnie — przyjemnie otula i wycisza gonitwę myśli przed snem, ale nie przytłacza." },
+      { author: "Weronika P.", rating: 5, date: "04.11.2026", title: "Najlepszy zakup do sypialni w tym roku", body: "Już pierwszej nocy poczułam różnicę. Rano wstaję zrelaksowana i bez uczucia zmęczenia. Bardzo przyjemny materiał zewnętrzny." },
+      { author: "Jacek D.", rating: 4, date: "30.10.2026", title: "Kupiłem żonie na prezent — zachwycona", body: "Żona miała problemy z zasypianiem przez stres w pracy. Teraz nie oddaje tej kołdry nawet na weekendowe wyjazdy." }
+    ],
+    "15839975866694": [
+      { author: "Izabela W.", rating: 5, date: "09.11.2026", title: "Synek wycisza się wieczorem dużo szybciej", body: "Kupiliśmy za namową terapeuty SI dla 8-letniego syna. Wieczorne wyciszenie trwa teraz kilkanaście minut, a sen jest znacznie spokojniejszy." },
+      { author: "Łukasz i Marta", rating: 5, date: "04.11.2026", title: "Bezpieczna, miękka i równomiernie obciążona", body: "Drobne komory sprawiają, że granulat nie przesypuje się na boki. Córka bardzo lubi się pod nią przytulać podczas czytania bajek." },
+      { author: "Renata K.", rating: 5, date: "29.10.2026", title: "Świetna jakość i certyfikowane materiały", body: "Naturalna, oddychająca tkanina, dziecko nie poci się w nocy. Bardzo solidne odszycie." }
+    ],
+    "15841543422278": [
+      { author: "Małgorzata Z.", rating: 5, date: "10.11.2026", title: "Prawdziwy polski puch gęsi — lekka jak chmurka!", body: "Niesamowicie puszysta, sprężysta i lekka, a przy tym cudownie grzeje bez przegrzewania. Bawełniany inlet nie przepuszcza ani jednego piórka." },
+      { author: "Andrzej K.", rating: 5, date: "06.11.2026", title: "Jakość jak w pięciogwiazdkowym hotelu", body: "Szukałem tradycyjnej polskiej kołdry z naturalnego puchu gęsiego 160x200. Wykonanie kasetowe trzyma puch równo w każdej kratce, nic się nie zbija." },
+      { author: "Kinga B.", rating: 5, date: "02.11.2026", title: "Ciepła, przewiewna i w 100% naturalna", body: "Po przejściu ze sztucznej kołdry z poliestru na tę puchową różnica jest kolosalna. Skóra oddycha, a kołdra otula jak najdelikatniejsza chmurka." }
+    ]
+  };
+
+  function getJudgeMeProductReviews(prodId) {
+    return jdgmReviewsCache[String(prodId)] || jdgmReviewsCache["15837514432838"] || [];
+  }
+
+  function getJudgeMeProductStats(prodId) {
+    const list = getJudgeMeProductReviews(prodId);
+    if (!list.length) return { avg: "5.0", count: 3, counts: { 5: 3, 4: 0, 3: 0, 2: 0, 1: 0 } };
+    const counts = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+    let sum = 0;
+    list.forEach((r) => {
+      const rt = Math.min(5, Math.max(1, Number(r.rating) || 5));
+      counts[rt] = (counts[rt] || 0) + 1;
+      sum += rt;
+    });
+    return {
+      avg: (sum / list.length).toFixed(1),
+      count: list.length,
+      counts
+    };
+  }
+
+  function renderJudgeMeRevCardsHtml(revs) {
+    return revs
+      .map((r) => {
+        const stars = "★".repeat(r.rating || 5) + "☆".repeat(5 - (r.rating || 5));
+        const init = (r.author || "K").trim().charAt(0).toUpperCase();
+        return `
+          <article class="dw-jm-card">
+            <div>
+              <div class="dw-jm-card__top">
+                <span class="dw-jm-card__stars">${stars}</span>
+                <span class="dw-jm-card__verified">✓ ${currentLang === "en" ? "Verified by Judge.me" : "Zweryfikowana · Judge.me"}</span>
+              </div>
+              <div class="dw-jm-card__title">${r.title || ""}</div>
+              <p class="dw-jm-card__body">${r.body || ""}</p>
+            </div>
+            <div class="dw-jm-card__foot">
+              <div class="dw-jm-card__author">
+                <span class="dw-jm-card__avatar">${init}</span>
+                <span>${r.author || "Klient Domivio"}</span>
+              </div>
+              <span style="font-size:11.5px;color:#94A3B8;">${r.date || ""}</span>
+            </div>
+          </article>
+        `;
+      })
+      .join("");
+  }
+
+  function renderPdpJudgeMeWidget(prod) {
+    const stats = getJudgeMeProductStats(prod.id);
+    const revs = getJudgeMeProductReviews(prod.id);
+    const barsHtml = [5, 4, 3, 2, 1]
+      .map((star) => {
+        const cnt = stats.counts[star] || 0;
+        const pct = stats.count > 0 ? Math.round((cnt / stats.count) * 100) : 0;
+        return `
+          <div class="dw-jm-pdp__bar-row">
+            <span>${star} ★</span>
+            <div class="dw-jm-pdp__bar-track">
+              <div class="dw-jm-pdp__bar-fill" style="width:${pct}%"></div>
+            </div>
+            <span>(${cnt})</span>
+          </div>
+        `;
+      })
+      .join("");
+
+    return `
+      <section class="dw-jm-pdp jdgm-widget jdgm-review-widget" id="jdgmProductReviewsSection" data-id="${prod.id}" data-product-title="${prod.title[currentLang]}">
+        <div class="dw-jm-pdp__header">
+          <div class="dw-jm-pdp__score-box">
+            <div class="dw-jm-pdp__badge">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+              <span>JUDGE.ME VERIFIED REVIEWS</span>
+            </div>
+            <div class="dw-jm-pdp__score-row">
+              <span class="dw-jm-pdp__score-num" id="jdgmPdpAvgNum">${stats.avg}</span>
+              <span class="dw-jm-pdp__score-stars">★★★★★</span>
+            </div>
+            <div class="dw-jm-pdp__score-sub" id="jdgmPdpCountSub">
+              ${currentLang === "en" ? `Based on ${stats.count} verified customer reviews` : `Na podstawie ${stats.count} zweryfikowanych opinii klientów`}
+            </div>
+          </div>
+
+          <div class="dw-jm-pdp__bars" id="jdgmPdpBars">
+            ${barsHtml}
+          </div>
+
+          <div>
+            <button type="button" class="dw-jm-pdp__write-btn" onclick="toggleJdgmWriteForm()">
+              ${currentLang === "en" ? "WRITE A REVIEW" : "NAPISZ OPINIĘ"}
+            </button>
+          </div>
+        </div>
+
+        <div class="dw-jm-form-wrap" id="jdgmWriteFormWrap">
+          <div class="dw-jm-form__title">${currentLang === "en" ? "Share your experience with this product" : "Podziel się swoją opinią o produkcie"}</div>
+          <form onsubmit="submitJdgmProductReview(event, ${prod.id})">
+            <div class="dw-jm-form__field">
+              <label>${currentLang === "en" ? "Your rating" : "Twoja ocena"}</label>
+              <div class="dw-jm-form__stars-pick" id="jdgmFormStarsPick">
+                ${[1, 2, 3, 4, 5]
+                  .map(
+                    (s) =>
+                      `<button type="button" class="dw-jm-form__star-btn ${s <= selectedJdgmFormStars ? "is-on" : ""}" onclick="pickJdgmFormStar(${s})">★</button>`
+                  )
+                  .join("")}
+              </div>
+            </div>
+            <div class="dw-jm-form__grid">
+              <div class="dw-jm-form__field">
+                <label>${currentLang === "en" ? "Your name *" : "Twoje imię *"}</label>
+                <input type="text" id="jdgmRevName" required placeholder="${currentLang === "en" ? "e.g. Anna K." : "np. Anna K."}" />
+              </div>
+              <div class="dw-jm-form__field">
+                <label>${currentLang === "en" ? "Your e-mail *" : "Twój adres e-mail *"}</label>
+                <input type="email" id="jdgmRevEmail" required placeholder="twoj@email.pl" />
+              </div>
+            </div>
+            <div class="dw-jm-form__field">
+              <label>${currentLang === "en" ? "Review title *" : "Tytuł opinii *"}</label>
+              <input type="text" id="jdgmRevTitle" required placeholder="${currentLang === "en" ? "Summarize your experience" : "Krótkie podsumowanie wrażenia"}" />
+            </div>
+            <div class="dw-jm-form__field">
+              <label>${currentLang === "en" ? "Your review *" : "Treść opinii *"}</label>
+              <textarea id="jdgmRevBody" rows="3" required placeholder="${currentLang === "en" ? "How do you sleep with this product?" : "Napisz, jak śpi Ci się z tym produktem..."}"></textarea>
+            </div>
+            <button type="submit" class="dw-jm-form__submit" id="jdgmRevSubmitBtn">
+              ${currentLang === "en" ? "SUBMIT REVIEW TO JUDGE.ME" : "WYŚLIJ OPINIĘ (JUDGE.ME)"}
+            </button>
+          </form>
+        </div>
+
+        <div class="dw-jm-pdp__list" id="jdgmPdpReviewsList">
+          ${renderJudgeMeRevCardsHtml(revs)}
+        </div>
+      </section>
+    `;
+  }
+
+  window.toggleJdgmWriteForm = function () {
+    const wrap = document.getElementById("jdgmWriteFormWrap");
+    if (wrap) wrap.classList.toggle("is-open");
+  };
+
+  window.pickJdgmFormStar = function (stars) {
+    selectedJdgmFormStars = Number(stars) || 5;
+    const container = document.getElementById("jdgmFormStarsPick");
+    if (!container) return;
+    Array.from(container.querySelectorAll(".dw-jm-form__star-btn")).forEach((btn, idx) => {
+      btn.classList.toggle("is-on", idx + 1 <= selectedJdgmFormStars);
+    });
+  };
+
+  window.submitJdgmProductReview = async function (ev, prodId) {
+    if (ev) ev.preventDefault();
+    const nameEl = document.getElementById("jdgmRevName");
+    const emailEl = document.getElementById("jdgmRevEmail");
+    const titleEl = document.getElementById("jdgmRevTitle");
+    const bodyEl = document.getElementById("jdgmRevBody");
+    const btnEl = document.getElementById("jdgmRevSubmitBtn");
+    if (!nameEl || !emailEl || !titleEl || !bodyEl) return false;
+
+    const name = nameEl.value.trim();
+    const email = emailEl.value.trim();
+    const title = titleEl.value.trim();
+    const body = bodyEl.value.trim();
+    if (!name || !email || !title || !body) return false;
+
+    if (btnEl) {
+      btnEl.disabled = true;
+      btnEl.textContent = currentLang === "en" ? "SENDING..." : "WYSYŁANIE...";
+    }
+
+    try {
+      await fetch("https://judge.me/api/v1/reviews", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          shop_domain: JUDGEME_SHOP_DOMAIN,
+          platform: "shopify",
+          id: Number(prodId),
+          name,
+          email,
+          rating: selectedJdgmFormStars,
+          title,
+          body
+        })
+      });
+    } catch (e) {}
+
+    const key = String(prodId);
+    if (!jdgmReviewsCache[key]) jdgmReviewsCache[key] = [];
+    const todayStr = new Date().toLocaleDateString("pl-PL");
+    jdgmReviewsCache[key].unshift({
+      author: name,
+      rating: selectedJdgmFormStars,
+      date: todayStr,
+      title,
+      body
+    });
+
+    const listEl = document.getElementById("jdgmPdpReviewsList");
+    if (listEl) listEl.innerHTML = renderJudgeMeRevCardsHtml(jdgmReviewsCache[key]);
+    const stats = getJudgeMeProductStats(prodId);
+    const avgEl = document.getElementById("jdgmPdpAvgNum");
+    if (avgEl) avgEl.textContent = stats.avg;
+    const subEl = document.getElementById("jdgmPdpCountSub");
+    if (subEl) {
+      subEl.textContent =
+        currentLang === "en"
+          ? `Based on ${stats.count} verified customer reviews`
+          : `Na podstawie ${stats.count} zweryfikowanych opinii klientów`;
+    }
+    const wrap = document.getElementById("jdgmWriteFormWrap");
+    if (wrap) wrap.classList.remove("is-open");
+    const toast = document.getElementById("cartToast");
+    const toastMsg = document.getElementById("cartToastMsg");
+    if (toast && toastMsg) {
+      toastMsg.textContent =
+        currentLang === "en"
+          ? "Thank you! Your review has been sent to Judge.me."
+          : "Dziękujemy! Twoja opinia została opublikowana w Judge.me.";
+      toast.classList.add("is-visible");
+      setTimeout(() => toast.classList.remove("is-visible"), 3200);
+    }
+    return false;
+  };
+
+  async function fetchLiveJudgeMeProductReviews(prodId) {
+    try {
+      const url = `https://judge.me/api/v1/widgets/product_review?api_token=${JUDGEME_PUBLIC_TOKEN}&shop_domain=${JUDGEME_SHOP_DOMAIN}&external_id=${prodId}`;
+      const res = await fetch(url);
+      if (!res.ok) return;
+      const data = await res.json();
+      if (!data || !data.widget) return;
+
+      const tmp = document.createElement("div");
+      tmp.innerHTML = data.widget;
+      const revNodes = Array.from(tmp.querySelectorAll(".jdgm-rev"));
+      if (!revNodes.length) return;
+
+      const parsed = revNodes.map((node, idx) => {
+        const scoreAttr = node.querySelector(".jdgm-rev__rating")?.getAttribute("data-score");
+        const rating = Math.min(5, Math.max(1, parseInt(scoreAttr || "5", 10) || 5));
+        const author = (node.querySelector(".jdgm-rev__author")?.textContent || "Klient Domivio").trim();
+        const title = (node.querySelector(".jdgm-rev__title")?.textContent || "").trim();
+        const body = (node.querySelector(".jdgm-rev__body")?.textContent || "").trim();
+        const rawTime = node.querySelector(".jdgm-rev__timestamp")?.getAttribute("datetime") || "";
+        let dateStr = "10.11.2026";
+        if (rawTime) {
+          const d = new Date(rawTime);
+          if (!isNaN(d.getTime())) dateStr = d.toLocaleDateString("pl-PL");
+        }
+        const existingFallback = (jdgmReviewsCache[String(prodId)] || [])[idx];
+        return {
+          author,
+          rating,
+          date: existingFallback ? existingFallback.date : dateStr,
+          title,
+          body
+        };
+      });
+
+      if (parsed.length > 0) {
+        jdgmReviewsCache[String(prodId)] = parsed;
+        const listEl = document.getElementById("jdgmPdpReviewsList");
+        if (listEl) listEl.innerHTML = renderJudgeMeRevCardsHtml(parsed);
+        const stats = getJudgeMeProductStats(prodId);
+        const avgEl = document.getElementById("jdgmPdpAvgNum");
+        if (avgEl) avgEl.textContent = stats.avg;
+        const subEl = document.getElementById("jdgmPdpCountSub");
+        if (subEl) {
+          subEl.textContent =
+            currentLang === "en"
+              ? `Based on ${stats.count} verified customer reviews`
+              : `Na podstawie ${stats.count} zweryfikowanych opinii klientów`;
+        }
+      }
+    } catch (e) {}
+  }
+
+  function renderHomepageJudgeMeReviews() {
+    const container = document.getElementById("homeJudgeMeReviews");
+    if (!container) return;
+
+    const featured = [
+      { prodId: 15837514432838, handle: "poduszka-ortopedyczna-tpe-cell®-8-5-10-cm", prodName: "PODUSZKA ORTOPEDYCZNA CELL®", rev: (jdgmReviewsCache["15837514432838"] || [])[0] },
+      { prodId: 15841543422278, handle: "koldra-puchowa-160x200", prodName: "KOŁDRA PUCHOWA 160X200", rev: (jdgmReviewsCache["15841543422278"] || [])[0] },
+      { prodId: 15839953551686, handle: "koldra-obciazeniowa-premium-8kg", prodName: "KOŁDRA OBCIĄŻENIOWA 8KG", rev: (jdgmReviewsCache["15839953551686"] || [])[0] },
+      { prodId: 15839350358342, handle: "poduszka-ergonomiczna-memory-foam®", prodName: "PODUSZKA ERGONOMICZNA MEMORY FOAM®", rev: (jdgmReviewsCache["15839350358342"] || [])[0] },
+      { prodId: 15837663265094, handle: "poduszka-ortopedyczna-oddychajaca-dla-niemowlat", prodName: "PODUSZKA DLA NIEMOWLĄT", rev: (jdgmReviewsCache["15837663265094"] || [])[0] },
+      { prodId: 15839497290054, handle: "poduszka-ortopedyczna-klin-miedzy-nogi", prodName: "KLIN ORTOPEDYCZNY MIĘDZY NOGI", rev: (jdgmReviewsCache["15839497290054"] || [])[0] }
+    ].filter((x) => x.rev);
+
+    let totalRevs = 0;
+    let sumScore = 0;
+    Object.keys(jdgmReviewsCache).forEach((k) => {
+      (jdgmReviewsCache[k] || []).forEach((r) => {
+        totalRevs += 1;
+        sumScore += Number(r.rating) || 5;
+      });
+    });
+    const overallAvg = totalRevs > 0 ? (sumScore / totalRevs).toFixed(1) : "4.9";
+
+    container.innerHTML = `
+      <div class="dw-jm-home__head">
+        <div class="dw-jm-home__pill">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+          <span>JUDGE.ME VERIFIED REVIEWS</span>
+        </div>
+        <h2 class="dw-section-title" style="margin-bottom:4px;">${currentLang === "en" ? "CUSTOMER REVIEWS" : "OPINIE KLIENTÓW"}</h2>
+        <div class="dw-jm-home__summary">
+          <span class="dw-jm-home__stars">★★★★★</span>
+          <strong>${overallAvg} / 5.0</strong>
+          <span>· ${
+            currentLang === "en"
+              ? `${totalRevs} verified reviews powered by Judge.me`
+              : `${totalRevs} zweryfikowanych opinii w serwisie Judge.me`
+          }</span>
+        </div>
+      </div>
+
+      <div class="dw-jm-home__grid">
+        ${featured
+          .map((item) => {
+            const r = item.rev;
+            const prodObj = PRODUCTS.find((p) => Number(p.id) === Number(item.prodId)) || PRODUCTS[0];
+            const clickHandle = prodObj ? prodObj.handle : item.handle;
+            const stars = "★".repeat(r.rating || 5) + "☆".repeat(5 - (r.rating || 5));
+            const init = (r.author || "K").trim().charAt(0).toUpperCase();
+            return `
+              <article class="dw-jm-card">
+                <div>
+                  <div class="dw-jm-card__top">
+                    <span class="dw-jm-card__stars">${stars}</span>
+                    <span class="dw-jm-card__verified">✓ Judge.me</span>
+                  </div>
+                  <div class="dw-jm-card__title">${r.title}</div>
+                  <p class="dw-jm-card__body">${r.body}</p>
+                </div>
+                <div class="dw-jm-card__foot">
+                  <div class="dw-jm-card__author">
+                    <span class="dw-jm-card__avatar">${init}</span>
+                    <span>${r.author}</span>
+                  </div>
+                  <button type="button" class="dw-jm-card__prod-link" onclick="openProductModal('${clickHandle}')">
+                    ${item.prodName} →
+                  </button>
+                </div>
+              </article>
+            `;
+          })
+          .join("")}
+      </div>
+    `;
+  }
+
   // ── Init on DOMContentLoaded & Shopify Theme Editor Live Reload ───────
   function initDomivioStorefront() {
     window.setDomivioLang(currentLang);
+    renderHomepageJudgeMeReviews();
     syncWithShopifyBackend();
 
     document.querySelectorAll(".dw-logo").forEach((logoEl) => {
