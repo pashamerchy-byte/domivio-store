@@ -2235,10 +2235,25 @@
           .toLowerCase();
         const titleLower = String(rp.title || "").toLowerCase();
 
-        if (tagStr.includes("kołdr") || tagStr.includes("koldr") || tagStr.includes("duvet") || titleLower.includes("kołdr") || titleLower.includes("koldr")) addCat("koldra");
+        const isKoldra =
+          tagStr.includes("kołdr") ||
+          tagStr.includes("koldr") ||
+          tagStr.includes("duvet") ||
+          titleLower.includes("kołdr") ||
+          titleLower.includes("koldr");
+
+        if (isKoldra) {
+          const akcIdx = cats.indexOf("akcesoria");
+          if (akcIdx !== -1 && !tagStr.includes("akcesor")) {
+            cats.splice(akcIdx, 1);
+          }
+          const kIdx = cats.indexOf("koldra");
+          if (kIdx !== -1) cats.splice(kIdx, 1);
+          cats.unshift("koldra");
+        }
         if (tagStr.includes("poduszk") || tagStr.includes("pillow")) addCat("poduszki");
-        if (tagStr.includes("dziec") || tagStr.includes("kid")) addCat("dla-dzieci");
-        if (tagStr.includes("akcesor") || tagStr.includes("poszewk") || tagStr.includes("access")) addCat("akcesoria");
+        if (tagStr.includes("dziec") || tagStr.includes("kid") || titleLower.includes("dzieci") || titleLower.includes("niemowl")) addCat("dla-dzieci");
+        if (!isKoldra && (tagStr.includes("akcesor") || tagStr.includes("poszewk") || tagStr.includes("access"))) addCat("akcesoria");
         if (tagStr.includes("zestaw") || tagStr.includes("prezent") || tagStr.includes("set") || tagStr.includes("bundle")) addCat("zestawy");
 
         // 3. Fallback if no category was assigned yet in Shopify Admin
