@@ -628,23 +628,48 @@
       rawGalleryImgs.unshift(activeVar.featuredImage);
     }
 
-    const galleryHtml = rawGalleryImgs
-      .map((imgSrc, idx) => {
-        const resolved = resolveAsset(imgSrc);
-        if (idx === 0) {
+    const heroResolved = resolveAsset(rawGalleryImgs[0] || "domivio_wave_1.jpg");
+    const thumbsHtml =
+      rawGalleryImgs.length > 1
+        ? `
+          <div class="dw-pdp__thumbs-row">
+            ${rawGalleryImgs
+              .map((imgSrc, idx) => {
+                const resolved = resolveAsset(imgSrc);
+                return `
+                  <button
+                    type="button"
+                    class="dw-pdp__thumb-btn ${idx === 0 ? "is-active" : ""}"
+                    onclick="switchPdpHeroPhoto('${resolved}', this)"
+                    aria-label="Zdjęcie ${idx + 1}"
+                  >
+                    <img src="${resolved}" alt="${prod.title[currentLang]} - ${idx + 1}" loading="lazy" />
+                  </button>
+                `;
+              })
+              .join("")}
+          </div>
+        `
+        : "";
+
+    const galleryHtml =
+      `
+        <div class="dw-pdp__img-box dw-pdp__img-box--hero">
+          <img id="pdpMainHeroImg" src="${heroResolved}" alt="${prod.title[currentLang]}" class="dw-pdp__img" />
+        </div>
+        ${thumbsHtml}
+      ` +
+      rawGalleryImgs
+        .slice(1)
+        .map((imgSrc, idx) => {
+          const resolved = resolveAsset(imgSrc);
           return `
-            <div class="dw-pdp__img-box dw-pdp__img-box--hero">
-              <img src="${resolved}" alt="${prod.title[currentLang]}" class="dw-pdp__img" />
+            <div class="dw-pdp__img-box dw-pdp__img-box--extra">
+              <img src="${resolved}" alt="${prod.title[currentLang]} - ${idx + 2}" class="dw-pdp__img" loading="lazy" />
             </div>
           `;
-        }
-        return `
-          <div class="dw-pdp__img-box">
-            <img src="${resolved}" alt="${prod.title[currentLang]} - ${idx + 1}" class="dw-pdp__img" loading="lazy" />
-          </div>
-        `;
-      })
-      .join("");
+        })
+        .join("");
 
     const hasMultipleVariants = Array.isArray(prod.variants) && prod.variants.length > 1;
     const optionLabelText =
@@ -832,6 +857,13 @@
       document.documentElement.scrollTop = 0;
       document.body.scrollTop = 0;
     }
+  };
+
+  window.switchPdpHeroPhoto = function (src, btnEl) {
+    const heroImg = document.getElementById("pdpMainHeroImg");
+    if (heroImg && src) heroImg.src = src;
+    document.querySelectorAll(".dw-pdp__thumb-btn").forEach((el) => el.classList.remove("is-active"));
+    if (btnEl) btnEl.classList.add("is-active");
   };
 
   window.switchPdpImage = function (src, thumbEl) {
