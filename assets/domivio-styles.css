@@ -2345,3 +2345,374 @@ button {
     font-size: 19px;
   }
 }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   JUDGE.ME VERIFIED REVIEWS — HOMEPAGE, PRODUCT CARDS & PDP WIDGET
+   ══════════════════════════════════════════════════════════════════════════ */
+.dw-card__jm-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #242C34;
+  margin-bottom: 4px;
+  cursor: pointer;
+}
+.dw-card__jm-stars {
+  color: #7B42F6;
+  letter-spacing: 1px;
+  font-size: 12px;
+}
+.dw-card__jm-count {
+  color: #64748B;
+  font-weight: 500;
+}
+
+/* Homepage Judge.me Section */
+.dw-jm-home-sec {
+  padding: 56px 0 64px;
+  background: #FAFAFC;
+  border-top: 1px solid #EFEFF4;
+}
+.dw-jm-home__head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+  margin-bottom: 36px;
+}
+.dw-jm-home__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: #F3EEFF;
+  border: 1px solid rgba(123, 66, 246, 0.22);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #7B42F6;
+}
+.dw-jm-home__summary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 14px;
+  color: #475569;
+}
+.dw-jm-home__stars {
+  color: #7B42F6;
+  font-size: 17px;
+  letter-spacing: 1.5px;
+}
+.dw-jm-home__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.dw-jm-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  padding: 22px 22px 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 14px;
+  transition: border-color 0.18s, transform 0.18s;
+}
+.dw-jm-card:hover {
+  border-color: #7B42F6;
+  transform: translateY(-2px);
+}
+.dw-jm-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.dw-jm-card__stars {
+  color: #7B42F6;
+  font-size: 14px;
+  letter-spacing: 1.5px;
+}
+.dw-jm-card__verified {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #16A34A;
+  background: #F0FDF4;
+  padding: 3px 8px;
+  border-radius: 999px;
+}
+.dw-jm-card__title {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #1E293B;
+  margin-bottom: 6px;
+  line-height: 1.35;
+}
+.dw-jm-card__body {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: #475569;
+  margin: 0;
+}
+.dw-jm-card__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 12px;
+  border-top: 1px solid #F1F5F9;
+}
+.dw-jm-card__author {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #1E293B;
+}
+.dw-jm-card__avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #7B42F6;
+  color: #FFFFFF;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+}
+.dw-jm-card__prod-link {
+  font-size: 11px;
+  font-weight: 600;
+  color: #7B42F6;
+  background: #F3EEFF;
+  padding: 4px 9px;
+  border: none;
+  cursor: pointer;
+  text-align: right;
+  max-width: 190px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.dw-jm-card__prod-link:hover {
+  background: #7B42F6;
+  color: #FFFFFF;
+}
+
+/* PDP Top Rating Summary Link */
+.dw-pdp__jm-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0 12px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #475569;
+}
+.dw-pdp__jm-inline:hover {
+  color: #7B42F6;
+}
+.dw-pdp__jm-inline-stars {
+  color: #7B42F6;
+  font-size: 15px;
+  letter-spacing: 1px;
+}
+
+/* PDP Full Judge.me Widget Section Under Product */
+.dw-jm-pdp {
+  margin-top: 56px;
+  padding-top: 44px;
+  border-top: 1px solid #E2E8F0;
+}
+.dw-jm-pdp__header {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr auto;
+  gap: 32px;
+  align-items: center;
+  background: #FAFAFC;
+  border: 1px solid #E2E8F0;
+  padding: 28px 32px;
+  margin-bottom: 28px;
+}
+.dw-jm-pdp__score-box {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.dw-jm-pdp__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #7B42F6;
+}
+.dw-jm-pdp__score-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.dw-jm-pdp__score-num {
+  font-size: 36px;
+  font-weight: 800;
+  color: #1E293B;
+  line-height: 1;
+}
+.dw-jm-pdp__score-stars {
+  color: #7B42F6;
+  font-size: 20px;
+  letter-spacing: 2px;
+}
+.dw-jm-pdp__score-sub {
+  font-size: 13px;
+  color: #64748B;
+}
+.dw-jm-pdp__bars {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.dw-jm-pdp__bar-row {
+  display: grid;
+  grid-template-columns: 48px 1fr 36px;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: #475569;
+}
+.dw-jm-pdp__bar-track {
+  height: 8px;
+  background: #E2E8F0;
+  overflow: hidden;
+}
+.dw-jm-pdp__bar-fill {
+  height: 100%;
+  background: #7B42F6;
+}
+.dw-jm-pdp__write-btn {
+  background: #7B42F6;
+  color: #FFFFFF;
+  border: none;
+  padding: 14px 24px;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.15s;
+}
+.dw-jm-pdp__write-btn:hover {
+  opacity: 0.9;
+}
+
+/* Judge.me Write Review Form */
+.dw-jm-form-wrap {
+  background: #FFFFFF;
+  border: 1px solid #7B42F6;
+  padding: 28px;
+  margin-bottom: 28px;
+  display: none;
+}
+.dw-jm-form-wrap.is-open {
+  display: block;
+}
+.dw-jm-form__title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1E293B;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+}
+.dw-jm-form__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+.dw-jm-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+.dw-jm-form__field label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #334155;
+}
+.dw-jm-form__field input,
+.dw-jm-form__field textarea {
+  border: 1px solid #CBD5E1;
+  padding: 11px 13px;
+  font-size: 13.5px;
+  font-family: inherit;
+  color: #1E293B;
+  outline: none;
+}
+.dw-jm-form__field input:focus,
+.dw-jm-form__field textarea:focus {
+  border-color: #7B42F6;
+}
+.dw-jm-form__stars-pick {
+  display: inline-flex;
+  gap: 6px;
+}
+.dw-jm-form__star-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #CBD5E1;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+.dw-jm-form__star-btn.is-on {
+  color: #7B42F6;
+}
+.dw-jm-form__submit {
+  background: #7B42F6;
+  color: #FFFFFF;
+  border: none;
+  padding: 13px 26px;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.dw-jm-pdp__list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+
+@media (max-width: 960px) {
+  .dw-jm-home__grid {
+    grid-template-columns: 1fr;
+  }
+  .dw-jm-pdp__header {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 20px;
+  }
+  .dw-jm-pdp__list {
+    grid-template-columns: 1fr;
+  }
+  .dw-jm-form__grid {
+    grid-template-columns: 1fr;
+  }
+}

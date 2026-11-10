@@ -15,6 +15,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   {{ 'domivio-styles.css' | asset_url | stylesheet_tag }}
+  {{ shop.metafields.judgeme.settings }}
   {{ content_for_header }}
   <script type="application/ld+json">
   {
@@ -167,6 +168,11 @@
         <div class="dw-progress-line__fill"></div>
       </div>
     </div>
+  </section>
+
+  <!-- 6. Judge.me Verified Customer Reviews Section -->
+  <section class="dw-jm-home-sec" id="reviews">
+    <div class="dw-container" id="homeJudgeMeReviews"></div>
   </section>
 
   <!-- 8. Full-Width Welcome to Quality Sleep Banner (1:1 Darwin) -->
