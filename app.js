@@ -38,6 +38,20 @@
     );
   }
 
+  function slugifyPolish(str) {
+    const map = {
+      ą: "a", ć: "c", ę: "e", ł: "l", ń: "n", ó: "o", ś: "s", ź: "z", ż: "z",
+      Ą: "a", Ć: "c", Ę: "e", Ł: "l", Ń: "n", Ó: "o", Ś: "s", Ź: "z", Ż: "z"
+    };
+    return String(str || "")
+      .replace(/[ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/g, (ch) => map[ch] || ch)
+      .toLowerCase()
+      .replace(/®/g, "")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "");
+  }
+
   function findProductByHandle(rawHandle) {
     if (!rawHandle) return null;
     let clean = String(rawHandle).trim();
@@ -56,15 +70,15 @@
     const lower = clean.toLowerCase();
     found = PRODUCTS.find((p) => String(p.handle || "").toLowerCase() === lower);
     if (found) return found;
-    const norm = (s) =>
-      String(s || "")
-        .toLowerCase()
-        .replace(/®/g, "")
-        .replace(/[^a-z0-9-]+/g, "-")
-        .replace(/-+/g, "-")
-        .replace(/^-|-$/g, "");
-    const normTarget = norm(clean);
-    return PRODUCTS.find((p) => norm(p.handle) === normTarget) || null;
+    const normTarget = slugifyPolish(clean);
+    if (!normTarget) return null;
+    return (
+      PRODUCTS.find(
+        (p) =>
+          slugifyPolish(p.handle) === normTarget ||
+          slugifyPolish(p.title && p.title.pl) === normTarget
+      ) || null
+    );
   }
 
   function extractProductHandleFromLocation() {
