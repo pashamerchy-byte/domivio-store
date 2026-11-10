@@ -274,6 +274,7 @@
   const CATEGORY_TITLE_KEYS = {
     "all": "hits_title",
     "poduszki": "nav_pillows",
+    "koldra": "nav_duvets",
     "dla-dzieci": "nav_kids",
     "akcesoria": "nav_accessories",
     "zestawy": "nav_gifts"
@@ -2049,8 +2050,13 @@
   // ── Live Sync with Shopify Backend (1tvnzn-zf.myshopify.com) ──────────
   async function syncWithShopifyBackend() {
     try {
-      const colHandles = ["frontpage", "hity-sprzedazy", "poduszki", "dla-dzieci", "akcesoria", "zestawy", "na-prezent"];
-      const catColHandles = ["poduszki", "dla-dzieci", "akcesoria", "zestawy", "na-prezent"];
+      const colHandles = ["frontpage", "hity-sprzedazy", "poduszki", "koldra", "koldry", "dla-dzieci", "akcesoria", "zestawy", "na-prezent"];
+      const catColHandles = ["poduszki", "koldra", "koldry", "dla-dzieci", "akcesoria", "zestawy", "na-prezent"];
+      const normalizeCatHandle = (h) => {
+        if (h === "na-prezent") return "zestawy";
+        if (h === "koldry" || h === "kołdra" || h === "kołdry") return "koldra";
+        return h;
+      };
       const [prodResp, ...colResps] = await Promise.allSettled([
         fetch(`/products.json?limit=250`).then((r) => (r.ok ? r.json() : null)),
         ...colHandles.map((h) =>
@@ -2068,14 +2074,14 @@
       const nextColOrderMap = {};
       const addColMapping = (pid, handle) => {
         const key = String(pid);
-        const normHandle = handle === "na-prezent" ? "zestawy" : handle;
+        const normHandle = normalizeCatHandle(handle);
         if (!prodColMap[key]) prodColMap[key] = [];
         if (!prodColMap[key].includes(normHandle)) prodColMap[key].push(normHandle);
       };
 
       if (window.DOMIVIO_COLLECTION_MAP) {
         Object.keys(window.DOMIVIO_COLLECTION_MAP).forEach((h) => {
-          const normH = h === "na-prezent" ? "zestawy" : h;
+          const normH = normalizeCatHandle(h);
           const ids = (window.DOMIVIO_COLLECTION_MAP[h] || []).map((id) => String(id));
           if (ids.length > 0 && !nextColOrderMap[normH]) {
             nextColOrderMap[normH] = ids.slice();
@@ -2087,7 +2093,7 @@
       colHandles.forEach((h, idx) => {
         const cRes = colResps[idx];
         if (cRes && cRes.status === "fulfilled" && cRes.value && Array.isArray(cRes.value.products)) {
-          const normH = h === "na-prezent" ? "zestawy" : h;
+          const normH = normalizeCatHandle(h);
           if (cRes.value.products.length > 0) {
             nextColOrderMap[normH] = cRes.value.products.map((cp) => String(cp.id));
           }
@@ -2168,12 +2174,14 @@
 
       const catLabelPLMap = {
         "poduszki": "PODUSZKI",
+        "koldra": "KOŁDRA",
         "dla-dzieci": "DLA DZIECI",
         "akcesoria": "AKCESORIA",
         "zestawy": "ZESTAWY"
       };
       const catLabelENMap = {
         "poduszki": "PILLOWS",
+        "koldra": "DUVETS",
         "dla-dzieci": "FOR KIDS",
         "akcesoria": "ACCESSORIES",
         "zestawy": "SETS"
@@ -2196,13 +2204,13 @@
 
         const cats = [];
         const addCat = (c) => {
-          const norm = c === "na-prezent" ? "zestawy" : c;
+          const norm = normalizeCatHandle(c);
           if (norm && !cats.includes(norm)) cats.push(norm);
         };
 
         // 1. Categories from Shopify Admin "Kolekcje"
         (prodColMap[String(rp.id)] || []).forEach((h) => {
-          if (catColHandles.includes(h)) addCat(h);
+          if (catColHandles.includes(h) || h === "koldra" || h === "zestawy") addCat(h);
         });
 
         // 2. Categories from Shopify Admin "Typ" (product_type) and "Tagi" (tags)
@@ -2225,7 +2233,9 @@
         const tagStr = [rp.product_type || "", rawTagsList.join(" ")]
           .join(" ")
           .toLowerCase();
+        const titleLower = String(rp.title || "").toLowerCase();
 
+        if (tagStr.includes("kołdr") || tagStr.includes("koldr") || tagStr.includes("duvet") || titleLower.includes("kołdr") || titleLower.includes("koldr")) addCat("koldra");
         if (tagStr.includes("poduszk") || tagStr.includes("pillow")) addCat("poduszki");
         if (tagStr.includes("dziec") || tagStr.includes("kid")) addCat("dla-dzieci");
         if (tagStr.includes("akcesor") || tagStr.includes("poszewk") || tagStr.includes("access")) addCat("akcesoria");
