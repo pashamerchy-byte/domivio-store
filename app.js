@@ -957,6 +957,8 @@
           </div>
         </div>
 
+        ${renderPdpRecommendations(prod)}
+
         ${renderPdpJudgeMeWidget(prod)}
       </div>
     `;
@@ -971,6 +973,81 @@
       document.body.scrollTop = 0;
     }
   };
+
+  function renderPdpRecommendations(currentProd) {
+    if (!currentProd || !Array.isArray(PRODUCTS)) return "";
+    const curCats = Array.isArray(currentProd.category) ? currentProd.category : [];
+    const others = PRODUCTS.filter(
+      (p) => p && p.handle !== currentProd.handle && String(p.id) !== String(currentProd.id)
+    );
+    if (others.length === 0) return "";
+
+    others.sort((a, b) => {
+      const aCats = Array.isArray(a.category) ? a.category : [];
+      const bCats = Array.isArray(b.category) ? b.category : [];
+      const aSame = aCats.some((c) => curCats.includes(c)) ? 1 : 0;
+      const bSame = bCats.some((c) => curCats.includes(c)) ? 1 : 0;
+      if (aSame !== bSame) return bSame - aSame;
+      return 0;
+    });
+
+    const recList = others.slice(0, 8);
+    const cardsHtml = recList
+      .map((p) => {
+        const price = getProductPrice(p);
+        const comp = getProductCompare(p);
+        const savePct = comp && comp > price ? Math.round(((comp - price) / comp) * 100) : 0;
+        const catLabel = currentLang === "en" ? p.catLabelEN || "SLEEP" : p.catLabelPL || "PODUSZKI";
+        const heroImg = optimizeShopifyImg(
+          resolveAsset((p.images && p.images[0]) || "domivio_wave_1.jpg"),
+          680
+        );
+        const stats = getJudgeMeProductStats(p.id);
+
+        return `
+          <article class="dw-card" style="cursor:pointer;" onclick="openProductModal('${p.handle}')">
+            <div class="dw-card__box">
+              <img class="dw-card__img" src="${heroImg}" alt="${p.title[currentLang]}" width="320" height="320" loading="lazy" decoding="async" />
+            </div>
+            <div class="dw-card__info">
+              <div class="dw-card__cat">${catLabel}</div>
+              <h3 class="dw-card__title">${p.title[currentLang]}</h3>
+              <div class="dw-card__jm-badge">
+                <span class="dw-card__jm-stars">★★★★★</span>
+                <span>${stats.avg}</span>
+                <span class="dw-card__jm-count">(${stats.count})</span>
+              </div>
+              <div class="dw-card__price-row">
+                <span class="dw-card__price">${formatValue(price)}</span>
+                ${comp && comp > price ? `<span class="dw-card__old">${formatValue(comp)}</span>` : ""}
+                ${savePct > 0 ? `<span class="dw-card__disc">-${savePct}%</span>` : ""}
+              </div>
+              <button type="button" class="dw-card__mobile-atc" onclick="event.stopPropagation(); addToCart(${p.variantId}, 1, true)">
+                ${t("btn_add_to_cart")}
+              </button>
+            </div>
+          </article>
+        `;
+      })
+      .join("");
+
+    return `
+      <section class="dw-pdp-recs" aria-label="${currentLang === "en" ? "Recommended products" : "Polecane produkty"}">
+        <div class="dw-pdp-recs__head">
+          <div>
+            <div class="dw-pdp-recs__eyebrow">${currentLang === "en" ? "COMPLETE YOUR SLEEP" : "DOBIERZ DO ZESTAWU"}</div>
+            <h2 class="dw-pdp-recs__title">${currentLang === "en" ? "YOU MAY ALSO LIKE" : "POLECANE PRODUKTY"}</h2>
+          </div>
+          <button type="button" class="dw-pdp-recs__all-btn" onclick="closeProductModal(); var el=document.getElementById('catalog'); if(el) el.scrollIntoView({behavior:'smooth'});">
+            ${currentLang === "en" ? "VIEW ALL CATALOG →" : "CAŁY KATALOG →"}
+          </button>
+        </div>
+        <div class="dw-product-grid dw-pdp-recs__grid">
+          ${cardsHtml}
+        </div>
+      </section>
+    `;
+  }
 
   window.switchPdpHeroPhoto = function (src, btnEl) {
     const heroImg = document.getElementById("pdpMainHeroImg");
