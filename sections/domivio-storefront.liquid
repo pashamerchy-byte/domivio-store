@@ -311,6 +311,20 @@
 
   window.DOMIVIO_INITIAL_PRODUCT_HANDLE = {% if product %}{{ product.handle | json }}{% else %}null{% endif %};
 
+  window.DOMIVIO_LIQUID_PRODUCTS_MAP = {
+    {% for p in collections['all'].products %}
+      "{{ p.id }}": {{ p | json }},
+    {% endfor %}
+    {% for col in collections %}
+      {% for p in col.products %}
+        "{{ p.id }}": {{ p | json }},
+      {% endfor %}
+    {% endfor %}
+    {% if product %}
+      "{{ product.id }}": {{ product | json }}
+    {% endif %}
+  };
+
   window.DOMIVIO_COLLECTION_MAP = {
     {% for col in collections %}
       "{{ col.handle }}": [{% for p in col.products %}{{ p.id }}{% unless forloop.last %},{% endunless %}{% endfor %}]{% unless forloop.last %},{% endunless %}

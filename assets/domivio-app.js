@@ -52,12 +52,27 @@
       .replace(/^-|-$/g, "");
   }
 
+  const HANDLE_ALIASES = {
+    "poduszka-ortopedyczna-adult-cell": "poduszka-ortopedyczna-tpe-cell®-8-5-10-cm",
+    "poduszka-ergonomiczna-memory-foam®": "рр",
+    "poduszka-ergonomiczna-memory-foam": "рр",
+    "koldra-puchowa-160x200": "ывц",
+    "poduszka-na-krzeslo": "k",
+    "poduszka-na-kszeslo": "k"
+  };
+
   function findProductByHandle(rawHandle) {
     if (!rawHandle) return null;
     let clean = String(rawHandle).trim();
-    try {
-      clean = decodeURIComponent(clean);
-    } catch (e) {}
+    for (let i = 0; i < 2; i++) {
+      try {
+        const dec = decodeURIComponent(clean);
+        if (dec === clean) break;
+        clean = dec;
+      } catch (e) {
+        break;
+      }
+    }
     clean = clean
       .replace(/^#produkt-/i, "")
       .replace(/^\/?products\//i, "")
@@ -70,14 +85,19 @@
     const lower = clean.toLowerCase();
     found = PRODUCTS.find((p) => String(p.handle || "").toLowerCase() === lower);
     if (found) return found;
+    if (HANDLE_ALIASES[lower]) {
+      const aliased = HANDLE_ALIASES[lower];
+      found = PRODUCTS.find((p) => p.handle === aliased || String(p.handle || "").toLowerCase() === aliased);
+      if (found) return found;
+    }
     const normTarget = slugifyPolish(clean);
     if (!normTarget) return null;
     return (
-      PRODUCTS.find(
-        (p) =>
-          slugifyPolish(p.handle) === normTarget ||
-          slugifyPolish(p.title && p.title.pl) === normTarget
-      ) || null
+      PRODUCTS.find((p) => {
+        const sh = slugifyPolish(p.handle);
+        const st = slugifyPolish(p.title && p.title.pl);
+        return (sh && sh === normTarget) || (st && st === normTarget);
+      }) || null
     );
   }
 
@@ -2359,18 +2379,52 @@
         if (h === "koldry" || h === "kołdra" || h === "kołdry") return "koldra";
         return h;
       };
-      const [prodResp, ...colResps] = await Promise.allSettled([
-        fetch(`/products.json?limit=250`).then((r) => (r.ok ? r.json() : null)),
-        ...colHandles.map((h) =>
-          fetch(`/collections/${h}/products.json?limit=250`).then((r) => (r.ok ? r.json() : null))
-        )
-      ]);
 
-      if (prodResp.status !== "fulfilled" || !prodResp.value) {
-        resolveUrlToProductOrCategory(true);
-        return;
+      let remoteProducts = [];
+      let colResps = [];
+      const liquidMap = window.DOMIVIO_LIQUID_PRODUCTS_MAP;
+      const liquidEntries = liquidMap && typeof liquidMap === "object" ? Object.values(liquidMap).filter(Boolean) : [];
+
+      if (liquidEntries.length > 0) {
+        remoteProducts = liquidEntries.map((lp) => ({
+          id: lp.id,
+          title: lp.title,
+          handle: lp.handle,
+          body_html: lp.body_html !== undefined ? lp.body_html : (lp.description || ""),
+          product_type: lp.product_type !== undefined ? lp.product_type : (lp.type || ""),
+          tags: lp.tags || [],
+          options: (lp.options || []).map((opt) => (typeof opt === "string" ? { name: opt } : opt)),
+          images: (lp.images || []).map((im) => {
+            const src = typeof im === "string" ? im : (im && im.src) || "";
+            return src.startsWith("//") ? "https:" + src : src;
+          }),
+          variants: (lp.variants || []).map((v) => ({
+            id: v.id,
+            title: v.title,
+            price: typeof v.price === "number" ? (v.price / 100).toFixed(2) : v.price,
+            compare_at_price:
+              typeof v.compare_at_price === "number"
+                ? (v.compare_at_price / 100).toFixed(2)
+                : v.compare_at_price || 0,
+            featured_image:
+              v.featured_image && v.featured_image.src
+                ? {
+                    src: v.featured_image.src.startsWith("//")
+                      ? "https:" + v.featured_image.src
+                      : v.featured_image.src
+                  }
+                : null
+          }))
+        }));
+      } else {
+        const prodResp = await fetch(`/products.json?limit=250`)
+          .then((r) => (r.ok ? r.json() : null))
+          .catch(() => null);
+        if (prodResp && Array.isArray(prodResp.products)) {
+          remoteProducts = prodResp.products;
+        }
       }
-      const remoteProducts = prodResp.value.products || [];
+
       if (!remoteProducts.length) {
         resolveUrlToProductOrCategory(true);
         return;
