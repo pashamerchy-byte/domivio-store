@@ -3347,12 +3347,63 @@
     });
   }
 
+  function enhanceShopifyCookieBanner() {
+    const banner = document.getElementById("shopify-pc__banner");
+    if (!banner || banner.getAttribute("data-domivio-styled") === "1") return;
+    banner.setAttribute("data-domivio-styled", "1");
+
+    const pEl = banner.querySelector(".shopify-pc__banner__body p");
+    if (pEl) {
+      pEl.innerHTML =
+        currentLang === "en"
+          ? `🍪 We use cookies for smooth shopping and fast delivery. <a href="#" onclick="event.preventDefault(); openLegalModal('prywatnosc');" style="color:#7B42F6;font-weight:600;text-decoration:underline;">Privacy Policy</a>`
+          : `🍪 Używamy plików cookie dla wygodnych zakupów i szybkiej dostawy. <a href="#" onclick="event.preventDefault(); openLegalModal('prywatnosc');" style="color:#7B42F6;font-weight:600;text-decoration:underline;">Polityka RODO</a>`;
+    }
+
+    const accBtn = document.getElementById("shopify-pc__banner__btn-accept");
+    if (accBtn) {
+      accBtn.textContent = currentLang === "en" ? "Accept ✓" : "Akceptuję ✓";
+    }
+
+    const prefsBtn = document.getElementById("shopify-pc__banner__btn-manage-prefs");
+    if (prefsBtn) {
+      prefsBtn.textContent = currentLang === "en" ? "Settings" : "Ustawienia";
+    }
+
+    const decBtn = document.getElementById("shopify-pc__banner__btn-decline");
+    if (decBtn) {
+      decBtn.style.setProperty("display", "none", "important");
+    }
+  }
+
+  let _cookieAutoAccepted = false;
+  function autoAcceptCookieBannerOnEngagement() {
+    if (_cookieAutoAccepted) return;
+    const accBtn = document.getElementById("shopify-pc__banner__btn-accept");
+    const banner = document.getElementById("shopify-pc__banner");
+    if (accBtn && banner && banner.style.display !== "none") {
+      _cookieAutoAccepted = true;
+      accBtn.click();
+    }
+  }
+
+  window.addEventListener(
+    "scroll",
+    () => {
+      if ((window.scrollY || document.documentElement.scrollTop || 0) > 420) {
+        autoAcceptCookieBannerOnEngagement();
+      }
+    },
+    { passive: true }
+  );
+
   let _domivioInitialized = false;
   function bootDomivio() {
     if (_domivioInitialized) return;
     if (!document.getElementById("productGrid") && !document.getElementById("pdpPageView")) return;
     _domivioInitialized = true;
     initDomivioStorefront();
+    enhanceShopifyCookieBanner();
 
     const heroSec = document.querySelector(".dw-hero");
     let heroHovered = false;
@@ -3375,6 +3426,7 @@
 
   let _lastHref = window.location.href;
   setInterval(() => {
+    enhanceShopifyCookieBanner();
     if (window.location.href !== _lastHref) {
       _lastHref = window.location.href;
       const h = extractProductHandleFromLocation();
