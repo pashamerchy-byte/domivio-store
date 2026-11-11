@@ -476,14 +476,14 @@
         const loadAttr = idx < 6 ? "eager" : "lazy";
 
         return `
-          <article class="dw-card">
-            <div class="dw-card__box" onclick="openProductModal('${p.handle}')">
+          <article class="dw-card" style="cursor:pointer;" onclick="openProductModal('${p.handle}')">
+            <div class="dw-card__box">
               <img class="dw-card__img" src="${heroImg}" alt="${p.title[currentLang]}" width="320" height="320" loading="${loadAttr}" decoding="async" />
             </div>
             <div class="dw-card__info">
               <div class="dw-card__cat">${catLabel}</div>
-              <h3 class="dw-card__title" onclick="openProductModal('${p.handle}')">${p.title[currentLang]}</h3>
-              <div class="dw-card__jm-badge" onclick="openProductModal('${p.handle}')">
+              <h3 class="dw-card__title">${p.title[currentLang]}</h3>
+              <div class="dw-card__jm-badge">
                 <span class="dw-card__jm-stars">★★★★★</span>
                 <span>${getJudgeMeProductStats(p.id).avg}</span>
                 <span class="dw-card__jm-count">(${getJudgeMeProductStats(p.id).count})</span>
@@ -493,7 +493,7 @@
                 ${comp && comp > price ? `<span class="dw-card__old">${formatValue(comp)}</span>` : ""}
                 ${savePct > 0 ? `<span class="dw-card__disc">-${savePct}%</span>` : ""}
               </div>
-              <button type="button" class="dw-card__mobile-atc" onclick="addToCart(${p.variantId}, 1, true)">
+              <button type="button" class="dw-card__mobile-atc" onclick="event.stopPropagation(); addToCart(${p.variantId}, 1, true)">
                 ${t("btn_add_to_cart")}
               </button>
             </div>
@@ -630,14 +630,14 @@
 
     if (!pdpView) return;
 
-    const wasOnHome = homeView && homeView.style.display !== "none";
+    const wasOnHome = homeView && homeView.style.display !== "none" && !document.documentElement.classList.contains("domivio-direct-pdp");
     if (wasOnHome) {
       savedHomeScrollY = window.scrollY || document.documentElement.scrollTop || 0;
     }
     if (!preserveScroll && !isHandlingPopState) {
       try {
         const curState = history.state || {};
-        const targetProductUrl = "/products/" + encodeURIComponent(prod.handle);
+        const targetProductUrl = "/?produkt=" + encodeURIComponent(prod.handle);
         if (wasOnHome || curState.domivioView !== "pdp") {
           history.replaceState(
             { domivioView: "home", category: currentCategory, scrollY: savedHomeScrollY },
@@ -649,7 +649,7 @@
             "",
             targetProductUrl
           );
-        } else if (curState.handle !== prod.handle || window.location.pathname !== targetProductUrl) {
+        } else if (curState.handle !== prod.handle || window.location.search !== "?produkt=" + encodeURIComponent(prod.handle)) {
           history.pushState(
             { domivioView: "pdp", handle: prod.handle, category: currentCategory, scrollY: savedHomeScrollY },
             "",
@@ -951,6 +951,7 @@
       </div>
     `;
 
+    document.documentElement.classList.add("domivio-direct-pdp");
     if (homeView) homeView.style.display = "none";
     pdpView.style.display = "block";
     fetchLiveJudgeMeProductReviews(prod.id);
@@ -978,6 +979,7 @@
   window.closeProductModal = function (fromPopState) {
     const modal = document.getElementById("pdpModal");
     if (modal) modal.classList.remove("is-open");
+    document.documentElement.classList.remove("domivio-direct-pdp");
     const pdpView = document.getElementById("pdpPageView");
     const homeView = document.getElementById("homeMainView");
     const wasPdpOpen = Boolean(activePdpProduct) || (pdpView && pdpView.style.display !== "none");
@@ -989,7 +991,12 @@
       document.documentElement.scrollTop = savedHomeScrollY;
       document.body.scrollTop = savedHomeScrollY;
     }
-    if (!fromPopState && (window.location.hash.startsWith("#produkt-") || /\/products\//i.test(window.location.pathname))) {
+    if (
+      !fromPopState &&
+      (window.location.hash.startsWith("#produkt-") ||
+        /\/products\//i.test(window.location.pathname) ||
+        /[?&](produkt|product)=/i.test(window.location.search))
+    ) {
       try {
         history.replaceState(
           { domivioView: "home", category: currentCategory, scrollY: savedHomeScrollY },
@@ -1015,6 +1022,7 @@
         return false;
       } else {
         pendingInitialProductHandle = "";
+        document.documentElement.classList.remove("domivio-direct-pdp");
         if (homeView && !activePdpProduct) homeView.style.display = "block";
       }
     }
@@ -3173,14 +3181,16 @@
     `;
   }
 
-  // ── Init on DOMContentLoaded & Shopify Theme Editor Live Reload ───────
+  // ── Init Immediately + on DOMContentLoaded & Shopify Theme Editor Live Reload ──
   function initDomivioStorefront() {
     window.setDomivioLang(currentLang);
     renderHomepageJudgeMeReviews();
     const initialHandle = pendingInitialProductHandle || extractProductHandleFromLocation();
     if (initialHandle) {
+      document.documentElement.classList.add("domivio-direct-pdp");
       const homeView = document.getElementById("homeMainView");
       if (homeView) homeView.style.display = "none";
+      resolveUrlToProductOrCategory(false);
     }
     syncWithShopifyBackend();
 
@@ -3204,7 +3214,11 @@
     });
   }
 
-  document.addEventListener("DOMContentLoaded", () => {
+  let _domivioInitialized = false;
+  function bootDomivio() {
+    if (_domivioInitialized) return;
+    if (!document.getElementById("productGrid") && !document.getElementById("pdpPageView")) return;
+    _domivioInitialized = true;
     initDomivioStorefront();
 
     const heroSec = document.querySelector(".dw-hero");
@@ -3218,7 +3232,27 @@
         }
       }, 7000);
     }
-  });
+  }
+
+  bootDomivio();
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", bootDomivio);
+  }
+  window.addEventListener("load", bootDomivio);
+
+  let _lastHref = window.location.href;
+  setInterval(() => {
+    if (window.location.href !== _lastHref) {
+      _lastHref = window.location.href;
+      const h = extractProductHandleFromLocation();
+      if (h) {
+        const matched = findProductByHandle(h);
+        if (matched && (!activePdpProduct || activePdpProduct.handle !== matched.handle)) {
+          window.openProductModal(matched.handle, 1, false);
+        }
+      }
+    }
+  }, 200);
 
   document.addEventListener("shopify:section:load", () => {
     initDomivioStorefront();

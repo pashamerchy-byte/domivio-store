@@ -15,6 +15,20 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   {{ 'domivio-styles.css' | asset_url | stylesheet_tag }}
+  <script>
+    (function() {
+      var h = window.location.hash || "";
+      var s = window.location.search || "";
+      var p = window.location.pathname || "";
+      if (/^#produkt-/i.test(h) || /[?&](produkt|product)=/i.test(s) || /\/products\/[^/?#]+/i.test(p)) {
+        document.documentElement.classList.add("domivio-direct-pdp");
+      }
+    })();
+  </script>
+  <style>
+    html.domivio-direct-pdp #homeMainView { display: none !important; }
+    html.domivio-direct-pdp #pdpPageView { display: block !important; min-height: 75vh; }
+  </style>
   {{ shop.metafields.judgeme.settings }}
   {{ content_for_header }}
   <script type="application/ld+json">
