@@ -3347,205 +3347,61 @@
     });
   }
 
+  let _cookieConsentGranted = false;
   function enhanceShopifyCookieBanner() {
-    const banner = document.getElementById("shopify-pc__banner");
-    if (!banner) return;
-
     if (!document.getElementById("domivio-cookie-override-style")) {
       const st = document.createElement("style");
       st.id = "domivio-cookie-override-style";
       st.textContent = `
-        html body #shopify-pc__banner.shopify-pc__banner__dialog {
-          position: fixed !important;
-          bottom: 12px !important;
-          left: 12px !important;
-          right: 12px !important;
-          top: auto !important;
-          max-width: 560px !important;
-          margin: 0 auto !important;
-          padding: 10px 14px !important;
-          border-radius: 16px !important;
-          background: rgba(255, 255, 255, 0.97) !important;
-          backdrop-filter: blur(14px) !important;
-          -webkit-backdrop-filter: blur(14px) !important;
-          box-shadow: 0 10px 32px rgba(24, 14, 41, 0.16) !important;
-          border: 1px solid rgba(123, 66, 246, 0.22) !important;
-          z-index: 9998 !important;
-          min-height: 0 !important;
-          height: auto !important;
-        }
-        html body #shopify-pc__banner .shopify-pc__banner__wrapper {
-          display: flex !important;
-          flex-direction: row !important;
-          align-items: center !important;
-          justify-content: space-between !important;
-          gap: 12px !important;
-          padding: 0 !important;
-          margin: 0 !important;
-        }
-        html body #shopify-pc__banner #shopify-pc__banner__body-title {
+        html body #shopify-pc__banner,
+        html body #shopify-pc__banner.shopify-pc__banner__dialog,
+        html body #shopify-pc__prefs,
+        html body .shopify-pc__banner__dialog,
+        html body .shopify-pc__prefs__dialog,
+        html body .shopify-pc__prefs__overlay {
           display: none !important;
-        }
-        html body #shopify-pc__banner .shopify-pc__banner__body {
-          margin: 0 !important;
-          padding: 0 !important;
-          flex: 1 1 auto !important;
-        }
-        html body #shopify-pc__banner .shopify-pc__banner__body p {
-          font-size: 11.5px !important;
-          line-height: 1.35 !important;
-          color: #4b4458 !important;
-          margin: 0 !important;
-        }
-        html body #shopify-pc__banner .shopify-pc__banner__btns {
-          display: flex !important;
-          flex-direction: row !important;
-          align-items: center !important;
-          gap: 8px !important;
-          margin: 0 !important;
-          padding: 0 !important;
-          flex-shrink: 0 !important;
-          width: auto !important;
-        }
-        html body #shopify-pc__banner #shopify-pc__banner__btn-decline {
-          display: none !important;
-        }
-        html body #shopify-pc__banner #shopify-pc__banner__btn-manage-prefs {
-          font-size: 10.5px !important;
-          color: #9b95a6 !important;
-          background: transparent !important;
-          border: none !important;
-          padding: 4px 6px !important;
-          margin: 0 !important;
-          text-decoration: underline !important;
-          min-width: 0 !important;
-          width: auto !important;
-          order: 1 !important;
-        }
-        html body #shopify-pc__banner #shopify-pc__banner__btn-accept {
-          background: linear-gradient(135deg, #7B42F6 0%, #6328E0 100%) !important;
-          color: #ffffff !important;
-          border: none !important;
-          border-radius: 999px !important;
-          padding: 9px 16px !important;
-          font-size: 12.5px !important;
-          font-weight: 700 !important;
-          white-space: nowrap !important;
-          box-shadow: 0 4px 14px rgba(123, 66, 246, 0.35) !important;
-          margin: 0 !important;
-          min-width: 0 !important;
-          width: auto !important;
-          order: 2 !important;
+          visibility: hidden !important;
+          opacity: 0 !important;
+          pointer-events: none !important;
+          width: 0 !important;
+          height: 0 !important;
+          overflow: hidden !important;
         }
       `;
       document.head.appendChild(st);
     }
 
-    if (banner.getAttribute("data-domivio-styled") === "1") return;
-    banner.setAttribute("data-domivio-styled", "1");
-
-    banner.style.setProperty("position", "fixed", "important");
-    banner.style.setProperty("bottom", "12px", "important");
-    banner.style.setProperty("left", "12px", "important");
-    banner.style.setProperty("right", "12px", "important");
-    banner.style.setProperty("top", "auto", "important");
-    banner.style.setProperty("max-width", "560px", "important");
-    banner.style.setProperty("margin", "0 auto", "important");
-    banner.style.setProperty("padding", "10px 14px", "important");
-    banner.style.setProperty("border-radius", "16px", "important");
-    banner.style.setProperty("height", "auto", "important");
-    banner.style.setProperty("min-height", "0", "important");
-
-    const wrapper = banner.querySelector(".shopify-pc__banner__wrapper");
-    if (wrapper) {
-      wrapper.style.setProperty("display", "flex", "important");
-      wrapper.style.setProperty("flex-direction", "row", "important");
-      wrapper.style.setProperty("align-items", "center", "important");
-      wrapper.style.setProperty("justify-content", "space-between", "important");
-      wrapper.style.setProperty("gap", "12px", "important");
-      wrapper.style.setProperty("padding", "0", "important");
-      wrapper.style.setProperty("margin", "0", "important");
+    const banner = document.getElementById("shopify-pc__banner");
+    if (banner) {
+      banner.style.setProperty("display", "none", "important");
+      banner.style.setProperty("visibility", "hidden", "important");
+      banner.style.setProperty("opacity", "0", "important");
+      banner.style.setProperty("pointer-events", "none", "important");
     }
 
-    const titleEl = document.getElementById("shopify-pc__banner__body-title");
-    if (titleEl) {
-      titleEl.style.setProperty("display", "none", "important");
-    }
+    if (!_cookieConsentGranted) {
+      try {
+        if (window.Shopify && window.Shopify.customerPrivacy && typeof window.Shopify.customerPrivacy.setTrackingConsent === "function") {
+          window.Shopify.customerPrivacy.setTrackingConsent(
+            { analytics: true, marketing: true, preferences: true, sale_of_data: true },
+            function () {}
+          );
+          _cookieConsentGranted = true;
+        }
+      } catch (e) {}
 
-    const bodyEl = banner.querySelector(".shopify-pc__banner__body");
-    if (bodyEl) {
-      bodyEl.style.setProperty("margin", "0", "important");
-      bodyEl.style.setProperty("padding", "0", "important");
-      bodyEl.style.setProperty("flex", "1 1 auto", "important");
-    }
-
-    const pEl = banner.querySelector(".shopify-pc__banner__body p");
-    if (pEl) {
-      pEl.style.setProperty("font-size", "11.5px", "important");
-      pEl.style.setProperty("line-height", "1.35", "important");
-      pEl.style.setProperty("margin", "0", "important");
-      pEl.innerHTML =
-        currentLang === "en"
-          ? `🍪 We use cookies for smooth shopping. <a href="#" onclick="event.preventDefault(); openLegalModal('prywatnosc');" style="color:#7B42F6;font-weight:600;text-decoration:underline;">Privacy</a>`
-          : `🍪 Używamy plików cookie dla wygodnych zakupów. <a href="#" onclick="event.preventDefault(); openLegalModal('prywatnosc');" style="color:#7B42F6;font-weight:600;text-decoration:underline;">Polityka</a>`;
-    }
-
-    const btnsWrap = banner.querySelector(".shopify-pc__banner__btns");
-    if (btnsWrap) {
-      btnsWrap.style.setProperty("display", "flex", "important");
-      btnsWrap.style.setProperty("flex-direction", "row", "important");
-      btnsWrap.style.setProperty("align-items", "center", "important");
-      btnsWrap.style.setProperty("gap", "8px", "important");
-      btnsWrap.style.setProperty("margin", "0", "important");
-      btnsWrap.style.setProperty("padding", "0", "important");
-      btnsWrap.style.setProperty("width", "auto", "important");
-      btnsWrap.style.setProperty("flex-shrink", "0", "important");
-    }
-
-    const accBtn = document.getElementById("shopify-pc__banner__btn-accept");
-    if (accBtn) {
-      accBtn.textContent = currentLang === "en" ? "Accept ✓" : "Akceptuję ✓";
-      accBtn.style.setProperty("background", "linear-gradient(135deg, #7B42F6 0%, #6328E0 100%)", "important");
-      accBtn.style.setProperty("color", "#ffffff", "important");
-      accBtn.style.setProperty("border", "none", "important");
-      accBtn.style.setProperty("border-radius", "999px", "important");
-      accBtn.style.setProperty("padding", "9px 16px", "important");
-      accBtn.style.setProperty("font-size", "12.5px", "important");
-      accBtn.style.setProperty("font-weight", "700", "important");
-      accBtn.style.setProperty("white-space", "nowrap", "important");
-      accBtn.style.setProperty("margin", "0", "important");
-      accBtn.style.setProperty("width", "auto", "important");
-      accBtn.style.setProperty("min-width", "0", "important");
-    }
-
-    const prefsBtn = document.getElementById("shopify-pc__banner__btn-manage-prefs");
-    if (prefsBtn) {
-      prefsBtn.textContent = currentLang === "en" ? "Settings" : "Opcje";
-      prefsBtn.style.setProperty("font-size", "10.5px", "important");
-      prefsBtn.style.setProperty("color", "#9b95a6", "important");
-      prefsBtn.style.setProperty("background", "transparent", "important");
-      prefsBtn.style.setProperty("border", "none", "important");
-      prefsBtn.style.setProperty("padding", "4px 4px", "important");
-      prefsBtn.style.setProperty("margin", "0", "important");
-      prefsBtn.style.setProperty("width", "auto", "important");
-      prefsBtn.style.setProperty("min-width", "0", "important");
-    }
-
-    const decBtn = document.getElementById("shopify-pc__banner__btn-decline");
-    if (decBtn) {
-      decBtn.style.setProperty("display", "none", "important");
+      const accBtn = document.getElementById("shopify-pc__banner__btn-accept");
+      if (accBtn) {
+        _cookieConsentGranted = true;
+        try {
+          accBtn.click();
+        } catch (e) {}
+      }
     }
   }
 
-  let _cookieAutoAccepted = false;
   function autoAcceptCookieBannerOnEngagement() {
-    if (_cookieAutoAccepted) return;
-    const accBtn = document.getElementById("shopify-pc__banner__btn-accept");
-    const banner = document.getElementById("shopify-pc__banner");
-    if (accBtn && banner && banner.style.display !== "none") {
-      _cookieAutoAccepted = true;
-      accBtn.click();
-    }
+    enhanceShopifyCookieBanner();
   }
 
   window.addEventListener(
