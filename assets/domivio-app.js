@@ -29,6 +29,78 @@
   let activePdpPackQty = 1;
   let selectedVariantByHandle = {};
 
+  const META_PIXEL_ID = "1004706708668571";
+  const AD_PARAMS_STORAGE_KEY = "domivio_ad_tracking_params";
+
+  function ensureMetaPixelLoaded() {
+    try {
+      if (typeof window.fbq !== "function") {
+        !(function (f, b, e, v, n, t, s) {
+          if (f.fbq) return;
+          n = f.fbq = function () {
+            n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
+          };
+          if (!f._fbq) f._fbq = n;
+          n.push = n;
+          n.loaded = !0;
+          n.version = "2.0";
+          n.queue = [];
+          t = b.createElement(e);
+          t.async = !0;
+          t.src = v;
+          s = b.getElementsByTagName(e)[0];
+          s.parentNode.insertBefore(t, s);
+        })(window, document, "script", "https://connect.facebook.net/en_US/fbevents.js");
+        window.fbq("init", META_PIXEL_ID);
+        window.fbq("track", "PageView");
+      }
+    } catch (e) {}
+  }
+
+  function captureAdTrackingParams() {
+    try {
+      const sp = new URLSearchParams(window.location.search);
+      const keys = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "utm_id", "fbclid", "ttclid", "gclid"];
+      const existing = getSavedAdTrackingParams();
+      let changed = false;
+      keys.forEach((k) => {
+        const val = sp.get(k);
+        if (val) {
+          existing[k] = val;
+          changed = true;
+        }
+      });
+      if (changed) {
+        existing.captured_at = new Date().toISOString();
+        localStorage.setItem(AD_PARAMS_STORAGE_KEY, JSON.stringify(existing));
+      }
+    } catch (e) {}
+  }
+
+  function getSavedAdTrackingParams() {
+    try {
+      const raw = localStorage.getItem(AD_PARAMS_STORAGE_KEY);
+      return raw ? JSON.parse(raw) : {};
+    } catch (e) {
+      return {};
+    }
+  }
+
+  function trackMetaPixelEvent(eventName, payload) {
+    try {
+      ensureMetaPixelLoaded();
+      if (typeof window.fbq === "function") {
+        window.fbq("track", eventName, payload || {});
+      }
+      if (window.Shopify && window.Shopify.analytics && typeof window.Shopify.analytics.publish === "function") {
+        window.Shopify.analytics.publish("domivio_" + String(eventName).toLowerCase(), payload || {});
+      }
+    } catch (e) {}
+  }
+
+  captureAdTrackingParams();
+  ensureMetaPixelLoaded();
+
   function findProductByVariantId(vid) {
     const numVid = Number(vid);
     return PRODUCTS.find(
@@ -971,6 +1043,13 @@
       window.scrollTo({ top: 0, behavior: "instant" });
       document.documentElement.scrollTop = 0;
       document.body.scrollTop = 0;
+      trackMetaPixelEvent("ViewContent", {
+        content_name: prod.title.pl,
+        content_ids: [String(prod.id), String(activeVariantId)],
+        content_type: "product_group",
+        value: Number(displayGrandTotal.toFixed(2)),
+        currency: currentLang === "en" ? "EUR" : "PLN"
+      });
     }
   };
 
@@ -1195,6 +1274,27 @@
     if (openDrawer) {
       openCartDrawer();
     }
+
+    const unitPrice = varObj
+      ? currentLang === "en"
+        ? varObj.priceEUR
+        : varObj.pricePLN
+      : getProductPrice(prod);
+    trackMetaPixelEvent("AddToCart", {
+      content_name: prod.title.pl,
+      content_ids: [String(prod.id), String(actualVid)],
+      content_type: "product_group",
+      num_items: addQty,
+      value: Number((unitPrice * addQty).toFixed(2)),
+      currency: currentLang === "en" ? "EUR" : "PLN"
+    });
+    try {
+      fetch("/cart/add.js", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({ items: [{ id: Number(actualVid), quantity: addQty }] })
+      }).catch(() => {});
+    } catch (e) {}
   };
 
   window.updateCartQty = function (variantId, delta) {
@@ -1569,6 +1669,26 @@
     }
     params.set("attributes[Sklep]", "DOMIVIO");
     params.set("skip_shop_pay", "true");
+
+    const savedUtms = getSavedAdTrackingParams();
+    const utmSummaryParts = [];
+    ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "utm_id", "fbclid", "ttclid", "gclid"].forEach((k) => {
+      if (savedUtms[k]) {
+        params.set(k, savedUtms[k]);
+        if (k.startsWith("utm_")) utmSummaryParts.push(`${k.replace("utm_", "")}:${savedUtms[k]}`);
+      }
+    });
+    if (utmSummaryParts.length > 0) {
+      params.set("attributes[Reklama UTM]", utmSummaryParts.join(" | "));
+    }
+
+    trackMetaPixelEvent("InitiateCheckout", {
+      content_ids: cart.map((i) => String(i.variantId)),
+      content_type: "product_group",
+      num_items: totals.totalCount,
+      value: Number(totals.grandTotal.toFixed(2)),
+      currency: currentLang === "en" ? "EUR" : "PLN"
+    });
 
     const checkoutHost = CFG.shopDomain || CFG.myshopifyDomain;
     const checkoutUrl = `https://${checkoutHost}/cart/${pairs}?${params.toString()}`;
