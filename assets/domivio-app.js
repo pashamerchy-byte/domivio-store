@@ -3427,9 +3427,10 @@
           color: #ffffff !important;
           border: none !important;
           border-radius: 999px !important;
-          padding: 9px 18px !important;
+          padding: 9px 16px !important;
           font-size: 12.5px !important;
           font-weight: 700 !important;
+          white-space: nowrap !important;
           box-shadow: 0 4px 14px rgba(123, 66, 246, 0.35) !important;
           margin: 0 !important;
           min-width: 0 !important;
@@ -3511,6 +3512,7 @@
       accBtn.style.setProperty("padding", "9px 16px", "important");
       accBtn.style.setProperty("font-size", "12.5px", "important");
       accBtn.style.setProperty("font-weight", "700", "important");
+      accBtn.style.setProperty("white-space", "nowrap", "important");
       accBtn.style.setProperty("margin", "0", "important");
       accBtn.style.setProperty("width", "auto", "important");
       accBtn.style.setProperty("min-width", "0", "important");
