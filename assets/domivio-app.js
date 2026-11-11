@@ -637,19 +637,29 @@
     if (!preserveScroll && !isHandlingPopState) {
       try {
         const curState = history.state || {};
-        const targetProductUrl = "/?produkt=" + encodeURIComponent(prod.handle);
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.delete("product");
+        urlParams.set("produkt", prod.handle);
+        const targetProductUrl = "/?" + urlParams.toString();
+
+        const homeParams = new URLSearchParams(window.location.search);
+        homeParams.delete("produkt");
+        homeParams.delete("product");
+        const homeQs = homeParams.toString();
+        const homeUrl = homeQs ? "/?" + homeQs : "/";
+
         if (wasOnHome || curState.domivioView !== "pdp") {
           history.replaceState(
             { domivioView: "home", category: currentCategory, scrollY: savedHomeScrollY },
             "",
-            "/"
+            homeUrl
           );
           history.pushState(
             { domivioView: "pdp", handle: prod.handle, category: currentCategory, scrollY: savedHomeScrollY },
             "",
             targetProductUrl
           );
-        } else if (curState.handle !== prod.handle || window.location.search !== "?produkt=" + encodeURIComponent(prod.handle)) {
+        } else if (curState.handle !== prod.handle) {
           history.pushState(
             { domivioView: "pdp", handle: prod.handle, category: currentCategory, scrollY: savedHomeScrollY },
             "",
@@ -998,10 +1008,15 @@
         /[?&](produkt|product)=/i.test(window.location.search))
     ) {
       try {
+        const homeParams = new URLSearchParams(window.location.search);
+        homeParams.delete("produkt");
+        homeParams.delete("product");
+        const homeQs = homeParams.toString();
+        const homeUrl = homeQs ? "/?" + homeQs : "/";
         history.replaceState(
           { domivioView: "home", category: currentCategory, scrollY: savedHomeScrollY },
           "",
-          "/"
+          homeUrl
         );
       } catch (e) {}
     }
