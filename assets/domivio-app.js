@@ -2756,7 +2756,9 @@
   // ══════════════════════════════════════════════════════════════════════════
   const JUDGEME_PUBLIC_TOKEN = "hccGWgUmKYe4AqwJXKv4gQXZIZs";
   const JUDGEME_SHOP_DOMAIN = "1tvnzn-zf.myshopify.com";
+  const JDGM_REVIEWS_PER_PAGE = 6;
   let selectedJdgmFormStars = 5;
+  let jdgmPageByProduct = {};
 
   const jdgmReviewsCache = {
     "15837514432838": [
@@ -2914,9 +2916,74 @@
       .join("");
   }
 
+  function getJdgmPageForProduct(prodId, totalCount) {
+    const totalPages = Math.max(1, Math.ceil((totalCount || 0) / JDGM_REVIEWS_PER_PAGE));
+    const raw = Number(jdgmPageByProduct[String(prodId)]) || 1;
+    return Math.min(totalPages, Math.max(1, raw));
+  }
+
+  function renderJudgeMePagerHtml(prodId, page, totalPages, totalCount, fromIdx, toIdx) {
+    if (totalPages <= 1) return "";
+    const pageButtons = [];
+    for (let p = 1; p <= totalPages; p++) {
+      pageButtons.push(
+        `<button type="button" class="dw-jm-pager__btn ${p === page ? "is-active" : ""}" onclick="goToJdgmReviewsPage(${prodId}, ${p})">${p}</button>`
+      );
+    }
+    const prevLabel = currentLang === "en" ? "‹ Prev" : "‹ Poprzednia";
+    const nextLabel = currentLang === "en" ? "Next ›" : "Następna ›";
+    const infoLabel =
+      currentLang === "en"
+        ? `Showing ${fromIdx}–${toIdx} of ${totalCount} reviews · Page ${page} of ${totalPages}`
+        : `Pokazano ${fromIdx}–${toIdx} z ${totalCount} opinii · Strona ${page} z ${totalPages}`;
+
+    return `
+      <div class="dw-jm-pager__info">${infoLabel}</div>
+      <div class="dw-jm-pager__btns">
+        <button type="button" class="dw-jm-pager__btn dw-jm-pager__btn--nav" ${page <= 1 ? "disabled" : ""} onclick="goToJdgmReviewsPage(${prodId}, ${page - 1})">${prevLabel}</button>
+        ${pageButtons.join("")}
+        <button type="button" class="dw-jm-pager__btn dw-jm-pager__btn--nav" ${page >= totalPages ? "disabled" : ""} onclick="goToJdgmReviewsPage(${prodId}, ${page + 1})">${nextLabel}</button>
+      </div>
+    `;
+  }
+
+  function renderJudgeMePaginatedView(prodId) {
+    const revs = getJudgeMeProductReviews(prodId);
+    const totalCount = revs.length;
+    const totalPages = Math.max(1, Math.ceil(totalCount / JDGM_REVIEWS_PER_PAGE));
+    const page = getJdgmPageForProduct(prodId, totalCount);
+    const startIdx = (page - 1) * JDGM_REVIEWS_PER_PAGE;
+    const slice = revs.slice(startIdx, startIdx + JDGM_REVIEWS_PER_PAGE);
+    const fromIdx = totalCount > 0 ? startIdx + 1 : 0;
+    const toIdx = Math.min(totalCount, startIdx + JDGM_REVIEWS_PER_PAGE);
+    return {
+      cardsHtml: renderJudgeMeRevCardsHtml(slice),
+      pagerHtml: renderJudgeMePagerHtml(prodId, page, totalPages, totalCount, fromIdx, toIdx)
+    };
+  }
+
+  window.goToJdgmReviewsPage = function (prodId, targetPage) {
+    const revs = getJudgeMeProductReviews(prodId);
+    const totalPages = Math.max(1, Math.ceil(revs.length / JDGM_REVIEWS_PER_PAGE));
+    const nextP = Math.min(totalPages, Math.max(1, Number(targetPage) || 1));
+    jdgmPageByProduct[String(prodId)] = nextP;
+    const view = renderJudgeMePaginatedView(prodId);
+    const listEl = document.getElementById("jdgmPdpReviewsList");
+    if (listEl) listEl.innerHTML = view.cardsHtml;
+    const pagerEl = document.getElementById("jdgmPdpPagination");
+    if (pagerEl) pagerEl.innerHTML = view.pagerHtml;
+    const secEl = document.getElementById("jdgmProductReviewsSection");
+    if (secEl) {
+      const rect = secEl.getBoundingClientRect();
+      if (rect.top < 0 || rect.top > window.innerHeight * 0.6) {
+        secEl.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+  };
+
   function renderPdpJudgeMeWidget(prod) {
     const stats = getJudgeMeProductStats(prod.id);
-    const revs = getJudgeMeProductReviews(prod.id);
+    const paginatedView = renderJudgeMePaginatedView(prod.id);
     const barsHtml = [5, 4, 3, 2, 1]
       .map((star) => {
         const cnt = stats.counts[star] || 0;
@@ -3000,7 +3067,10 @@
         </div>
 
         <div class="dw-jm-pdp__list" id="jdgmPdpReviewsList">
-          ${renderJudgeMeRevCardsHtml(revs)}
+          ${paginatedView.cardsHtml}
+        </div>
+        <div class="dw-jm-pager" id="jdgmPdpPagination">
+          ${paginatedView.pagerHtml}
         </div>
       </section>
     `;
@@ -3068,8 +3138,12 @@
       body
     });
 
+    jdgmPageByProduct[key] = 1;
+    const viewAfterSubmit = renderJudgeMePaginatedView(prodId);
     const listEl = document.getElementById("jdgmPdpReviewsList");
-    if (listEl) listEl.innerHTML = renderJudgeMeRevCardsHtml(jdgmReviewsCache[key]);
+    if (listEl) listEl.innerHTML = viewAfterSubmit.cardsHtml;
+    const pagerEl = document.getElementById("jdgmPdpPagination");
+    if (pagerEl) pagerEl.innerHTML = viewAfterSubmit.pagerHtml;
     const stats = getJudgeMeProductStats(prodId);
     const avgEl = document.getElementById("jdgmPdpAvgNum");
     if (avgEl) avgEl.textContent = stats.avg;
@@ -3145,8 +3219,11 @@
           }
         });
         jdgmReviewsCache[key] = merged;
+        const viewAfterSync = renderJudgeMePaginatedView(prodId);
         const listEl = document.getElementById("jdgmPdpReviewsList");
-        if (listEl) listEl.innerHTML = renderJudgeMeRevCardsHtml(merged);
+        if (listEl) listEl.innerHTML = viewAfterSync.cardsHtml;
+        const pagerEl = document.getElementById("jdgmPdpPagination");
+        if (pagerEl) pagerEl.innerHTML = viewAfterSync.pagerHtml;
         const stats = getJudgeMeProductStats(prodId);
         const avgEl = document.getElementById("jdgmPdpAvgNum");
         if (avgEl) avgEl.textContent = stats.avg;

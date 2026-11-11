@@ -2851,6 +2851,69 @@ button {
   gap: 18px;
 }
 
+.dw-jm-pager {
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid #E2E8F0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+.dw-jm-pager:empty {
+  display: none;
+}
+.dw-jm-pager__info {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #64748B;
+  letter-spacing: 0.02em;
+}
+.dw-jm-pager__btns {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.dw-jm-pager__btn {
+  min-width: 38px;
+  height: 38px;
+  padding: 0 12px;
+  background: #FFFFFF;
+  border: 1.5px solid #E2E8F0;
+  color: #242C34;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+.dw-jm-pager__btn:hover:not(:disabled) {
+  border-color: #7B42F6;
+  color: #7B42F6;
+  background: #FAF8FF;
+}
+.dw-jm-pager__btn.is-active {
+  background: #7B42F6;
+  border-color: #7B42F6;
+  color: #FFFFFF;
+  font-weight: 700;
+}
+.dw-jm-pager__btn:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+}
+.dw-jm-pager__btn--nav {
+  padding: 0 14px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
 @media (max-width: 960px) {
   .dw-jm-home__grid {
     grid-template-columns: 1fr;
