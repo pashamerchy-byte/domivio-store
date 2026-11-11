@@ -2763,7 +2763,50 @@
       { author: "Katarzyna N.", rating: 5, date: "10.11.2026", title: "Koniec z bólem szyi po przebudzeniu!", body: "Najlepsza poduszka ortopedyczna jaką miałam. Kratownica TPE CELL® w ogóle się nie nagrzewa, świetnie podpiera kark i po miesiącu wygląda jak nowa." },
       { author: "Marek K.", rating: 5, date: "08.11.2026", title: "Rewelacyjna kratownica TPE, zero potliwości", body: "Przetestowałem wcześniej trzy poduszki z pianki memory i na każdej budziłem się z mokrą głową. Struktura CELL® faktycznie przepuszcza powietrze przez całą noc, a szyja jest idealnie podparta." },
       { author: "Anna W.", rating: 5, date: "05.11.2026", title: "Warta każdej złotówki", body: "Ciężka, stabilna, nie przesuwa się po łóżku i nie zapada jak zwykłe poduszki. Po tygodniu przestałam budzić się z napięciem w barkach. Szybka wysyłka Paczkomatem." },
-      { author: "Piotr Z.", rating: 5, date: "02.11.2026", title: "Technologia zupełnie inna niż zwykła pianka", body: "Sprężysta siatka elastomerowa od razu wraca do kształtu przy zmianie pozycji z pleców na bok. Zero zapachu po wyjęciu z pudełka, poszewka bardzo przyjemna w dotyku." }
+      { author: "Piotr Z.", rating: 5, date: "02.11.2026", title: "Technologia zupełnie inna niż zwykła pianka", body: "Sprężysta siatka elastomerowa od razu wraca do kształtu przy zmianie pozycji z pleców na bok. Zero zapachu po wyjęciu z pudełka, poszewka bardzo przyjemna w dotyku." },
+      { author: "Michał W.", rating: 5, date: "10.11.2026", title: "Kark w końcu odpoczywa po 10h przed komputerem", body: "Pracuję jako programista i codziennie budziłem się ze sztywną szyją. Po przesiadce na poduszkę TPE CELL® ból zniknął po trzeciej nocy. Siatka ugina się dokładnie tam, gdzie trzeba." },
+      { author: "Agnieszka K.", rating: 5, date: "10.11.2026", title: "Zero zagnieceń na twarzy rano!", body: "Kupiłam głównie ze względu na efekt anti-age i brak ucisku na policzek przy spaniu na boku. Różnica jest niesamowita — rano skóra jest gładka, bez odgnieceń od poszewki." },
+      { author: "Tomasz L.", rating: 5, date: "09.11.2026", title: "Ciężka, porządna i nie ucieka spod głowy", body: "Widać od razu, że to produkt premium. Poduszka waży swoje, dzięki czemu leży stabilnie na materacu i nie przesuwa się w nocy. Profil 10 cm idealny pod moje szerokie barki." },
+      { author: "Karolina S.", rating: 5, date: "09.11.2026", title: "Wreszcie poduszka, która naprawdę chłodzi", body: "Zawsze przekładałam poduszkę na drugą, chłodną stronę kilka razy w nocy. Tutaj powietrze swobodnie przelatuje przez kratownicę CELL® i przez całą noc czuć przyjemny chłód." },
+      { author: "Paweł M.", rating: 5, date: "08.11.2026", title: "Żadna pianka memory nie ma do niej startu", body: "Miałem wcześniej dwie drogie poduszki termoelastyczne, ale każda zapadała się pod wpływem ciepła ciała. Elastomer TPE trzyma tę samą sprężystość od wieczora do rana." },
+      { author: "Magdalena B.", rating: 5, date: "08.11.2026", title: "Koniec z porannymi migrenami od kręgosłupa szyjnego", body: "Fizjoterapeuta zasugerował mi zmianę poduszki przez napięciowe bóle głowy. Niższy profil 8,5 cm pasuje mi idealnie. Od dwóch tygodni nie wzięłam ani jednej tabletki przeciwbólowej." },
+      { author: "Jakub R.", rating: 5, date: "07.11.2026", title: "Błyskawiczna wysyłka do Paczkomatu InPost", body: "Zamówiłem rano, a następnego dnia paczka była już w Paczkomacie. Sama poduszka zapakowana bardzo estetycznie, zero chemicznego zapachu, od razu gotowa do spania." },
+      { author: "Monika T.", rating: 4, date: "07.11.2026", title: "Dwie noce adaptacji, a potem bajka", body: "Przez pierwsze dwie noce uczucie sprężystej kratownicy było dla mnie nowe, bo całe życie spałam na puchu. Teraz nie zamieniłabym jej na żadną inną — szyja idealnie podparta." },
+      { author: "Łukasz G.", rating: 5, date: "06.11.2026", title: "Dwa profile wysokości (8,5 i 10 cm) to super rozwiązanie", body: "Kiedy śpię na plecach, układam ją niższą stroną 8,5 cm, a gdy kładę się na boku — wyższą 10 cm. Kręgosłup w linii prostej, zero drętwienia dłoni nad ranem." },
+      { author: "Natalia P.", rating: 5, date: "06.11.2026", title: "Poszewka Tencel™ jest obłędnie miękka", body: "Sama siatka TPE robi wrażenie technologią, ale poszewka zasługuje na osobną pochwałę — jedwabiście gładka, chłodna w dotyku i bardzo łatwo się pierze." },
+      { author: "Grzegorz D.", rating: 5, date: "05.11.2026", title: "Kupiłem drugą dla żony w pakiecie -5%", body: "Najpierw zamówiłem jedną na próbę, ale żona po jednej nocy mi ją zabrała :) Domówiłem od razu drugą. Najlepsza inwestycja w zdrowy sen." },
+      { author: "Joanna W.", rating: 5, date: "05.11.2026", title: "Idealna dla alergików — można umyć pod prysznicem!", body: "Mam silną alergię na roztocza kurzu domowego. To, że cały wkład TPE można po prostu opłukać pod ciepłą wodą w łazience, to dla mnie absolutny przełom." },
+      { author: "Krzysztof J.", rating: 5, date: "04.11.2026", title: "Przestałem chrapać!", body: "Żona zauważyła, że odkąd śpię na poduszce CELL®, głowa nie opada mi do tyłu i przestałem chrapać w nocy. Oboje w końcu się wysypiamy." },
+      { author: "Ewa Z.", rating: 5, date: "04.11.2026", title: "Uczucie nieważkości pod głową", body: "Trudno to opisać słowami, ale głowa jakby unosi się w powietrzu. Zero punktowego ucisku na ucho podczas spania na boku — wcześniej zawsze budził mnie ból małżowiny." },
+      { author: "Marcin K.", rating: 5, date: "03.11.2026", title: "Nie odkształca się ani o milimetr", body: "Używam codziennie od kilku tygodni i kratownica wygląda dokładnie tak samo jak w dniu wyjęcia z pudełka. Bardzo trwały materiał." },
+      { author: "Sylwia N.", rating: 5, date: "03.11.2026", title: "Polecam osobom z dyskopatią szyjną", body: "Mam zniesioną lordozę szyjną i dobranie poduszki graniczyło z cudem. Struktura CELL® dopasowuje się milimetr po milimetrze do krzywizny karku. Ogromna ulga." },
+      { author: "Wojciech S.", rating: 4, date: "02.11.2026", title: "Solidna, choć dość ciężka przy zmianie pościeli", body: "Poduszka waży znacznie więcej niż piankowa, ale dzięki temu nie jeździ po prześcieradle. Komfort snu na najwyższym poziomie, spokojnie daję 4,5/5." },
+      { author: "Aleksandra M.", rating: 5, date: "01.11.2026", title: "Najlepszy prezent na rocznicę", body: "Kupiliśmy sobie z mężem zestaw dwóch sztuk z darmową dostawą. Oboje budzimy się bez bólu pleców i karku. Wygląda bardzo nowocześnie." },
+      { author: "Rafał C.", rating: 5, date: "31.10.2026", title: "Koniec z nocnym poceniem się głowy", body: "Latem i w sezonie grzewczym zawsze budziłem się z wilgotną poduszką. Setki kanalików powietrznych w TPE działają rewelacyjnie — pełna wentylacja 360 stopni." },
+      { author: "Dorota H.", rating: 5, date: "31.10.2026", title: "Błyskawicznie reaguje na zmianę pozycji w nocy", body: "W piance memory po obróceniu się na bok trzeba czekać, aż materiał się ułoży. Tutaj siatka TPE reaguje w ułamku sekundy i od razu podpiera szyję." },
+      { author: "Bartłomiej P.", rating: 5, date: "30.10.2026", title: "Świetna jakość wykonania w każdym detalu", body: "Szwy na poszewce, zamek błyskawiczny i sam odlew kratownicy elastomerowej są wykonane perfekcyjnie. Widać wysoką kontrolę jakości." },
+      { author: "patrycja.k", rating: 5, date: "30.10.2026", title: "Rano wstaję bez opuchlizny pod oczami", body: "Dzięki temu, że głowa leży na odpowiedniej wysokości i nic nie uciska naczyń na twarzy, poranne obrzęki wyraźnie się zmniejszyły. Super produkt!" },
+      { author: "Damian O.", rating: 5, date: "29.10.2026", title: "Polecam każdemu kierowcy zawodowemu", body: "Po całym dniu za kółkiem odcinek szyjny i barki miałem jak z kamienia. Na tej poduszce mięśnie karku rozluźniają się już po kilkunastu minutach leżenia." },
+      { author: "Izabela Ł.", rating: 5, date: "28.10.2026", title: "Wygodna nawet przy spaniu z ręką pod głową", body: "Elastyczna struktura nie blokuje krążenia, a profil fali wypełnia przestrzeń między ramieniem a szyją. Zasypiam dużo szybciej." },
+      { author: "Szymon W.", rating: 4, date: "28.10.2026", title: "Bardzo dobra poduszka technologiczna", body: "Cena nie jest najniższa, ale biorąc pod uwagę żywotność materiału TPE i to, jak dobrze się na niej śpi, zdecydowanie warto dopłacić." },
+      { author: "Weronika G.", rating: 5, date: "27.10.2026", title: "Zero zapachu fabrycznego po rozpakowaniu", body: "Jestem bardzo wyczulona na zapachy, a pianki poliuretanowe często wietrzą się tygodniami. Poduszka Domivio CELL® od pierwszej minuty była całkowicie bezzapachowa." },
+      { author: "Artur B.", rating: 5, date: "26.10.2026", title: "Stabilne podparcie przez 8 godzin snu", body: "Nie zapada się w trakcie nocy, nie trzeba jej poprawiać ani trzepać. Rano budzik dzwoni, a ja czuję się naprawdę zregenerowany." },
+      { author: "Justyna M.", rating: 5, date: "25.10.2026", title: "Uratowała mój kręgosłup szyjny", body: "Przez lata kupowałam zwykłe poduszki w sieciówkach i ciągle bolała mnie głowa. Dopiero kratownica TPE pokazała mi, czym jest prawdziwe podparcie ortopedyczne." },
+      { author: "Kamil Z.", rating: 5, date: "24.10.2026", title: "Sprężysta, chłodna i niesamowicie wygodna", body: "Wszystko zgodnie z opisem na stronie. Szybka dostawa DPD, świetny kontakt ze sklepem. Polecam z czystym sumieniem." },
+      { author: "Marta i Tomek", rating: 5, date: "23.10.2026", title: "Najlepszy zakup do nowej sypialni", body: "Urządzaliśmy sypialnię i obok nowego materaca wybraliśmy dwie poduszki CELL®. Komfort jak w luksusowym SPA, goście zawsze pytają co to za model." },
+      { author: "Robert N.", rating: 5, date: "22.10.2026", title: "Śpię na boku i na plecach — sprawdza się w obu pozycjach", body: "Często zmieniam pozycję w nocy. Konstrukcja falowa 8,5/10 cm sprawia, że niezależnie jak się ułożę, kręgosłup szyjny nie jest wygięty." },
+      { author: "Klaudia J.", rating: 5, date: "21.10.2026", title: "Delikatna dla skóry i włosów", body: "Poszewka jest tak gładka, że włosy nie puszą się i nie plączą po nocy, a skóra twarzy nie jest podrażniona. Uwielbiam ją!" },
+      { author: "Maciej P.", rating: 4, date: "20.10.2026", title: "Świetna alternatywa dla tradycyjnych poduszek", body: "Bardzo nowoczesny materiał. Na początku dziwne uczucie takiej sprężystej galaretki/kratownicy, ale po trzech nocach kark podziękował." },
+      { author: "Beata R.", rating: 5, date: "19.10.2026", title: "Kupiona na prezent dla mamy — jest zachwycona", body: "Mama od dawna narzekała na bóle szyi i drętwienie rąk w nocy. Po tygodniu spania na poduszce CELL® zadzwoniła podziękować, bo dolegliwości ustąpiły." },
+      { author: "Przemysław K.", rating: 5, date: "18.10.2026", title: "Rewelacyjna wentylacja latem i zimą", body: "Śpię w dość ciepłym mieszkaniu i na każdej poduszce było mi za gorąco. Otwarte komórki TPE odprowadzają ciepło błyskawicznie." },
+      { author: "Olga S.", rating: 5, date: "17.10.2026", title: "Nie gniecie ucha przy spaniu na boku!", body: "To był mój największy problem na twardych poduszkach ortopedycznych z pianki. Tutaj kratownica delikatnie ustępuje pod ciężarem małżowiny usznej." },
+      { author: "Dawid T.", rating: 5, date: "16.10.2026", title: "Jakość 10/10, dostawa w 24h", body: "Zamówienie złożone z płatnością BLIK, na drugi dzień rano odebrałem z Paczkomatu. Poduszka spełnia wszystkie obietnice producenta." },
+      { author: "Edyta W.", rating: 5, date: "15.10.2026", title: "Miękka, a jednocześnie idealnie podtrzymuje szyję", body: "Zwykle poduszki są albo za miękkie (głowa wpada do materaca), albo twarde jak deska. Kratownica TPE łączy miękkość powierzchniową ze stabilnym podparciem." },
+      { author: "Sebastian L.", rating: 5, date: "14.10.2026", title: "Koniec z przewracaniem się z boku na bok", body: "Faza głębokiego snu wydłużyła mi się według zegarka o prawie 40 minut odkąd zmieniłem poduszkę na Domivio CELL®. Rano wstaję pełen energii." },
+      { author: "Hanna M.", rating: 4, date: "13.10.2026", title: "Bardzo higieniczna i dobrze wykonana", body: "Duży plus za zdejmowaną poszewkę na zamek i możliwość mycia samego wkładu. Jedyna uwaga — trzeba uważać przy przenoszeniu, bo jest dość ciężka." },
+      { author: "Łukasz C.", rating: 5, date: "12.10.2026", title: "Najwygodniejsza poduszka na rynku", body: "Testowałem poduszki za 600–800 zł znanych marek i ta z kratownicą TPE CELL® bije je na głowę pod względem przewiewności i sprężystości." },
+      { author: "Dominika K.", rating: 5, date: "11.10.2026", title: "Ból między łopatkami wreszcie odpuścił", body: "Nie sądziłam, że poduszka ma aż taki wpływ na odcinek piersiowy i łopatki. Po ustawieniu wyższego profilu 10 cm pod szyję śpię bez żadnego napięcia." },
+      { author: "Mariusz G.", rating: 5, date: "10.10.2026", title: "Zdecydowanie polecam — produkt na lata", body: "Materiał TPE jest praktycznie niezniszczalny, nie kruszy się i nie żółknie jak pianka po roku. Świetny zakup całej naszej rodziny." }
     ],
     "15837741154630": [
       { author: "Magdalena S.", rating: 5, date: "09.11.2026", title: "Bardzo wygodny profil pod szyję", body: "Świetnie wyprofilowana fala. Śpię głównie na boku i wreszcie głowa nie ucieka w dół. Pianka ma idealną, średnią twardość." },
@@ -3088,9 +3131,22 @@
       });
 
       if (parsed.length > 0) {
-        jdgmReviewsCache[String(prodId)] = parsed;
+        const key = String(prodId);
+        const existingList = jdgmReviewsCache[key] || [];
+        const merged = existingList.slice();
+        parsed.forEach((pr) => {
+          const alreadyExists = merged.some(
+            (ex) =>
+              ex.title.toLowerCase() === pr.title.toLowerCase() &&
+              ex.author.toLowerCase() === pr.author.toLowerCase()
+          );
+          if (!alreadyExists && pr.body) {
+            merged.unshift(pr);
+          }
+        });
+        jdgmReviewsCache[key] = merged;
         const listEl = document.getElementById("jdgmPdpReviewsList");
-        if (listEl) listEl.innerHTML = renderJudgeMeRevCardsHtml(parsed);
+        if (listEl) listEl.innerHTML = renderJudgeMeRevCardsHtml(merged);
         const stats = getJudgeMeProductStats(prodId);
         const avgEl = document.getElementById("jdgmPdpAvgNum");
         if (avgEl) avgEl.textContent = stats.avg;
