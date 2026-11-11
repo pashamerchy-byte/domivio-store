@@ -2995,120 +2995,20 @@ button {
   font-weight: 600;
 }
 
-/* ── Compact High-Conversion Cookie Banner (#shopify-pc__banner) ──────── */
-#shopify-pc__banner.shopify-pc__banner__dialog {
-  position: fixed !important;
-  left: 50% !important;
-  right: auto !important;
-  bottom: 14px !important;
-  top: auto !important;
-  transform: translateX(-50%) !important;
-  width: calc(100% - 24px) !important;
-  max-width: 680px !important;
-  padding: 10px 16px !important;
-  margin: 0 !important;
-  background: rgba(255, 255, 255, 0.98) !important;
-  backdrop-filter: blur(10px) !important;
-  border: 1.5px solid #EDE5FF !important;
-  border-radius: 10px !important;
-  box-shadow: 0 10px 30px rgba(36, 44, 52, 0.14) !important;
-  z-index: 99990 !important;
-}
-#shopify-pc__banner .shopify-pc__banner__wrapper {
-  display: flex !important;
-  flex-direction: row !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  gap: 14px !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  max-width: 100% !important;
-}
-#shopify-pc__banner #shopify-pc__banner__body-title {
+/* ── Always-Enabled Auto-Accepted Cookie Banner (Hidden UI) ──────────── */
+html body #shopify-pc__banner,
+html body #shopify-pc__banner.shopify-pc__banner__dialog,
+html body #shopify-pc__prefs,
+html body .shopify-pc__banner__dialog,
+html body .shopify-pc__prefs__dialog,
+html body .shopify-pc__prefs__overlay {
   display: none !important;
-}
-#shopify-pc__banner .shopify-pc__banner__body {
-  margin: 0 !important;
-  padding: 0 !important;
-  flex: 1 1 auto !important;
-}
-#shopify-pc__banner .shopify-pc__banner__body p {
-  margin: 0 !important;
-  font-size: 12px !important;
-  line-height: 1.35 !important;
-  color: #475569 !important;
-}
-#shopify-pc__banner #shopify-pc__banner__body-policy-link {
-  color: #7B42F6 !important;
-  text-decoration: underline !important;
-  font-weight: 600 !important;
-}
-#shopify-pc__banner .shopify-pc__banner__btns {
-  display: flex !important;
-  flex-direction: row !important;
-  align-items: center !important;
-  gap: 10px !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  flex-shrink: 0 !important;
-  width: auto !important;
-}
-#shopify-pc__banner #shopify-pc__banner__btn-decline {
-  display: none !important;
-}
-#shopify-pc__banner #shopify-pc__banner__btn-manage-prefs {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  color: #94A3B8 !important;
-  font-size: 11px !important;
-  font-weight: 500 !important;
-  padding: 4px 6px !important;
-  margin: 0 !important;
-  min-width: 0 !important;
-  text-decoration: underline !important;
-  cursor: pointer !important;
-}
-#shopify-pc__banner #shopify-pc__banner__btn-accept {
-  background: #7B42F6 !important;
-  color: #FFFFFF !important;
-  border: none !important;
-  border-radius: 6px !important;
-  padding: 9px 20px !important;
-  margin: 0 !important;
-  font-size: 12.5px !important;
-  font-weight: 700 !important;
-  letter-spacing: 0.03em !important;
-  text-transform: uppercase !important;
-  cursor: pointer !important;
-  box-shadow: 0 4px 12px rgba(123, 66, 246, 0.25) !important;
-  white-space: nowrap !important;
-}
-#shopify-pc__banner #shopify-pc__banner__btn-accept:hover {
-  background: #6930E0 !important;
-}
-
-@media (max-width: 640px) {
-  #shopify-pc__banner.shopify-pc__banner__dialog {
-    bottom: 8px !important;
-    width: calc(100% - 16px) !important;
-    padding: 9px 12px !important;
-    border-radius: 8px !important;
-  }
-  #shopify-pc__banner .shopify-pc__banner__wrapper {
-    gap: 10px !important;
-  }
-  #shopify-pc__banner .shopify-pc__banner__body p {
-    font-size: 11px !important;
-    line-height: 1.3 !important;
-  }
-  #shopify-pc__banner #shopify-pc__banner__btn-manage-prefs {
-    display: none !important;
-  }
-  #shopify-pc__banner #shopify-pc__banner__btn-accept {
-    padding: 8px 14px !important;
-    font-size: 11.5px !important;
-  }
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
 }
 
 
